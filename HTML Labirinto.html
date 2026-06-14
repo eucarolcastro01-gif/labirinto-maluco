@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Labirinto Maluco!</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#3ecfaa;
+  --green:#4dc97e;
+  --sky:#5ab5e8;
+  --purple:#8a28f0;
+  --purple-dark:#3a0888;
+  --purple-light:#c070ff;
+  --yellow:#ffd700;
+  --yellow-dark:#e07000;
+  --pink:#f080c8;
+  --red:#e02020;
+  --wall-teal:#5ecfca;
+  --wall-green:#68cc58;
+  --wall-pink:#f080a8;
+  --wall-purple:#a060d8;
+  --wall-yellow:#f0c040;
+  --wall-orange:#f08848;
+  --path:#162240;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+body{
+  font-family:'Fredoka One',cursive;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(ellipse at 15% 25%,rgba(62,207,170,.6) 0%,transparent 45%),
+    radial-gradient(ellipse at 85% 70%,rgba(90,181,232,.55) 0%,transparent 45%),
+    radial-gradient(ellipse at 50% 50%,rgba(77,201,126,.35) 0%,transparent 60%),
+    linear-gradient(150deg,#27b890 0%,#33c070 50%,#42aad4 100%);
+  min-height:100vh;
+  transition:background 1.2s ease;
+}
+
+/* ── FLOATING STARS ── */
+.star{
+  position:fixed;pointer-events:none;z-index:0;
+  background:#ffd700;
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  filter:drop-shadow(0 0 5px #ffd700) drop-shadow(0 0 10px rgba(255,215,0,.6));
+  animation:twinkle var(--dur,2s) var(--delay,0s) infinite alternate ease-in-out;
+}
+@keyframes twinkle{0%{opacity:.4;transform:scale(.85) rotate(var(--rot,0deg))}100%{opacity:1;transform:scale(1.25) rotate(var(--rot,0deg))}}
+
+/* ── SCREENS ── */
+.screen{display:none;position:relative;z-index:2;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.screen.active{display:flex;animation:popIn .45s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes popIn{from{opacity:0;transform:scale(.75) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+/* ── GLASS CARD ── */
+.glass{
+  background:rgba(255,255,255,.18);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:2px solid rgba(255,255,255,.35);
+  border-radius:28px;
+  box-shadow:0 16px 48px rgba(0,0,0,.18),inset 0 1.5px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.08);
+}
+
+/* ══ TELA INICIAL ══ */
+.start-card{
+  padding:28px 40px 24px;
+  text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  min-width:340px;max-width:420px;
+}
+.start-sub{
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;
+  color:rgba(255,255,255,.85);letter-spacing:.5px;
+  text-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+.bncc-row{
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:6px;
+}
+.bncc-tag{
+  background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.38);
+  border-radius:20px;padding:3px 11px;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;
+  color:#fff;letter-spacing:.5px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+.bncc-sep{color:rgba(255,255,255,.4);font-size:.9rem;}
+.bncc-info{
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.7rem;
+  color:rgba(255,255,255,.65);
+}
+.start-btn-col{
+  display:flex;flex-direction:column;align-items:center;gap:9px;width:100%;
+  margin-top:2px;
+}
+.btn-how{
+  font-family:'Fredoka One',cursive;font-size:1rem;
+  padding:10px 0;border:2px solid rgba(255,255,255,.35);border-radius:28px;
+  background:rgba(255,255,255,.16);backdrop-filter:blur(8px);
+  color:#fff;cursor:pointer;width:100%;
+  box-shadow:0 3px 12px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.28);
+  transition:background .15s,transform .1s;
+  letter-spacing:.5px;
+}
+.btn-how:hover{background:rgba(255,255,255,.28);transform:translateY(-2px);}
+.start-credits{
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.68rem;
+  color:rgba(255,255,255,.6);line-height:1.7;
+  padding:7px 12px;background:rgba(0,0,0,.12);border-radius:10px;
+  width:100%;
+}
+.start-credits strong{color:rgba(255,255,255,.9);}
+.start-credits span{font-size:.62rem;color:rgba(255,255,255,.45);}
+
+/* ══ TELA COMO JOGAR ══ */
+#screen-how{padding:8px 0;}
+.how-card-outer{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  padding:22px 26px 18px;max-width:480px;width:100%;border-radius:24px;
+}
+.how-title{
+  font-family:'Fredoka One',cursive;font-size:1.9rem;color:#ffd700;
+  text-shadow:0 3px 0 rgba(0,0,0,.18),0 0 28px rgba(255,215,0,.35);
+  -webkit-text-stroke:1.5px rgba(0,0,0,.15);
+}
+.how-steps{display:flex;flex-direction:column;gap:10px;width:100%;}
+.how-step-row{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(255,255,255,.1);border-radius:14px;
+  padding:10px 12px;
+  border:1px solid rgba(255,255,255,.18);
+}
+.how-num{
+  min-width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,#ffd700,#ff8c00);
+  color:#fff;font-family:'Fredoka One',cursive;font-size:.85rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 8px rgba(0,0,0,.22);flex-shrink:0;margin-top:1px;
+}
+.how-content{display:flex;align-items:flex-start;gap:10px;}
+.how-emoji{font-size:1.5rem;line-height:1;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));}
+.how-head{
+  font-family:'Fredoka One',cursive;font-size:.95rem;color:#ffd700;
+  text-shadow:0 1px 4px rgba(0,0,0,.2);margin-bottom:2px;
+}
+.how-desc{
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.72rem;
+  color:rgba(255,255,255,.88);line-height:1.45;
+}
+.how-desc strong{color:#fff;}
+.how-btns{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;margin-top:2px;}
+
+/* Rainbow title */
+.game-title{
+  font-family:'Fredoka One',cursive;
+  font-size:3.2rem;line-height:1.08;letter-spacing:3px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.title-line{display:flex;gap:1px}
+.game-title span{
+  display:inline-block;
+  text-shadow:0 3px 0 rgba(0,0,0,.22),0 6px 18px rgba(0,0,0,.12);
+  -webkit-text-stroke:2px rgba(0,0,0,.28);
+  transition:transform .2s;
+}
+.game-title span:hover{transform:translateY(-4px) scale(1.15)}
+.l0{color:#ff3d3d}.l1{color:#ff9f00}.l2{color:#ffe000}.l3{color:#3dff6e}
+.l4{color:#3db5ff}.l5{color:#d43dff}.l6{color:#ff3dde}.l7{color:#fff}.l8{color:#ff8c00}
+
+/* Big CTA button */
+.btn-cta{
+  font-family:'Fredoka One',cursive;font-size:1.45rem;
+  padding:14px 40px;border:none;border-radius:50px;cursor:pointer;
+  background:linear-gradient(175deg,#ffe840 0%,#ffaa00 55%,#e06800 100%);
+  color:#fff;letter-spacing:1.5px;
+  box-shadow:0 6px 0 #a04400,0 10px 28px rgba(200,100,0,.4),inset 0 1.5px 0 rgba(255,255,255,.45);
+  transition:transform .13s,box-shadow .13s;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:10px;
+  -webkit-text-stroke:.5px rgba(0,0,0,.15);
+}
+.btn-cta::after{content:'';position:absolute;top:0;left:0;right:0;height:52%;background:linear-gradient(180deg,rgba(255,255,255,.3) 0%,transparent 100%);border-radius:50px 50px 80% 80%}
+.btn-cta:hover{transform:translateY(-3px);box-shadow:0 9px 0 #a04400,0 14px 32px rgba(200,100,0,.5)}
+.btn-cta:active{transform:translateY(3px);box-shadow:0 3px 0 #a04400,inset 0 3px 8px rgba(0,0,0,.2)}
+
+/* ══ TELA DE FASES ══ */
+.phases-header{
+  font-size:2.5rem;color:#ffd700;letter-spacing:6px;
+  text-shadow:0 3px 0 rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.15),0 0 40px rgba(255,215,0,.35);
+  -webkit-text-stroke:2px rgba(0,0,0,.18);
+}
+.phases-grid{display:grid;grid-template-columns:repeat(5,76px);gap:12px}
+.phase-btn{
+  width:76px;height:76px;border-radius:20px;border:none;cursor:pointer;
+  font-family:'Fredoka One',cursive;font-size:1.8rem;color:#fff;
+  background:linear-gradient(170deg,#cc6aff 0%,#8a28f0 55%,#5c0ec8 100%);
+  box-shadow:0 6px 0 #35087a,0 10px 24px rgba(100,20,200,.4),inset 0 1.5px 0 rgba(255,255,255,.4),inset 0 -1px 0 rgba(0,0,0,.15);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  position:relative;overflow:hidden;
+  transition:transform .13s,box-shadow .13s;
+}
+.phase-btn::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.3) 0%,transparent 100%);border-radius:20px 20px 60% 60%}
+.phase-btn:hover{transform:translateY(-5px);box-shadow:0 11px 0 #35087a,0 16px 28px rgba(100,20,200,.5)}
+.phase-btn:active{transform:translateY(3px);box-shadow:0 3px 0 #35087a}
+.phase-btn.done{background:linear-gradient(170deg,#5cf0a0 0%,#20b860 55%,#087030 100%);box-shadow:0 6px 0 #044020,0 10px 24px rgba(20,140,60,.4),inset 0 1.5px 0 rgba(255,255,255,.4)}
+.ph-num{position:relative;z-index:1;line-height:1}
+.ph-stars{font-size:.55rem;letter-spacing:1px;position:relative;z-index:1}
+
+/* ══ GAME SCREEN ══ */
+.topbar{
+  width:520px;padding:8px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.lbl-phase{font-size:1.15rem;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.25)}
+.lbl-timer{font-size:1.1rem;color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,.6)}
+
+/* MAZE */
+.maze-card{padding:10px}
+#game-grid{display:grid;gap:3px;border-radius:12px;overflow:hidden}
+.cell{
+  width:50px;height:46px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;font-size:1.3rem;
+}
+.cell.wall{
+  box-shadow:inset 0 2.5px 0 rgba(255,255,255,.45),inset 0 -2px 0 rgba(0,0,0,.18);
+}
+.cell.wall::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:46%;
+  background:linear-gradient(180deg,rgba(255,255,255,.35) 0%,transparent 100%);
+  border-radius:8px 8px 50% 50%;pointer-events:none;
+}
+.cell.path{
+  background:linear-gradient(145deg,#1e3a6e,#254d8a);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.cell.hint-path{
+  background:linear-gradient(145deg,#1a3a10,#254d18);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.35);
+  outline:2.5px solid rgba(200,255,80,.75);outline-offset:-2px;
+}
+
+/* QUEUE */
+.queue-card{
+  width:520px;min-height:54px;padding:8px 12px;
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+}
+.q-chip{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(170deg,#cc6aff,#8a28f0,#5c0ec8);
+  color:#fff;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 0 #35087a,0 5px 12px rgba(100,20,200,.35),inset 0 1.5px 0 rgba(255,255,255,.4);
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .1s,box-shadow .1s;
+}
+.q-chip::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.28) 0%,transparent 100%);border-radius:50% 50% 0 0}
+.q-chip:hover{transform:scale(1.12)}
+.q-chip.playing{
+  background:linear-gradient(170deg,#ffe840,#ffaa00,#e06800);
+  box-shadow:0 3px 0 #a04400,0 5px 14px rgba(200,100,0,.45),inset 0 1.5px 0 rgba(255,255,255,.4);
+  transform:scale(1.22);
+  animation:pulse .35s ease infinite alternate;
+}
+@keyframes pulse{from{box-shadow:0 3px 0 #a04400,0 5px 14px rgba(200,100,0,.45)}to{box-shadow:0 3px 0 #a04400,0 5px 22px rgba(255,160,0,.8)}}
+.q-chip.used{opacity:.3;transform:scale(.9)}
+.q-empty{color:rgba(255,255,255,.4);font-size:.88rem;font-family:'Nunito',sans-serif;font-weight:700}
+
+/* CONTROLS — 4 big round buttons */
+.ctrl-pad{display:flex;flex-direction:column;align-items:center;gap:6px}
+.ctrl-row{display:flex;gap:8px}
+.ctrl-btn{
+  width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(170deg,#cc6aff,#8a28f0,#5c0ec8);
+  color:#fff;font-size:1.4rem;
+  box-shadow:0 6px 0 #35087a,0 10px 22px rgba(100,20,200,.4),inset 0 1.5px 0 rgba(255,255,255,.4);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  transition:transform .1s,box-shadow .1s;
+}
+.ctrl-btn::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.3) 0%,transparent 100%);border-radius:50% 50% 0 0}
+.ctrl-btn:hover{transform:translateY(-3px);box-shadow:0 9px 0 #35087a,0 14px 26px rgba(100,20,200,.5)}
+.ctrl-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #35087a,inset 0 4px 10px rgba(0,0,0,.25)}
+.ctrl-space{width:54px;height:54px}
+
+/* ACTION BUTTONS */
+.action-row{display:flex;gap:10px}
+.btn-exec{
+  font-family:'Fredoka One',cursive;font-size:1.05rem;
+  padding:10px 28px;border:none;border-radius:28px;cursor:pointer;
+  background:linear-gradient(170deg,#5cf0a0,#20b860,#087030);
+  color:#fff;
+  box-shadow:0 5px 0 #044020,0 8px 20px rgba(20,140,60,.4),inset 0 1.5px 0 rgba(255,255,255,.4);
+  transition:transform .1s,box-shadow .1s;position:relative;overflow:hidden;
+}
+.btn-exec::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.25) 0%,transparent 100%);border-radius:28px 28px 50% 50%}
+.btn-exec:hover{transform:translateY(-2px);box-shadow:0 7px 0 #044020,0 12px 24px rgba(20,140,60,.5)}
+.btn-exec:active{transform:translateY(3px);box-shadow:0 2px 0 #044020}
+.btn-clear{
+  font-family:'Fredoka One',cursive;font-size:1.05rem;
+  padding:10px 28px;border:none;border-radius:28px;cursor:pointer;
+  background:linear-gradient(170deg,#ff7070,#e02020,#900000);
+  color:#fff;
+  box-shadow:0 5px 0 #500000,0 8px 20px rgba(180,20,20,.4),inset 0 1.5px 0 rgba(255,255,255,.35);
+  transition:transform .1s,box-shadow .1s;position:relative;overflow:hidden;
+}
+.btn-clear::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.22) 0%,transparent 100%);border-radius:28px 28px 50% 50%}
+.btn-clear:hover{transform:translateY(-2px);box-shadow:0 7px 0 #500000,0 12px 24px rgba(180,20,20,.5)}
+.btn-clear:active{transform:translateY(3px);box-shadow:0 2px 0 #500000}
+
+/* HINT BAR */
+.hint-bar{
+  width:520px;padding:11px 0;border:none;border-radius:16px;cursor:pointer;
+  background:linear-gradient(170deg,#50e090,#20b060,#087040);
+  box-shadow:0 5px 0 #044028,0 8px 22px rgba(20,140,70,.4),inset 0 1.5px 0 rgba(255,255,255,.35);
+  transition:transform .1s,box-shadow .1s;position:relative;overflow:hidden;
+  font-family:'Fredoka One',cursive;
+}
+.hint-bar::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.22) 0%,transparent 100%);pointer-events:none}
+.hint-bar:hover{transform:translateY(-2px);box-shadow:0 7px 0 #044028,0 12px 26px rgba(20,140,70,.5)}
+.hint-bar:active{transform:translateY(3px);box-shadow:0 2px 0 #044028}
+.hint-label{
+  font-size:1.2rem;letter-spacing:1.5px;position:relative;z-index:1;
+  background:linear-gradient(135deg,#fff176,#ffaa00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.3));
+}
+
+/* ══ CONGRATS + DRESS-UP ══ */
+.congrats-card{padding:18px 28px;text-align:center}
+.congrats-title{
+  font-size:2.8rem;color:#ffd700;
+  text-shadow:0 3px 0 rgba(0,0,0,.18),0 0 40px rgba(255,215,0,.45);
+  -webkit-text-stroke:2px rgba(0,0,0,.15);
+}
+.congrats-sub{font-size:1rem;color:rgba(255,255,255,.92);margin:5px 0 8px;font-family:'Nunito',sans-serif;font-weight:800}
+.congrats-stars{font-size:2.4rem;letter-spacing:8px;filter:drop-shadow(0 0 8px rgba(255,215,0,.6))}
+.score-breakdown{font-size:.88rem;line-height:1.9;margin-top:6px;font-family:'Nunito',sans-serif;font-weight:700}
+
+/* ── DRESS-UP STUMBLE GUYS STYLE ── */
+.dressup-card{
+  width:520px;padding:16px 18px 18px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.dressup-title{
+  font-size:1.2rem;color:#ffd700;letter-spacing:1px;
+  text-shadow:0 0 14px rgba(255,215,0,.45);
+  display:flex;align-items:center;gap:8px;
+}
+
+/* Main dress-up area: preview + grid side by side */
+.dressup-body{
+  display:flex;gap:14px;width:100%;align-items:flex-start;
+}
+
+/* LEFT — Mimi preview pedestal */
+.mimi-pedestal{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  flex-shrink:0;
+}
+.mimi-preview-box{
+  width:130px;height:130px;
+  background:linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,.06));
+  border:2px solid rgba(255,255,255,.3);
+  border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.3);
+  position:relative;overflow:hidden;
+}
+.mimi-preview-box::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:35%;
+  background:linear-gradient(0deg,rgba(255,255,255,.08),transparent);
+  border-radius:0 0 18px 18px;
+}
+.mimi-preview-box svg{
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,.35));
+  position:relative;z-index:1;
+}
+.mimi-equipped-label{
+  font-family:'Fredoka One',cursive;font-size:.75rem;
+  color:rgba(255,255,255,.7);text-align:center;
+  background:rgba(0,0,0,.2);border-radius:8px;padding:3px 8px;
+  width:100%;
+}
+
+/* RIGHT — items grid */
+.items-panel{flex:1;display:flex;flex-direction:column;gap:8px;}
+
+/* category tabs */
+.cat-tabs{display:flex;gap:6px;}
+.cat-tab{
+  font-family:'Fredoka One',cursive;font-size:.82rem;
+  padding:5px 14px;border:none;border-radius:20px;cursor:pointer;
+  background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);
+  transition:all .15s;
+  border:1.5px solid rgba(255,255,255,.15);
+}
+.cat-tab.active{
+  background:linear-gradient(135deg,#ffd700,#ff8c00);
+  color:#fff;border-color:transparent;
+  box-shadow:0 3px 10px rgba(255,140,0,.4);
+}
+.cat-tab:hover:not(.active){background:rgba(255,255,255,.25);color:#fff;}
+
+/* items grid */
+.items-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+}
+.item-slot{
+  aspect-ratio:1;border-radius:14px;border:none;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;position:relative;overflow:hidden;
+  transition:transform .12s,box-shadow .12s;
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.18);
+  box-shadow:0 4px 12px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.2);
+}
+/* rarity color strip at bottom */
+.item-slot::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:4px;
+  background:var(--rarity,rgba(255,255,255,.3));
+  border-radius:0 0 12px 12px;
+}
+/* glossy top shine */
+.item-slot::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:linear-gradient(180deg,rgba(255,255,255,.22) 0%,transparent 100%);
+  border-radius:12px 12px 0 0;pointer-events:none;
+}
+.item-slot.locked{
+  background:rgba(0,0,0,.25);
+  border-color:rgba(255,255,255,.1);
+  cursor:not-allowed;
+}
+.item-slot.selected{
+  border-color:#ffd700;
+  box-shadow:0 0 0 2px #ffd700,0 0 20px rgba(255,215,0,.5),0 4px 12px rgba(0,0,0,.15);
+  background:rgba(255,215,0,.2);
+}
+.item-slot:hover:not(.locked):not(.selected){
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+}
+.item-slot:active:not(.locked){transform:scale(.95);}
+
+.item-emoji{
+  font-size:1.8rem;line-height:1;position:relative;z-index:1;
+  font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));
+}
+.item-name{
+  font-family:'Fredoka One',cursive;font-size:.6rem;color:rgba(255,255,255,.85);
+  position:relative;z-index:1;text-align:center;
+  line-height:1.1;
+}
+.item-lock{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:1.3rem;z-index:2;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
+}
+.item-new-badge{
+  position:absolute;top:4px;right:4px;
+  background:#ff3366;color:#fff;
+  font-family:'Fredoka One',cursive;font-size:.52rem;
+  padding:1px 5px;border-radius:6px;z-index:3;
+  box-shadow:0 2px 6px rgba(0,0,0,.3);
+  animation:newBadge 1s infinite alternate;
+}
+@keyframes newBadge{from{transform:scale(1)}to{transform:scale(1.1)}}
+
+.lock-ico{position:absolute;bottom:3px;right:5px;font-size:.65rem}
+
+.nav-row{display:flex;gap:10px;align-items:center}
+.btn-ghost{
+  font-family:'Fredoka One',cursive;font-size:.95rem;padding:8px 22px;
+  border:2px solid rgba(255,255,255,.3);border-radius:22px;cursor:pointer;
+  background:rgba(255,255,255,.16);backdrop-filter:blur(8px);color:#fff;
+  box-shadow:0 2px 10px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.3);
+  transition:background .15s,transform .1s;
+}
+.btn-ghost:hover{background:rgba(255,255,255,.3);transform:translateY(-1px)}
+
+/* ══ FINAL SCREEN ══ */
+#screen-final{text-align:center;gap:12px}
+
+/* ══ JARDIM SECRETO ══ */
+#screen-garden{gap:0;position:relative}
+.garden-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(160deg,#87ceeb 0%,#c8f0c0 50%,#4dc97e 100%);
+  animation:gardenFadeIn .8s ease both;}
+@keyframes gardenFadeIn{from{opacity:0}to{opacity:1}}
+.garden-card{
+  position:relative;z-index:2;
+  padding:20px 28px 22px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  max-width:560px;width:100%;
+  background:rgba(255,255,255,.22)!important;
+  border:2px solid rgba(255,255,255,.5)!important;
+  animation:gardenCardIn .6s .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes gardenCardIn{from{opacity:0;transform:translateY(30px) scale(.9)}to{opacity:1;transform:none}}
+.garden-badge{
+  background:linear-gradient(135deg,#ffd700,#ff8c00);
+  color:#fff;font-family:'Fredoka One',cursive;font-size:1rem;
+  padding:4px 18px;border-radius:20px;
+  box-shadow:0 4px 14px rgba(255,140,0,.4);
+  animation:gardenPulse .9s infinite alternate;
+}
+@keyframes gardenPulse{from{box-shadow:0 4px 14px rgba(255,140,0,.4)}to{box-shadow:0 4px 30px rgba(255,140,0,.9)}}
+.garden-title{
+  font-family:'Fredoka One',cursive;font-size:2.2rem;line-height:1.1;
+  color:#1a5c20;text-align:center;
+  text-shadow:0 3px 0 rgba(255,255,255,.5);
+  -webkit-text-stroke:1px rgba(0,80,0,.18);
+}
+.garden-subtitle{
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;
+  color:#1a5c20;text-align:center;line-height:1.5;opacity:.85;
+}
+.garden-scene{width:100%;border-radius:16px;overflow:hidden;
+  box-shadow:0 6px 24px rgba(0,0,0,.18);border:2px solid rgba(255,255,255,.5);}
+.garden-svg{width:100%;height:auto;display:block;}
+.garden-msg{
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;
+  color:#1a5c20;text-align:center;line-height:1.6;
+  background:rgba(255,255,255,.4);border-radius:12px;padding:8px 16px;
+  border:1px solid rgba(255,255,255,.5);
+}
+.garden-msg strong{color:#0d4010;}
+.garden-msg span{font-size:.8rem;opacity:.75;}
+.garden-score-row{display:flex;gap:10px;width:100%;}
+.garden-score-box{
+  flex:1;background:rgba(255,255,255,.35);border-radius:14px;
+  padding:10px 8px;text-align:center;
+  border:1.5px solid rgba(255,255,255,.5);
+}
+.garden-score-num{
+  font-family:'Fredoka One',cursive;font-size:2.2rem;color:#1a5c20;line-height:1;
+}
+.garden-score-lbl{
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.68rem;
+  color:#1a5c20;opacity:.7;margin-top:2px;
+}
+.final-title{
+  font-size:2.8rem;color:#ffd700;
+  text-shadow:0 3px 0 rgba(0,0,0,.18),0 0 36px rgba(255,215,0,.4);
+  -webkit-text-stroke:2px rgba(0,0,0,.15);
+}
+.final-num{
+  font-size:5.5rem;color:#fff;line-height:1;
+  text-shadow:0 4px 0 rgba(0,0,0,.18),0 10px 30px rgba(0,0,0,.2);
+  font-family:'Fredoka One',cursive;
+}
+.final-lbl{color:rgba(255,255,255,.85);font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem}
+.final-stars{font-size:2.6rem;letter-spacing:10px;filter:drop-shadow(0 0 10px rgba(255,215,0,.6))}
+
+/* ── CONFETTI ── */
+.confetti{position:fixed;pointer-events:none;z-index:999;border-radius:2px;animation:cffall var(--d,1.6s) var(--dl,0s) ease-in both}
+@keyframes cffall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(760deg);opacity:0}}
+
+/* ── TOAST OVERLAYS ── */
+.toast{
+  position:fixed;top:50%;left:50%;z-index:800;
+  transform:translate(-50%,-50%) scale(0);
+  background:rgba(10,15,30,.88);backdrop-filter:blur(16px);
+  border:2px solid rgba(255,255,255,.2);
+  border-radius:24px;padding:22px 36px;text-align:center;
+  pointer-events:none;transition:transform .28s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+.toast.show{transform:translate(-50%,-50%) scale(1)}
+.toast-icon{font-size:3rem;margin-bottom:8px}
+.toast-msg{font-size:1.1rem;color:#fff;font-family:'Nunito',sans-serif;font-weight:800}
+.toast-sub{font-size:.88rem;color:rgba(255,255,255,.65);margin-top:4px;font-family:'Nunito',sans-serif;font-weight:700}
+
+/* ── FLASH GRID ERROR ── */
+@keyframes shakeRed{0%,100%{filter:none;transform:translateX(0)}20%{filter:brightness(.5) sepia(1) saturate(8) hue-rotate(-10deg);transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.flash-error{animation:shakeRed .4s ease}
+
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-15px)}}
+@keyframes mimiStep{0%{transform:scale(1)}40%{transform:scale(1.18) translateY(-3px)}100%{transform:scale(1)}}
+@keyframes gardenFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(540deg);opacity:0}}
+</style>
+</head>
+<body>
+
+<!-- ══ SCREEN: START ══ -->
+<div id="screen-start" class="screen active">
+  <div class="start-card glass">
+
+    <!-- título arco-íris -->
+    <div class="game-title">
+      <div class="title-line">
+        <span class="l0">L</span><span class="l1">A</span><span class="l2">B</span><span class="l3">I</span><span class="l4">R</span><span class="l5">I</span><span class="l6">N</span><span class="l0">T</span><span class="l1">O</span>
+      </div>
+      <div class="title-line">
+        <span class="l3">M</span><span class="l4">A</span><span class="l5">L</span><span class="l6">U</span><span class="l0">C</span><span class="l1">O</span><span class="l7">!</span>
+      </div>
+    </div>
+
+    <!-- subtítulo -->
+    <div class="start-sub">Jogo Educativo de Lógica e Algoritmos</div>
+
+    <!-- Mimi animada -->
+    <div id="mimi-start-wrap" style="animation:bounce 1.1s infinite alternate ease-in-out;display:inline-block"></div>
+
+    <!-- botões centralizados -->
+    <div class="start-btn-col">
+      <button class="btn-cta" onclick="showPhases()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="white"><polygon points="2,1 15,8 2,15"/></svg>
+        JOGAR
+      </button>
+      <button class="btn-how" onclick="showScreen('screen-how')">❓ Como Jogar</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ SCREEN: COMO JOGAR ══ -->
+<div id="screen-how" class="screen">
+  <div class="how-card-outer glass">
+    <div class="how-title">❓ Como Jogar</div>
+
+    <div class="how-steps">
+
+      <div class="how-step-row">
+        <div class="how-num">1</div>
+        <div class="how-content">
+          <div class="how-emoji">🐛</div>
+          <div>
+            <div class="how-head">Guie a Mimi!</div>
+            <div class="how-desc">Leve a Mimi até a <strong>⭐ estrela</strong>. Blocos coloridos são paredes — ela só anda pelos caminhos escuros.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-step-row">
+        <div class="how-num">2</div>
+        <div class="how-content">
+          <div class="how-emoji">▲◀▼▶</div>
+          <div>
+            <div class="how-head">Monte um Algoritmo</div>
+            <div class="how-desc">Clique nas <strong>setas</strong> para criar uma sequência de comandos. Isso é programação! Pense antes de executar.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-step-row">
+        <div class="how-num">3</div>
+        <div class="how-content">
+          <div class="how-emoji"><span style="font-size:1.5rem">🟫</span> <svg width="28" height="24" viewBox="0 0 28 24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="14" cy="15" rx="12" ry="8" fill="#4a5060" stroke="#2a3040" stroke-width="1.2"/><ellipse cx="14" cy="13" rx="12" ry="8" fill="#6a7080" stroke="#3a4050" stroke-width="1.2"/><ellipse cx="11" cy="10" rx="4" ry="2.5" fill="rgba(255,255,255,.18)" transform="rotate(-15,11,10)"/></svg></div>
+          <div>
+            <div class="how-head">Desvie dos Obstáculos</div>
+            <div class="how-desc"><strong>Lama</strong> deixa a Mimi lenta (−10 pts). <strong>Pedra</strong> reinicia (−25 pts). Sempre há um caminho livre!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-step-row">
+        <div class="how-num">4</div>
+        <div class="how-content">
+          <div class="how-emoji">🎽👑</div>
+          <div>
+            <div class="how-head">Colete Acessórios</div>
+            <div class="how-desc">Há um <strong>brinde secreto</strong> em cada fase. Passe por ele para desbloquear roupinhas e chapéus para a Mimi!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-step-row">
+        <div class="how-num">5</div>
+        <div class="how-content">
+          <div class="how-emoji">⭐</div>
+          <div>
+            <div class="how-head">Ganhe Estrelas</div>
+            <div class="how-desc">Menos passos = mais pontos. <strong>⭐⭐⭐ = 80–100 pts</strong>. A dica custa −50 pts — use só em último caso!</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="how-btns">
+      <button class="btn-cta" onclick="showPhases()" style="font-size:1.1rem;padding:12px 32px">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="white"><polygon points="2,1 15,8 2,15"/></svg>
+        VAMOS JOGAR!
+      </button>
+      <button class="btn-ghost" onclick="showScreen('screen-start')">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: PHASES ══ -->
+<div id="screen-phases" class="screen">
+  <div class="phases-header">✦ FASES ✦</div>
+  <div class="phases-grid" id="phases-grid"></div>
+  <button class="btn-ghost" onclick="showScreen('screen-start')">← Voltar</button>
+</div>
+
+<!-- ══ SCREEN: GAME ══ -->
+<div id="screen-game" class="screen">
+  <div class="topbar glass">
+    <span class="lbl-phase" id="lbl-phase">Fase 1</span>
+    <span class="lbl-timer" id="lbl-timer">⏱ 00:00</span>
+    <button class="btn-ghost" style="padding:5px 14px;font-size:.85rem" onclick="stopGame();showPhases()">↩ Fases</button>
+  </div>
+  <div class="maze-card glass">
+    <div id="game-grid"></div>
+  </div>
+  <div class="queue-card glass" id="queue-wrap">
+    <span class="q-empty">Adicione comandos abaixo ↓</span>
+  </div>
+  <div class="ctrl-pad">
+    <div class="ctrl-row">
+      <div class="ctrl-space"></div>
+      <button class="ctrl-btn" onclick="addCmd('up')">▲</button>
+      <div class="ctrl-space"></div>
+    </div>
+    <div class="ctrl-row">
+      <button class="ctrl-btn" onclick="addCmd('left')">◀</button>
+      <button class="ctrl-btn" onclick="addCmd('down')">▼</button>
+      <button class="ctrl-btn" onclick="addCmd('right')">▶</button>
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="btn-exec" onclick="executeQueue()">▶ Executar</button>
+    <button class="btn-clear" onclick="clearQueue()">✕ Limpar</button>
+  </div>
+  <button class="hint-bar" onclick="toggleHint()">
+    <span class="hint-label" id="hint-label">COMO SAIR!</span>
+  </button>
+</div>
+
+<!-- ══ SCREEN: CONGRATS ══ -->
+<div id="screen-congrats" class="screen">
+  <div class="congrats-card glass">
+    <div class="congrats-title">PARABÉNS! 🎉</div>
+    <div class="congrats-sub" id="congrats-sub">Você passou de fase!</div>
+    <div class="congrats-stars" id="congrats-stars">⭐⭐⭐</div>
+    <div class="score-breakdown" id="score-breakdown"></div>
+  </div>
+  <div class="dressup-card glass">
+    <div class="dressup-title">✨ Vista a Mimi!</div>
+    <div class="dressup-body">
+
+      <!-- LEFT: Mimi preview -->
+      <div class="mimi-pedestal">
+        <div class="mimi-preview-box" id="mimi-stage"></div>
+        <div class="mimi-equipped-label" id="equipped-label">Sem acessórios</div>
+      </div>
+
+      <!-- RIGHT: items panel -->
+      <div class="items-panel">
+        <div class="cat-tabs">
+          <button class="cat-tab active" onclick="switchCat('hat',this)">🎩 Chapéus</button>
+          <button class="cat-tab" onclick="switchCat('outfit',this)">🎽 Roupas</button>
+        </div>
+        <div class="items-grid" id="items-grid"></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="nav-row">
+    <button class="btn-cta" id="btn-next" onclick="nextPhase()" style="font-size:1.1rem;padding:11px 26px">▶ PRÓXIMA FASE</button>
+    <button class="btn-ghost" id="btn-replay" onclick="showScreen('screen-game');setTimeout(replayPath,300)" style="display:none">🔁 Rever Caminho</button>
+    <button class="btn-ghost" onclick="showPhases()">↩ Fases</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN: FINAL ══ -->
+<div id="screen-final" class="screen">
+  <div id="mimi-final-wrap" style="animation:bounce 1s infinite alternate ease-in-out;display:inline-block"></div>
+  <div class="final-title">🏆 JOGO COMPLETO! 🏆</div>
+  <div class="final-num" id="final-num">100</div>
+  <div class="final-lbl">Pontuação Final (0 a 100)</div>
+  <div class="final-stars" id="final-stars">⭐⭐⭐</div>
+  <button class="btn-cta" onclick="showScreen('screen-start')" style="font-size:1.1rem;padding:12px 28px;margin-top:6px">🔄 Jogar Novamente</button>
+  <button class="btn-ghost" onclick="showPhases()">↩ Ver Fases</button>
+</div>
+
+<!-- ══ SCREEN: JARDIM SECRETO (3 estrelas em todas as fases) ══ -->
+<div id="screen-garden" class="screen">
+  <!-- animated garden background elements -->
+  <div class="garden-bg" id="garden-bg"></div>
+
+  <div class="garden-card glass">
+    <div class="garden-badge">🌟 PERFEITO! 🌟</div>
+    <div class="garden-title">Novo Jardim<br>Desbloqueado!</div>
+    <div class="garden-subtitle">Você conquistou ⭐⭐⭐ em todas as 10 fases!<br>A Mimi encontrou um jardim secreto!</div>
+
+    <!-- Mimi no jardim -->
+    <div class="garden-scene">
+      <!-- animated garden SVG -->
+      <svg class="garden-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+        <!-- sky gradient -->
+        <defs>
+          <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#87CEEB"/>
+            <stop offset="100%" stop-color="#c8f0c0"/>
+          </linearGradient>
+          <linearGradient id="grassG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4dc97e"/>
+            <stop offset="100%" stop-color="#2a8050"/>
+          </linearGradient>
+          <radialGradient id="sunG" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#fff9c0"/>
+            <stop offset="100%" stop-color="#ffd700"/>
+          </radialGradient>
+        </defs>
+        <!-- sky -->
+        <rect width="500" height="180" fill="url(#skyG)"/>
+        <!-- sun -->
+        <circle cx="440" cy="35" r="28" fill="url(#sunG)" opacity=".9"/>
+        <g stroke="#ffd700" stroke-width="2.5" opacity=".6">
+          <line x1="440" y1="0" x2="440" y2="10"/>
+          <line x1="440" y1="60" x2="440" y2="70"/>
+          <line x1="405" y1="35" x2="415" y2="35"/>
+          <line x1="465" y1="35" x2="475" y2="35"/>
+          <line x1="415" y1="10" x2="421" y2="16"/>
+          <line x1="459" y1="54" x2="465" y2="60"/>
+          <line x1="415" y1="60" x2="421" y2="54"/>
+          <line x1="459" y1="16" x2="465" y2="10"/>
+        </g>
+        <!-- clouds -->
+        <g fill="white" opacity=".85">
+          <ellipse cx="80" cy="30" rx="35" ry="18"/>
+          <ellipse cx="55" cy="35" rx="22" ry="14"/>
+          <ellipse cx="108" cy="35" rx="22" ry="14"/>
+          <ellipse cx="240" cy="22" rx="28" ry="14"/>
+          <ellipse cx="218" cy="27" rx="18" ry="11"/>
+          <ellipse cx="263" cy="27" rx="18" ry="11"/>
+        </g>
+        <!-- far trees -->
+        <g opacity=".6">
+          <rect x="18" y="75" width="8" height="35" fill="#5a3010"/>
+          <circle cx="22" cy="68" r="20" fill="#2a8050"/>
+          <rect x="355" y="70" width="8" height="40" fill="#5a3010"/>
+          <circle cx="359" cy="62" r="22" fill="#1e6e40"/>
+        </g>
+        <!-- grass -->
+        <ellipse cx="250" cy="155" rx="260" ry="35" fill="url(#grassG)"/>
+        <rect x="0" y="148" width="500" height="32" fill="#4dc97e"/>
+        <!-- grass blades -->
+        <g fill="#3ab060" opacity=".7">
+          <path d="M30,148 Q28,130 32,120 Q36,130 34,148Z"/>
+          <path d="M80,148 Q78,133 82,125 Q86,133 84,148Z"/>
+          <path d="M150,148 Q148,136 151,128 Q155,136 153,148Z"/>
+          <path d="M220,148 Q218,132 222,124 Q226,132 224,148Z"/>
+          <path d="M310,148 Q308,134 312,126 Q316,134 314,148Z"/>
+          <path d="M390,148 Q388,131 392,123 Q396,131 394,148Z"/>
+          <path d="M460,148 Q458,135 462,127 Q466,135 464,148Z"/>
+        </g>
+        <!-- colorful flowers -->
+        <!-- flower 1 -->
+        <circle cx="50" cy="138" r="5" fill="#ff5888"/><circle cx="50" cy="138" r="2" fill="#ffe000"/>
+        <circle cx="43" cy="135" r="4" fill="#ff80c0"/><circle cx="57" cy="135" r="4" fill="#ff80c0"/>
+        <circle cx="50" cy="130" r="4" fill="#ff5888"/><circle cx="50" cy="144" r="4" fill="#ff80c0"/>
+        <rect x="49" y="140" width="2" height="10" fill="#3ab060"/>
+        <!-- flower 2 -->
+        <circle cx="120" cy="136" r="5" fill="#ffd700"/><circle cx="120" cy="136" r="2" fill="#ff8c00"/>
+        <circle cx="113" cy="133" r="4" fill="#ffe060"/><circle cx="127" cy="133" r="4" fill="#ffe060"/>
+        <circle cx="120" cy="128" r="4" fill="#ffd700"/><circle cx="120" cy="142" r="4" fill="#ffe060"/>
+        <rect x="119" y="138" width="2" height="10" fill="#3ab060"/>
+        <!-- flower 3 -->
+        <circle cx="200" cy="137" r="5" fill="#a855f7"/><circle cx="200" cy="137" r="2" fill="#ffd700"/>
+        <circle cx="193" cy="134" r="4" fill="#c084fc"/><circle cx="207" cy="134" r="4" fill="#c084fc"/>
+        <circle cx="200" cy="129" r="4" fill="#a855f7"/><circle cx="200" cy="143" r="4" fill="#c084fc"/>
+        <rect x="199" y="139" width="2" height="9" fill="#3ab060"/>
+        <!-- flower 4 -->
+        <circle cx="300" cy="136" r="5" fill="#ff6b35"/><circle cx="300" cy="136" r="2" fill="#ffe000"/>
+        <circle cx="293" cy="133" r="4" fill="#ff9a6c"/><circle cx="307" cy="133" r="4" fill="#ff9a6c"/>
+        <circle cx="300" cy="128" r="4" fill="#ff6b35"/><circle cx="300" cy="142" r="4" fill="#ff9a6c"/>
+        <rect x="299" y="138" width="2" height="10" fill="#3ab060"/>
+        <!-- flower 5 -->
+        <circle cx="420" cy="135" r="5" fill="#38bdf8"/><circle cx="420" cy="135" r="2" fill="#ffd700"/>
+        <circle cx="413" cy="132" r="4" fill="#7dd3fc"/><circle cx="427" cy="132" r="4" fill="#7dd3fc"/>
+        <circle cx="420" cy="127" r="4" fill="#38bdf8"/><circle cx="420" cy="141" r="4" fill="#7dd3fc"/>
+        <rect x="419" y="137" width="2" height="11" fill="#3ab060"/>
+        <!-- butterflies -->
+        <g opacity=".85">
+          <ellipse cx="165" cy="90" rx="12" ry="7" fill="#ff80c0" transform="rotate(-20,165,90)"/>
+          <ellipse cx="178" cy="90" rx="12" ry="7" fill="#ff80c0" transform="rotate(20,178,90)"/>
+          <ellipse cx="165" cy="97" rx="9" ry="5" fill="#ffb0d8" transform="rotate(10,165,97)"/>
+          <ellipse cx="178" cy="97" rx="9" ry="5" fill="#ffb0d8" transform="rotate(-10,178,97)"/>
+          <line x1="171" y1="88" x2="171" y2="100" stroke="#333" stroke-width="1.2"/>
+          <path d="M171,88 Q168,82 166,80" stroke="#333" stroke-width="1" fill="none"/>
+          <path d="M171,88 Q174,82 176,80" stroke="#333" stroke-width="1" fill="none"/>
+        </g>
+        <!-- Mimi in the garden -->
+        <g transform="translate(248,92) scale(0.55)">
+          <ellipse cx="28" cy="76" rx="24" ry="20" fill="#ffb0e0" stroke="#c050a0" stroke-width="2.2"/>
+          <ellipse cx="28" cy="70" rx="16" ry="9" fill="rgba(255,255,255,.2)"/>
+          <ellipse cx="54" cy="72" rx="22" ry="19" fill="#ffb0e0" stroke="#c050a0" stroke-width="2.2"/>
+          <ellipse cx="54" cy="66" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
+          <ellipse cx="78" cy="69" rx="22" ry="19" fill="#ffb0e0" stroke="#c050a0" stroke-width="2.2"/>
+          <ellipse cx="78" cy="63" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
+          <ellipse cx="118" cy="64" rx="26" ry="26" fill="#ffc8ec" stroke="#c050a0" stroke-width="2.5"/>
+          <ellipse cx="107" cy="52" rx="9" ry="6" fill="rgba(255,255,255,.35)" transform="rotate(-25,107,52)"/>
+          <ellipse cx="109" cy="60" rx="9" ry="10" fill="white" stroke="#ccc" stroke-width="1"/>
+          <ellipse cx="128" cy="60" rx="9" ry="10" fill="white" stroke="#ccc" stroke-width="1"/>
+          <ellipse cx="110" cy="61" rx="6" ry="7" fill="#1a1a3a"/>
+          <ellipse cx="129" cy="61" rx="6" ry="7" fill="#1a1a3a"/>
+          <ellipse cx="111" cy="60" rx="4" ry="5" fill="#4444cc"/>
+          <ellipse cx="130" cy="60" rx="4" ry="5" fill="#4444cc"/>
+          <circle cx="112" cy="58" r="2.5" fill="white"/>
+          <circle cx="131" cy="58" r="2.5" fill="white"/>
+          <path d="M110 75 Q118 84 127 75" stroke="#c050a0" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <ellipse cx="103" cy="73" rx="7" ry="5" fill="#ffaacc" opacity=".65"/>
+          <ellipse cx="134" cy="73" rx="7" ry="5" fill="#ffaacc" opacity=".65"/>
+          <path d="M108 40 Q100 22 94 14" stroke="#c050a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M124 38 Q130 20 138 13" stroke="#c050a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="94" cy="13" r="5.5" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
+          <circle cx="138" cy="12" r="5.5" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
+        </g>
+        <!-- sparkles around Mimi -->
+        <g fill="#ffd700" opacity=".9">
+          <polygon points="232,75 234,81 240,81 235,85 237,91 232,87 227,91 229,85 224,81 230,81" transform="scale(.6) translate(162,50)"/>
+          <polygon points="232,75 234,81 240,81 235,85 237,91 232,87 227,91 229,85 224,81 230,81" transform="scale(.5) translate(540,110)"/>
+          <polygon points="232,75 234,81 240,81 235,85 237,91 232,87 227,91 229,85 224,81 230,81" transform="scale(.45) translate(460,30)"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="garden-msg">
+      A Mimi está <strong>feliz</strong> no novo jardim! 🌸<br>
+      <span>Você foi um programador incrível!</span>
+    </div>
+
+    <div class="garden-score-row">
+      <div class="garden-score-box">
+        <div class="garden-score-num" id="garden-score-num">100</div>
+        <div class="garden-score-lbl">Pontuação Final</div>
+      </div>
+      <div class="garden-score-box">
+        <div style="font-size:2rem">⭐⭐⭐</div>
+        <div class="garden-score-lbl">10/10 Fases Perfeitas</div>
+      </div>
+      <div class="garden-score-box" id="garden-mimi-box">
+        <div id="garden-mimi-small"></div>
+        <div class="garden-score-lbl">Mimi personalizada</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn-cta" onclick="showScreen('screen-start')" style="font-size:1rem;padding:10px 24px">🔄 Jogar Novamente</button>
+      <button class="btn-ghost" onclick="showPhases()">↩ Ver Fases</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast" id="toast-rock">
+  <div class="toast-icon">⛰️</div>
+  <div class="toast-msg">Bateu na pedra!</div>
+  <div class="toast-sub">Tente desviar... Recomeçando!</div>
+</div>
+<div class="toast" id="toast-mud">
+  <div class="toast-icon">🟫</div>
+  <div class="toast-msg">Lama! Mimi ficou lenta...</div>
+  <div class="toast-sub">−10 pontos</div>
+</div>
+<div class="toast" id="toast-pickup">
+  <div class="toast-icon" id="pickup-icon">👑</div>
+  <div class="toast-msg" id="pickup-msg">Item desbloqueado!</div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+//  KAWAII MIMI SVG
+// ═══════════════════════════════════
+function makeMimi(w=100, hat=null, outfit=null){
+  const vw=180, vh=120;
+  const h=Math.round(vh*(w/vw));
+  const uid=Math.random().toString(36).slice(2,8);
+
+  // OUTFIT layer (behind body)
+  let outfitSVG='';
+  if(outfit==='out_capa'){
+    outfitSVG=`<g>
+      <path d="M20,72 Q-5,88 2,108 Q32,100 62,108 Q68,88 62,72Z" fill="#e82020" stroke="#900" stroke-width="1.5" opacity=".93"/>
+      <path d="M20,72 Q40,64 62,72" stroke="#ffd700" stroke-width="3" fill="none"/>
+      <path d="M24,78 Q40,70 58,78 Q56,96 40,104 Q24,96 24,78Z" fill="#ff4040" opacity=".45"/>
+      <polygon points="40,82 42,89 49,89 44,93 46,100 40,96 34,100 36,93 31,89 38,89" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/>
+    </g>`;
+  } else if(outfit==='out_arcoirs'){
+    outfitSVG=`<g opacity=".9">
+      <ellipse cx="28" cy="76" rx="22" ry="7" fill="#ff4040"/>
+      <ellipse cx="28" cy="81" rx="22" ry="6" fill="#ff9900"/>
+      <ellipse cx="28" cy="86" rx="21" ry="5" fill="#ffe000"/>
+      <ellipse cx="54" cy="72" rx="20" ry="7" fill="#40cc40"/>
+      <ellipse cx="54" cy="77" rx="20" ry="6" fill="#4488ff"/>
+      <ellipse cx="54" cy="82" rx="19" ry="5" fill="#9940ff"/>
+      <ellipse cx="78" cy="70" rx="20" ry="6" fill="#ff4040"/>
+      <ellipse cx="78" cy="75" rx="20" ry="6" fill="#ff9900"/>
+      <ellipse cx="78" cy="80" rx="19" ry="5" fill="#ffe000"/>
+    </g>`;
+  } else if(outfit==='out_estrela'){
+    outfitSVG=`<g>
+      <ellipse cx="28" cy="76" rx="22" ry="18" fill="#ffd700" opacity=".35" stroke="#c8a000" stroke-width="1.5"/>
+      <ellipse cx="54" cy="72" rx="20" ry="17" fill="#ffd700" opacity=".35" stroke="#c8a000" stroke-width="1.5"/>
+      <ellipse cx="78" cy="70" rx="20" ry="17" fill="#ffd700" opacity=".35" stroke="#c8a000" stroke-width="1.5"/>
+      <polygon points="28,70 30,77 37,77 31,81 33,88 28,84 23,88 25,81 19,77 26,77" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/>
+      <polygon points="54,66 56,73 63,73 57,77 59,84 54,80 49,84 51,77 45,73 52,73" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/>
+      <polygon points="78,64 80,71 87,71 81,75 83,82 78,78 73,82 75,75 69,71 76,71" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/>
+    </g>`;
+  } else if(outfit==='out_coracao'){
+    outfitSVG=`<g>
+      <ellipse cx="28" cy="76" rx="22" ry="18" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1.5"/>
+      <ellipse cx="54" cy="72" rx="20" ry="17" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1.5"/>
+      <ellipse cx="78" cy="70" rx="20" ry="17" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1.5"/>
+      <path d="M28,70 C28,67 24,65 24,69 C24,73 28,76 28,76 C28,76 32,73 32,69 C32,65 28,67 28,70Z" fill="#ff2080"/>
+      <path d="M54,66 C54,63 50,61 50,65 C50,69 54,72 54,72 C54,72 58,69 58,65 C58,61 54,63 54,66Z" fill="#ff2080"/>
+      <path d="M78,64 C78,61 74,59 74,63 C74,67 78,70 78,70 C78,70 82,67 82,63 C82,59 78,61 78,64Z" fill="#ff2080"/>
+    </g>`;
+  }
+
+  // HAT layer (above head)
+  let hatSVG='';
+  if(hat==='hat_coroa'){
+    hatSVG=`<g transform="translate(100,4)">
+      <rect x="0" y="16" width="46" height="12" rx="4" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
+      <polygon points="0,16 7,2 14,16" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
+      <polygon points="16,16 23,0 30,16" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
+      <polygon points="32,16 39,2 46,16" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
+      <circle cx="7"  cy="22" r="3.5" fill="#ff3366"/>
+      <circle cx="23" cy="22" r="3.5" fill="#3366ff"/>
+      <circle cx="39" cy="22" r="3.5" fill="#33cc66"/>
+      <!-- shine -->
+      <ellipse cx="10" cy="8" rx="2" ry="4" fill="rgba(255,255,255,.4)" transform="rotate(-15,10,8)"/>
+    </g>`;
+  } else if(hat==='hat_cartola'){
+    hatSVG=`<g transform="translate(100,0)">
+      <ellipse cx="23" cy="26" rx="28" ry="6" fill="#1a1a2e" stroke="#111" stroke-width="1"/>
+      <rect x="7" y="4" width="32" height="23" rx="4" fill="#2a2a3e" stroke="#111" stroke-width="1"/>
+      <rect x="7" y="20" width="32" height="5" rx="1.5" fill="#e040a0"/>
+      <ellipse cx="15" cy="11" rx="4" ry="7" fill="rgba(255,255,255,.1)" transform="rotate(-10,15,11)"/>
+    </g>`;
+  } else if(hat==='hat_flor'){
+    hatSVG=`<g transform="translate(96,8)">
+      <path d="M4,20 Q20,10 40,20" stroke="#50c030" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="4"  cy="20" r="7" fill="#ff5888"/><circle cx="4"  cy="20" r="3" fill="#ffe000"/>
+      <circle cx="14" cy="13" r="7" fill="#ff80c0"/><circle cx="14" cy="13" r="3" fill="#ffe000"/>
+      <circle cx="24" cy="10" r="7" fill="#ff4488"/><circle cx="24" cy="10" r="3" fill="#ffe000"/>
+      <circle cx="34" cy="13" r="7" fill="#ff70b0"/><circle cx="34" cy="13" r="3" fill="#ffe000"/>
+      <ellipse cx="9"  cy="18" rx="5" ry="2.5" fill="#40b020" transform="rotate(-30,9,18)"/>
+      <ellipse cx="30" cy="12" rx="5" ry="2.5" fill="#40b020" transform="rotate(25,30,12)"/>
+    </g>`;
+  } else if(hat==='hat_laco'){
+    hatSVG=`<g transform="translate(104,10)">
+      <ellipse cx="9"  cy="9" rx="12" ry="8" fill="#ff40a0" stroke="#cc1070" stroke-width="1.5" transform="rotate(-22,9,9)"/>
+      <ellipse cx="31" cy="9" rx="12" ry="8" fill="#ff40a0" stroke="#cc1070" stroke-width="1.5" transform="rotate(22,31,9)"/>
+      <ellipse cx="20" cy="10" rx="6" ry="6" fill="#ff70c0" stroke="#cc1070" stroke-width="1"/>
+      <path d="M15,15 Q8,26 4,30" stroke="#ff40a0" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M25,15 Q32,26 36,30" stroke="#ff40a0" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    </g>`;
+  }
+
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${vw} ${vh}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="mg1_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffb0e0"/><stop offset="100%" stop-color="#e060b8"/></radialGradient>
+    <radialGradient id="mg2_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffc8ec"/><stop offset="100%" stop-color="#e878c8"/></radialGradient>
+    <radialGradient id="eg1_${uid}" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ddeeff"/></radialGradient>
+  </defs>
+
+  ${outfitSVG}
+
+  <!-- BODY SEGMENTS -->
+  <ellipse cx="28" cy="76" rx="24" ry="20" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
+  <ellipse cx="28" cy="72" rx="16" ry="9" fill="rgba(255,255,255,.2)"/>
+
+  <ellipse cx="54" cy="72" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
+  <ellipse cx="54" cy="68" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
+
+  <ellipse cx="78" cy="69" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
+  <ellipse cx="78" cy="65" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
+
+  <!-- HEAD -->
+  <ellipse cx="118" cy="64" rx="26" ry="26" fill="url(#mg2_${uid})" stroke="#c050a0" stroke-width="2.5"/>
+  <ellipse cx="107" cy="52" rx="9" ry="6" fill="rgba(255,255,255,.35)" transform="rotate(-25,107,52)"/>
+
+  <!-- LEFT EYE -->
+  <ellipse cx="109" cy="60" rx="9" ry="10" fill="url(#eg1_${uid})" stroke="#333" stroke-width="1.2"/>
+  <ellipse cx="110" cy="61" rx="6" ry="7" fill="#1a1a3a"/>
+  <ellipse cx="111" cy="60" rx="4.5" ry="5.5" fill="#4444cc"/>
+  <circle  cx="112" cy="58" r="2.5" fill="white"/>
+  <circle  cx="108" cy="63" r="1.2" fill="rgba(255,255,255,.55)"/>
+  <line x1="103" y1="52" x2="101" y2="48" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="108" y1="50" x2="107" y2="46" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="113" y1="51" x2="113" y2="47" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- RIGHT EYE -->
+  <ellipse cx="128" cy="60" rx="9" ry="10" fill="url(#eg1_${uid})" stroke="#333" stroke-width="1.2"/>
+  <ellipse cx="129" cy="61" rx="6" ry="7" fill="#1a1a3a"/>
+  <ellipse cx="130" cy="60" rx="4.5" ry="5.5" fill="#4444cc"/>
+  <circle  cx="131" cy="58" r="2.5" fill="white"/>
+  <circle  cx="127" cy="63" r="1.2" fill="rgba(255,255,255,.55)"/>
+  <line x1="122" y1="52" x2="120" y2="48" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="127" y1="50" x2="126" y2="46" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="133" y1="51" x2="134" y2="47" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- NOSE -->
+  <ellipse cx="118" cy="70" rx="2.5" ry="1.8" fill="#d050a0" opacity=".6"/>
+
+  <!-- SMILE -->
+  <path d="M110 75 Q118 84 127 75" stroke="#c050a0" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+
+  <!-- CHEEKS -->
+  <ellipse cx="103" cy="73" rx="7" ry="5" fill="#ffaacc" opacity=".65"/>
+  <ellipse cx="134" cy="73" rx="7" ry="5" fill="#ffaacc" opacity=".65"/>
+
+  <!-- ANTENNAE -->
+  <path d="M108 40 Q100 22 94 14"  stroke="#c050a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M124 38 Q130 20 138 13" stroke="#c050a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="94"  cy="13" r="5.5" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
+  <circle cx="138" cy="12" r="5.5" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
+  <circle cx="96"  cy="11" r="2"   fill="rgba(255,255,255,.6)"/>
+  <circle cx="140" cy="10" r="2"   fill="rgba(255,255,255,.6)"/>
+
+  <!-- LEGS -->
+  <path d="M14 92 Q10 100 8 106"  stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M30 94 Q30 102 30 108" stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M46 88 Q42 96 40 102"  stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M62 86 Q62 94 62 100"  stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="8"  cy="108" rx="4" ry="2.5" fill="#e060b0"/>
+  <ellipse cx="30" cy="109" rx="4" ry="2.5" fill="#e060b0"/>
+  <ellipse cx="40" cy="103" rx="4" ry="2.5" fill="#e060b0"/>
+  <ellipse cx="62" cy="101" rx="4" ry="2.5" fill="#e060b0"/>
+
+  ${hatSVG}
+  </svg>`;
+}
+
+function makeMimiTiny(){
+  // Simplified SVG optimized for small size — flat colors, no gradients
+  const hat = equippedHat;
+  const outfit = equippedOutfit;
+
+  let hatSVG = '';
+  if(hat==='hat_coroa') hatSVG=`<g transform="translate(54,0)"><rect x="0" y="9" width="24" height="7" rx="2" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/><polygon points="0,9 4,1 8,9" fill="#ffd700" stroke="#c8a000" stroke-width=".6"/><polygon points="8,9 12,0 16,9" fill="#ffd700" stroke="#c8a000" stroke-width=".6"/><polygon points="16,9 20,1 24,9" fill="#ffd700" stroke="#c8a000" stroke-width=".6"/><circle cx="4" cy="13" r="2" fill="#ff3366"/><circle cx="12" cy="13" r="2" fill="#3366ff"/><circle cx="20" cy="13" r="2" fill="#33cc66"/></g>`;
+  else if(hat==='hat_cartola') hatSVG=`<g transform="translate(54,-2)"><ellipse cx="13" cy="15" rx="16" ry="4" fill="#222"/><rect x="4" y="2" width="18" height="14" rx="2" fill="#333"/><rect x="4" y="12" width="18" height="3" rx="1" fill="#e040a0"/></g>`;
+  else if(hat==='hat_flor') hatSVG=`<g transform="translate(50,4)"><path d="M2,12 Q14,5 28,12" stroke="#40b020" stroke-width="2" fill="none"/><circle cx="2" cy="12" r="4" fill="#ff5888"/><circle cx="2" cy="12" r="1.5" fill="#ffe000"/><circle cx="10" cy="7" r="4" fill="#ff80c0"/><circle cx="10" cy="7" r="1.5" fill="#ffe000"/><circle cx="18" cy="5" r="4" fill="#ff4488"/><circle cx="18" cy="5" r="1.5" fill="#ffe000"/><circle cx="26" cy="7" r="4" fill="#ff70b0"/><circle cx="26" cy="7" r="1.5" fill="#ffe000"/></g>`;
+  else if(hat==='hat_laco') hatSVG=`<g transform="translate(56,6)"><ellipse cx="6" cy="6" rx="7" ry="5" fill="#ff40a0" stroke="#cc1070" stroke-width="1" transform="rotate(-20,6,6)"/><ellipse cx="20" cy="6" rx="7" ry="5" fill="#ff40a0" stroke="#cc1070" stroke-width="1" transform="rotate(20,20,6)"/><ellipse cx="13" cy="7" rx="4" ry="4" fill="#ff70c0" stroke="#cc1070" stroke-width=".8"/></g>`;
+
+  let outfitSVG = '';
+  if(outfit==='out_capa') outfitSVG=`<path d="M10,42 Q0,52 2,64 Q18,59 34,64 Q36,52 34,42Z" fill="#e82020" stroke="#900" stroke-width="1" opacity=".9"/>`;
+  else if(outfit==='out_arcoirs') outfitSVG=`<g opacity=".85"><ellipse cx="16" cy="46" rx="13" ry="4" fill="#ff4040"/><ellipse cx="16" cy="50" rx="13" ry="4" fill="#ff9900"/><ellipse cx="30" cy="44" rx="12" ry="4" fill="#40cc40"/><ellipse cx="30" cy="48" rx="12" ry="4" fill="#4488ff"/><ellipse cx="44" cy="42" rx="12" ry="4" fill="#ff4040"/><ellipse cx="44" cy="46" rx="12" ry="4" fill="#ff9900"/></g>`;
+  else if(outfit==='out_estrela') outfitSVG=`<g><ellipse cx="16" cy="46" rx="13" ry="11" fill="#ffd700" opacity=".3" stroke="#c8a000" stroke-width="1"/><ellipse cx="30" cy="43" rx="12" ry="10" fill="#ffd700" opacity=".3" stroke="#c8a000" stroke-width="1"/><ellipse cx="44" cy="41" rx="12" ry="10" fill="#ffd700" opacity=".3" stroke="#c8a000" stroke-width="1"/><polygon points="16,41 17,46 22,46 18,49 20,54 16,51 12,54 14,49 10,46 15,46" fill="#ffd700"/><polygon points="30,38 31,43 36,43 32,46 34,51 30,48 26,51 28,46 24,43 29,43" fill="#ffd700"/></g>`;
+  else if(outfit==='out_coracao') outfitSVG=`<g><ellipse cx="16" cy="46" rx="13" ry="11" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1"/><ellipse cx="30" cy="43" rx="12" ry="10" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1"/><path d="M16,41 C16,39 13,38 13,41 C13,44 16,46 16,46 C16,46 19,44 19,41 C19,38 16,39 16,41Z" fill="#ff2080"/><path d="M30,38 C30,36 27,35 27,38 C27,41 30,43 30,43 C30,43 33,41 33,38 C33,35 30,36 30,38Z" fill="#ff2080"/></g>`;
+
+  return `<svg width="54" height="46" viewBox="0 0 88 72" xmlns="http://www.w3.org/2000/svg">
+  ${outfitSVG}
+  <!-- segments - flat pink, clearly visible -->
+  <ellipse cx="16" cy="48" rx="14" ry="12" fill="#f070c0" stroke="#c040a0" stroke-width="1.5"/>
+  <ellipse cx="16" cy="48" rx="8" ry="6" fill="rgba(255,255,255,.22)"/>
+  <ellipse cx="30" cy="45" rx="13" ry="11" fill="#f070c0" stroke="#c040a0" stroke-width="1.5"/>
+  <ellipse cx="30" cy="45" rx="7" ry="5.5" fill="rgba(255,255,255,.22)"/>
+  <ellipse cx="44" cy="42" rx="13" ry="11" fill="#f070c0" stroke="#c040a0" stroke-width="1.5"/>
+  <ellipse cx="44" cy="42" rx="7" ry="5.5" fill="rgba(255,255,255,.22)"/>
+  <!-- head -->
+  <ellipse cx="68" cy="38" rx="17" ry="17" fill="#f878cc" stroke="#c040a0" stroke-width="1.8"/>
+  <ellipse cx="62" cy="30" rx="6" ry="4" fill="rgba(255,255,255,.3)" transform="rotate(-20,62,30)"/>
+  <!-- eyes white -->
+  <ellipse cx="63" cy="35" rx="6" ry="7" fill="white" stroke="#ccc" stroke-width=".5"/>
+  <ellipse cx="74" cy="35" rx="6" ry="7" fill="white" stroke="#ccc" stroke-width=".5"/>
+  <!-- pupils -->
+  <ellipse cx="64" cy="36" rx="4" ry="5" fill="#1a1a3a"/>
+  <ellipse cx="75" cy="36" rx="4" ry="5" fill="#1a1a3a"/>
+  <ellipse cx="64" cy="35" rx="3" ry="3.5" fill="#4444cc"/>
+  <ellipse cx="75" cy="35" rx="3" ry="3.5" fill="#4444cc"/>
+  <circle cx="65.5" cy="33.5" r="1.8" fill="white"/>
+  <circle cx="76.5" cy="33.5" r="1.8" fill="white"/>
+  <!-- smile -->
+  <path d="M61 42 Q68 49 76 42" stroke="#c040a0" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- cheeks -->
+  <ellipse cx="58" cy="41" rx="5" ry="3.5" fill="#ffaacc" opacity=".7"/>
+  <ellipse cx="78" cy="41" rx="5" ry="3.5" fill="#ffaacc" opacity=".7"/>
+  <!-- antennae -->
+  <line x1="63" y1="23" x2="58" y2="13" stroke="#c040a0" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="73" y1="22" x2="79" y2="12" stroke="#c040a0" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="58" cy="12" r="3.5" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
+  <circle cx="79" cy="11" r="3.5" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
+  <!-- legs -->
+  <line x1="8"  y1="58" x2="5"  y2="66" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
+  <line x1="20" y1="59" x2="20" y2="67" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
+  <line x1="28" y1="55" x2="25" y2="63" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
+  <line x1="40" y1="52" x2="40" y2="60" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
+  ${hatSVG}
+  </svg>`;
+}
+
+// ═══════════════════════════════════
+//  ITEMS
+// ═══════════════════════════════════
+const ITEMS=[
+  {id:'hat_coroa',  type:'hat',    emoji:'👑', label:'Coroa Real'},
+  {id:'hat_cartola',type:'hat',    emoji:'🎩', label:'Cartola'},
+  {id:'hat_flor',   type:'hat',    emoji:'🌸', label:'Grinalda'},
+  {id:'hat_laco',   type:'hat',    emoji:'🎀', label:'Laço Fofo'},
+  {id:'out_capa',   type:'outfit', emoji:'🦸', label:'Capa Herói'},
+  {id:'out_arcoirs',type:'outfit', emoji:'🌈', label:'Arco-íris'},
+  {id:'out_estrela',type:'outfit', emoji:'🌟', label:'Estrela'},
+  {id:'out_coracao',type:'outfit', emoji:'🩷', label:'Corações'},
+];
+const PHASE_PICKUPS=['hat_coroa','hat_cartola','hat_flor','hat_laco','out_capa','out_arcoirs','out_estrela','out_coracao',null,null];
+
+// ═══════════════════════════════════
+//  WALL COLORS (Figma palette)
+// ═══════════════════════════════════
+const WCOLS=[
+  ['#5ecfca','#68cc58','#5ecfca','#68cc58','#5ecfca','#68cc58','#5ecfca','#68cc58','#5ecfca','#68cc58','#5ecfca'],
+  ['#5ecfca','#f080a8','#a060d8','#f0c040','#5ecfca','#f080a8','#a060d8','#f0c040','#5ecfca','#f080a8','#5ecfca'],
+  ['#68cc58','#5ecfca','#f080a8','#a060d8','#5ecfca','#68cc58','#5ecfca','#f0c040','#68cc58','#5ecfca','#68cc58'],
+  ['#a060d8','#f0c040','#5ecfca','#68cc58','#f080a8','#5ecfca','#a060d8','#5ecfca','#f0c040','#68cc58','#5ecfca'],
+];
+function wc(r,c){return WCOLS[r%WCOLS.length][c%WCOLS[0].length];}
+
+// ═══════════════════════════════════
+//  LEVELS  0=path 1=wall 2=start 3=goal 4=pickup 5=mud 6=rock
+// ═══════════════════════════════════
+const LEVELS=[
+  // F1: curva em L — intro
+  {rows:5,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,0,0,1,1,1,1,1,1],
+    [1,1,1,1,0,1,1,1,1,1,1],
+    [1,1,1,1,0,0,0,4,0,3,1],
+    [1,1,1,1,1,1,1,1,1,1,1],
+  ]},
+  // F2: forma de S
+  {rows:6,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,0,0,0,1,1,1,1,1],
+    [1,1,1,1,1,0,1,1,1,1,1],
+    [1,1,1,1,1,0,0,4,0,1,1],
+    [1,1,1,1,1,1,1,1,0,1,1],
+    [1,1,1,1,1,1,1,1,0,3,1],
+  ]},
+  // F3: bifurcação — rota direta ou desvio com lama+pickup
+  {rows:6,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,0,1,1,1,1,1,1,1],
+    [1,1,1,0,0,0,0,0,1,1,1],
+    [1,1,1,0,1,1,1,0,0,3,1],
+    [1,1,1,0,5,0,0,0,1,1,1],
+    [1,1,1,1,1,1,4,1,1,1,1],
+  ]},
+  // F4: espiral — desce, vira, sobe
+  {rows:6,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,0,0,0,0,0,1,1,1],
+    [1,1,1,1,1,1,1,0,1,1,1],
+    [1,1,1,0,0,0,0,0,1,1,1],
+    [1,1,1,0,1,4,5,1,1,1,1],
+    [1,1,1,0,0,0,0,0,0,3,1],
+  ]},
+  // F5: dois caminhos paralelos, pedra no inferior
+  {rows:6,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,1,0,0,0,0,1,1,1],
+    [1,1,0,1,0,1,1,0,1,1,1],
+    [1,1,0,0,0,1,1,0,0,3,1],
+    [1,1,1,1,4,1,1,1,1,1,1],
+    [1,1,1,1,6,1,1,1,1,1,1],
+  ]},
+  // F6: loop com desvio longo — lama+pickup em rota alternativa
+  {rows:7,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,0,0,0,1,1,1,1,1],
+    [1,1,1,1,1,0,0,0,1,1,1],
+    [1,1,1,0,0,0,1,0,1,1,1],
+    [1,1,1,0,1,1,1,0,0,3,1],
+    [1,1,1,0,5,4,0,0,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1],
+  ]},
+  // F7: ziguezague com pickup+lama num desvio lateral
+  {rows:7,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,0,1,1,1,1,1,1,1],
+    [1,1,1,0,0,0,1,1,1,1,1],
+    [1,1,1,1,1,0,0,0,1,1,1],
+    [1,1,1,1,1,4,5,0,0,1,1],
+    [1,1,1,1,1,1,1,1,0,3,1],
+    [1,1,1,1,1,1,1,1,1,1,1],
+  ]},
+  // F8: escada com desvio — lama+pickup+pedra opcionais
+  {rows:7,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,0,0,1,1,1,1,1,1],
+    [1,1,1,1,0,0,0,1,1,1,1],
+    [1,1,1,1,1,1,0,0,0,1,1],
+    [1,1,1,0,5,0,0,1,0,3,1],
+    [1,1,1,0,4,0,6,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1],
+  ]},
+  // F9: labirinto em U invertido com armadilhas
+  {rows:7,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,1,1,1,0,0,0,1,1],
+    [1,1,0,1,1,1,0,1,0,1,1],
+    [1,1,0,0,0,0,0,1,0,1,1],
+    [1,1,1,1,1,5,1,1,0,3,1],
+    [1,1,1,0,4,0,0,0,1,1,1],
+    [1,1,1,0,6,1,1,1,1,1,1],
+  ]},
+  // F10: labirinto longo e tortuoso
+  {rows:7,cols:11,grid:[
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,2,0,1,1,1,1,1,1,1,1],
+    [1,1,0,0,0,1,1,1,1,1,1],
+    [1,1,1,1,0,0,0,1,1,1,1],
+    [1,1,1,1,1,5,0,0,1,1,1],
+    [1,1,1,0,4,0,6,0,0,3,1],
+    [1,1,1,0,6,1,1,1,1,1,1],
+  ]},
+];
+
+// ═══════════════════════════════════
+//  STATE
+// ═══════════════════════════════════
+let curPhase=0,playerR=0,playerC=0,startR=0,startC=0;
+let cmdQueue=[],executing=false;
+let phaseScores=new Array(10).fill(null);
+let timer=null,timerSecs=0;
+let hintOn=false,hintPath=[];
+let collectedPickup=false;
+let penMud=0,penRock=0,penHint=false,penWall=0,penQueue=0;
+let equippedHat=null,equippedOutfit=null;
+let unlockedItems=new Set();
+let trail=new Set();
+let replayLog=[];
+
+// ═══════════════════════════════════
+//  STARS
+// ═══════════════════════════════════
+(function(){
+  const pts=[[8,10],[20,88],[90,12],[82,82],[50,4],[4,52],[96,52],[50,94],[26,28],[76,28],[24,72],[76,72],[40,15],[62,85],[10,64],[90,36],[33,50],[68,18]];
+  pts.forEach(([t,l],i)=>{
+    const s=document.createElement('div');s.className='star';
+    const sz=14+Math.random()*12;
+    s.style.cssText=`top:${t}%;left:${l}%;width:${sz}px;height:${sz}px;--dur:${1.4+i*.09}s;--delay:${i*.12}s;--rot:${Math.random()*20-10}deg`;
+    document.body.appendChild(s);
+  });
+})();
+
+// Init start screen Mimi
+document.getElementById('mimi-start-wrap').innerHTML=makeMimi(120,null,null);
+
+// ═══════════════════════════════════
+//  SCREEN
+// ═══════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
+  const el=document.getElementById(id);el.style.display='flex';
+  requestAnimationFrame(()=>el.classList.add('active'));
+}
+function showPhases(){buildPhaseGrid();showScreen('screen-phases');}
+
+// ═══════════════════════════════════
+//  PHASE GRID
+// ═══════════════════════════════════
+function buildPhaseGrid(){
+  const g=document.getElementById('phases-grid');g.innerHTML='';
+  for(let i=0;i<10;i++){
+    const b=document.createElement('button');
+    b.className='phase-btn'+(phaseScores[i]!==null?' done':'');
+    const sc=phaseScores[i];
+    const st=sc===null?'···':sc>=80?'⭐⭐⭐':sc>=50?'⭐⭐':'⭐';
+    b.innerHTML=`<span class="ph-num">${i+1}</span><span class="ph-stars">${st}</span>`;
+    b.onclick=()=>startPhase(i);
+    g.appendChild(b);
+  }
+}
+
+// ═══════════════════════════════════
+//  START PHASE
+// ═══════════════════════════════════
+function startPhase(idx){
+  curPhase=idx;cmdQueue=[];executing=false;
+  hintOn=false;hintPath=[];collectedPickup=false;
+  penMud=0;penRock=0;penHint=false;penWall=0;penQueue=0;
+  trail=new Set();replayLog=[];
+  document.getElementById('btn-replay').style.display='none';
+  document.getElementById('hint-label').textContent='COMO SAIR!';
+  const lvl=LEVELS[idx];
+  for(let r=0;r<lvl.rows;r++)for(let c=0;c<lvl.cols;c++)if(lvl.grid[r][c]===2){playerR=r;playerC=c;startR=r;startC=c;}
+  timerSecs=0;clearInterval(timer);
+  timer=setInterval(()=>{
+    timerSecs++;
+    const m=String(Math.floor(timerSecs/60)).padStart(2,'0'),s=String(timerSecs%60).padStart(2,'0');
+    document.getElementById('lbl-timer').textContent=`⏱ ${m}:${s}`;
+  },1000);
+  document.getElementById('lbl-phase').textContent=`Fase ${idx+1}`;
+  showScreen('screen-game');
+  setTimeout(()=>{ renderGrid(true); renderQueue(); },50);
+}
+// ═══════════════════════════════════
+//  SOUND ENGINE (Web Audio API)
+// ═══════════════════════════════════
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playTone(freq,type,dur,vol=0.18,delay=0){
+  try{
+    const ctx=getAudio();
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type=type;o.frequency.setValueAtTime(freq,ctx.currentTime+delay);
+    g.gain.setValueAtTime(vol,ctx.currentTime+delay);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+delay+dur);
+    o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+dur);
+  }catch(e){}
+}
+function sfxAdd()   { playTone(520,'sine',.08,.12); }
+function sfxExec()  { playTone(440,'sine',.06,.1); }
+function sfxStep()  { playTone(300,'sine',.05,.06); }
+function sfxMud()   { playTone(120,'sawtooth',.22,.1); }
+function sfxRock()  { [180,140,100].forEach((f,i)=>playTone(f,'square',.18,.15,i*.08)); }
+function sfxWall()  { playTone(200,'square',.1,.1); }
+function sfxPickup(){ [523,659,784].forEach((f,i)=>playTone(f,'sine',.18,.15,i*.07)); }
+function sfxWin()   { [523,659,784,1047].forEach((f,i)=>playTone(f,'sine',.3,.2,i*.1)); }
+function sfxHint()  { playTone(350,'sine',.15,.08); }
+
+// ═══════════════════════════════════
+//  GARDEN BACKGROUND — evolves with 3-star phases
+// ═══════════════════════════════════
+// Each entry = background CSS when N phases have 3 stars
+// Starts as the default teal/blue, gradually shifts to lush garden
+const GARDEN_STAGES = [
+  // 0 stars — default
+  `radial-gradient(ellipse at 15% 25%,rgba(62,207,170,.6) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 70%,rgba(90,181,232,.55) 0%,transparent 45%),
+   radial-gradient(ellipse at 50% 50%,rgba(77,201,126,.35) 0%,transparent 60%),
+   linear-gradient(150deg,#27b890 0%,#33c070 50%,#42aad4 100%)`,
+  // 1 — first hint of green
+  `radial-gradient(ellipse at 20% 30%,rgba(80,220,130,.65) 0%,transparent 50%),
+   radial-gradient(ellipse at 80% 65%,rgba(60,190,140,.5) 0%,transparent 50%),
+   linear-gradient(150deg,#22b87a 0%,#3dcc6a 55%,#38b8a0 100%)`,
+  // 2
+  `radial-gradient(ellipse at 25% 35%,rgba(90,210,100,.7) 0%,transparent 50%),
+   radial-gradient(ellipse at 75% 60%,rgba(50,200,110,.55) 0%,transparent 50%),
+   linear-gradient(150deg,#20a060 0%,#40cc58 55%,#28c890 100%)`,
+  // 3
+  `radial-gradient(ellipse at 20% 40%,rgba(100,220,80,.75) 0%,transparent 50%),
+   radial-gradient(ellipse at 80% 55%,rgba(60,180,80,.6) 0%,transparent 50%),
+   radial-gradient(ellipse at 50% 80%,rgba(255,200,50,.2) 0%,transparent 40%),
+   linear-gradient(150deg,#1c9050 0%,#3ec050 55%,#22c870 100%)`,
+  // 4 — flowers starting
+  `radial-gradient(ellipse at 15% 45%,rgba(255,150,180,.3) 0%,transparent 40%),
+   radial-gradient(ellipse at 85% 50%,rgba(100,220,80,.7) 0%,transparent 50%),
+   radial-gradient(ellipse at 50% 75%,rgba(255,215,0,.25) 0%,transparent 40%),
+   linear-gradient(150deg,#189048 0%,#3db845 55%,#18c060 100%)`,
+  // 5 — half garden
+  `radial-gradient(ellipse at 20% 30%,rgba(255,160,200,.35) 0%,transparent 45%),
+   radial-gradient(ellipse at 80% 40%,rgba(150,230,80,.65) 0%,transparent 50%),
+   radial-gradient(ellipse at 50% 70%,rgba(255,220,50,.3) 0%,transparent 40%),
+   linear-gradient(150deg,#158840 0%,#38b040 55%,#12b855 100%)`,
+  // 6 — vibrant
+  `radial-gradient(ellipse at 15% 25%,rgba(255,170,210,.4) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 35%,rgba(255,215,0,.3) 0%,transparent 40%),
+   radial-gradient(ellipse at 50% 65%,rgba(120,230,80,.65) 0%,transparent 55%),
+   linear-gradient(150deg,#128038 0%,#35a838 55%,#10b050 100%)`,
+  // 7 — blooming
+  `radial-gradient(ellipse at 10% 20%,rgba(255,180,220,.45) 0%,transparent 45%),
+   radial-gradient(ellipse at 90% 30%,rgba(255,220,60,.35) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 60%,rgba(80,210,100,.7) 0%,transparent 55%),
+   radial-gradient(ellipse at 30% 80%,rgba(255,140,180,.2) 0%,transparent 35%),
+   linear-gradient(150deg,#107030 0%,#30a030 55%,#0ea848 100%)`,
+  // 8 — lush
+  `radial-gradient(ellipse at 10% 15%,rgba(255,190,230,.5) 0%,transparent 45%),
+   radial-gradient(ellipse at 88% 25%,rgba(255,230,80,.4) 0%,transparent 42%),
+   radial-gradient(ellipse at 55% 55%,rgba(60,200,90,.72) 0%,transparent 55%),
+   radial-gradient(ellipse at 25% 85%,rgba(255,150,190,.25) 0%,transparent 35%),
+   linear-gradient(150deg,#0a6028 0%,#289828 55%,#0aa040 100%)`,
+  // 9 — paradise
+  `radial-gradient(ellipse at 8% 12%,rgba(255,200,240,.55) 0%,transparent 45%),
+   radial-gradient(ellipse at 92% 20%,rgba(255,235,100,.45) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 50%,rgba(50,195,80,.75) 0%,transparent 55%),
+   radial-gradient(ellipse at 20% 88%,rgba(255,160,200,.3) 0%,transparent 35%),
+   radial-gradient(ellipse at 80% 85%,rgba(100,240,150,.3) 0%,transparent 35%),
+   linear-gradient(150deg,#085020 0%,#259025 55%,#089838 100%)`,
+  // 10 — full secret garden (all perfect)
+  `radial-gradient(ellipse at 5% 10%,rgba(255,210,240,.6) 0%,transparent 45%),
+   radial-gradient(ellipse at 95% 15%,rgba(255,240,120,.5) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 45%,rgba(40,190,70,.78) 0%,transparent 55%),
+   radial-gradient(ellipse at 15% 90%,rgba(255,170,210,.35) 0%,transparent 35%),
+   radial-gradient(ellipse at 85% 88%,rgba(120,250,160,.35) 0%,transparent 35%),
+   radial-gradient(ellipse at 50% 95%,rgba(255,220,80,.3) 0%,transparent 30%),
+   linear-gradient(150deg,#064818 0%,#208820 55%,#069030 100%)`,
+];
+
+function updateGardenBg(){
+  const count3stars = phaseScores.filter(s=>s!==null && s>=80).length;
+  document.body.style.background = GARDEN_STAGES[Math.min(count3stars, 10)];
+}
+// Limits = max(direct, start→pickup→goal) + 4 buffer
+// F1=10, F2=12, F3=14, F4=16, F5=16, F6=17, F7=12, F8=19, F9=21, F10=14
+const MAX_QUEUE_PER_PHASE=[14,16,18,20,20,22,16,24,26,20];
+
+function stopGame(){clearInterval(timer);}
+
+// ═══════════════════════════════════
+//  RENDER GRID
+// ═══════════════════════════════════
+function renderGrid(animate=false){
+  const lvl=LEVELS[curPhase];
+  const g=document.getElementById('game-grid');
+  g.style.gridTemplateColumns=`repeat(${lvl.cols},50px)`;
+  g.innerHTML='';
+  for(let r=0;r<lvl.rows;r++){
+    for(let c=0;c<lvl.cols;c++){
+      const div=document.createElement('div');div.className='cell';
+      const v=lvl.grid[r][c];
+      const key=`${r},${c}`;
+      if(v===1){
+        div.classList.add('wall');div.style.background=wc(r,c);
+        if(animate){
+          div.style.opacity='0';div.style.transform='scale(0.6)';
+          div.style.transition=`opacity .25s ${(r*lvl.cols+c)*8}ms, transform .25s ${(r*lvl.cols+c)*8}ms`;
+          requestAnimationFrame(()=>requestAnimationFrame(()=>{div.style.opacity='1';div.style.transform='scale(1)';}));
+        }
+      } else {
+        if(hintOn&&hintPath.some(([hr,hc])=>hr===r&&hc===c))div.classList.add('hint-path');
+        else div.classList.add('path');
+        // trail glow — only on plain path cells
+        if(trail.has(key)&&!(r===playerR&&c===playerC)&&v===0){
+          div.style.boxShadow='inset 0 0 10px rgba(255,150,220,.35)';
+          div.style.background='linear-gradient(145deg,#2a3d6a,#2e4a7a)';
+        }
+        if(v===3)div.innerHTML='<span style="font-size:1.5rem;filter:drop-shadow(0 0 6px #ffd700)">⭐</span>';
+        if(v===5){
+          div.style.background='#5a3a18';
+          div.style.boxShadow='inset 0 2px 6px rgba(0,0,0,.4)';
+          div.innerHTML=`<span style="font-size:1.3rem;line-height:1">🟫</span>`;
+        }
+        if(v===6){
+          div.style.background='#3a3f4a';
+          div.style.boxShadow='inset 0 2px 6px rgba(0,0,0,.5)';
+          div.innerHTML=`<svg width="28" height="24" viewBox="0 0 28 24" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="14" cy="15" rx="12" ry="8" fill="#4a5060" stroke="#2a3040" stroke-width="1.2"/>
+            <ellipse cx="14" cy="13" rx="12" ry="8" fill="#6a7080" stroke="#3a4050" stroke-width="1.2"/>
+            <ellipse cx="11" cy="10" rx="4" ry="2.5" fill="rgba(255,255,255,.18)" transform="rotate(-15,11,10)"/>
+            <ellipse cx="19" cy="12" rx="2" ry="1.5" fill="rgba(255,255,255,.1)" transform="rotate(10,19,12)"/>
+          </svg>`;
+        }
+        if(v===4&&!collectedPickup){
+          const item=ITEMS.find(x=>x.id===PHASE_PICKUPS[curPhase]);
+          if(item)div.innerHTML=`<span style="font-size:1.3rem;filter:drop-shadow(0 0 5px rgba(255,215,0,.8))">${item.emoji}</span>`;
+        }
+      }
+      if(r===playerR&&c===playerC){
+        div.innerHTML=`<span style="display:inline-block;filter:drop-shadow(0 0 6px rgba(255,150,220,.9)) drop-shadow(0 2px 4px rgba(0,0,0,.5));animation:mimiStep .25s ease">${makeMimiTiny()}</span>`;
+      }
+      g.appendChild(div);
+    }
+  }
+}
+
+// ═══════════════════════════════════
+//  QUEUE
+// ═══════════════════════════════════
+const SYM={up:'▲',down:'▼',left:'◀',right:'▶'};
+function addCmd(d){
+  const maxQ=MAX_QUEUE_PER_PHASE[curPhase]||16;
+  if(executing||cmdQueue.length>=maxQ)return;
+  cmdQueue.push(d);
+  sfxAdd();
+  renderQueue();
+}
+function clearQueue(){
+  if(executing)return;
+  cmdQueue=[];playerR=startR;playerC=startC;collectedPickup=false;trail=new Set();
+  // reset per-attempt penalties (only count on completion)
+  penMud=0;penRock=0;penWall=0;penQueue=0;
+  renderGrid();renderQueue();
+}
+function renderQueue(activeIdx=-1){
+  const w=document.getElementById('queue-wrap');w.innerHTML='';
+  const maxQ=MAX_QUEUE_PER_PHASE[curPhase]||16;
+  if(!cmdQueue.length){
+    const sp=document.createElement('span');sp.className='q-empty';
+    sp.textContent=`Adicione até ${maxQ} comandos ↓`;w.appendChild(sp);return;
+  }
+  // counter
+  const ctr=document.createElement('span');
+  ctr.style.cssText='font-size:.78rem;color:rgba(255,255,255,.55);font-family:Nunito,sans-serif;font-weight:700;margin-right:4px;white-space:nowrap;align-self:center';
+  ctr.textContent=`${cmdQueue.length}/${maxQ}`;
+  w.appendChild(ctr);
+
+  cmdQueue.forEach((d,i)=>{
+    const el=document.createElement('div');
+    el.className='q-chip'+(i===activeIdx?' playing':i<activeIdx?' used':'');
+    el.textContent=SYM[d];
+    el.onclick=()=>{if(!executing){cmdQueue.splice(i,1);renderQueue();}};
+    w.appendChild(el);
+  });
+}
+
+// ═══════════════════════════════════
+//  EXECUTE
+// ═══════════════════════════════════
+async function executeQueue(){
+  if(executing||!cmdQueue.length)return;
+  executing=true;
+  sfxExec();
+  playerR=startR;playerC=startC;collectedPickup=false;
+  trail=new Set();trail.add(`${playerR},${playerC}`);
+  penMud=0;penRock=0;penWall=0;penQueue=0; // reset per-execution
+  replayLog=[];
+  renderGrid();await sleep(280);
+
+  for(let i=0;i<cmdQueue.length;i++){
+    renderQueue(i);
+    const prevR=playerR,prevC=playerC;
+    const ok=applyMove(cmdQueue[i]);
+    trail.add(`${playerR},${playerC}`);
+    replayLog.push({r:playerR,c:playerC,dir:cmdQueue[i],ok});
+    renderGrid();
+    sfxStep();
+    const v=LEVELS[curPhase].grid[playerR][playerC];
+
+    // Rock = game over
+    if(v===6){
+      penRock+=25;
+      await sleep(180);sfxRock();showToast('toast-rock');await sleep(950);hideToast('toast-rock');
+      executing=false;
+      playerR=startR;playerC=startC;collectedPickup=false;trail=new Set();
+      cmdQueue=[];renderGrid();renderQueue();return;
+    }
+
+    // Mud = slow
+    const delay=v===5?860:320;
+    if(v===5){penMud+=10;sfxMud();showToast('toast-mud');setTimeout(()=>hideToast('toast-mud'),700);}
+    await sleep(delay);
+
+    // Pickup
+    if(v===4&&!collectedPickup){
+      collectedPickup=true;
+      const itemId=PHASE_PICKUPS[curPhase];
+      if(itemId){unlockedItems.add(itemId);sfxPickup();showPickupToast(itemId);}
+      await sleep(480);
+    }
+
+    // Goal
+    if(v===3){renderQueue(i+1);await sleep(200);phaseComplete(i+1);return;}
+
+    // Wall
+    if(!ok){penWall+=5;sfxWall();flashError();await sleep(500);break;}
+  }
+
+  // Queue ended without goal
+  penQueue+=5;executing=false;renderQueue();
+}
+
+function applyMove(d){
+  const lvl=LEVELS[curPhase];let nr=playerR,nc=playerC;
+  if(d==='up')nr--;if(d==='down')nr++;if(d==='left')nc--;if(d==='right')nc++;
+  if(nr<0||nr>=lvl.rows||nc<0||nc>=lvl.cols)return false;
+  if(lvl.grid[nr][nc]===1)return false;
+  playerR=nr;playerC=nc;return true;
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function flashError(){
+  const g=document.getElementById('game-grid');
+  g.classList.add('flash-error');setTimeout(()=>g.classList.remove('flash-error'),420);
+}
+
+// ═══════════════════════════════════
+//  REPLAY
+// ═══════════════════════════════════
+async function replayPath(){
+  if(!replayLog.length)return;
+  const btn=document.getElementById('btn-replay');
+  btn.disabled=true;btn.textContent='▶ Reproduzindo...';
+  playerR=startR;playerC=startC;trail=new Set();trail.add(`${playerR},${playerC}`);
+  renderGrid();await sleep(300);
+  for(const step of replayLog){
+    playerR=step.r;playerC=step.c;
+    trail.add(`${playerR},${playerC}`);
+    renderGrid();sfxStep();
+    await sleep(350);
+  }
+  btn.disabled=false;btn.textContent='🔁 Rever Caminho';
+}
+
+// ═══════════════════════════════════
+//  TOASTS
+// ═══════════════════════════════════
+function showToast(id){document.getElementById(id).classList.add('show');}
+function hideToast(id){document.getElementById(id).classList.remove('show');}
+function showPickupToast(itemId){
+  const item=ITEMS.find(x=>x.id===itemId);if(!item)return;
+  document.getElementById('pickup-icon').textContent=item.emoji;
+  document.getElementById('pickup-msg').textContent=`${item.label} desbloqueada!`;
+  showToast('toast-pickup');setTimeout(()=>hideToast('toast-pickup'),1400);
+}
+
+// ═══════════════════════════════════
+//  HINT
+// ═══════════════════════════════════
+function toggleHint(){
+  hintOn=!hintOn;
+  if(hintOn){hintPath=bfspath();penHint=true;sfxHint();document.getElementById('hint-label').textContent='ESCONDER DICA';}
+  else{hintPath=[];document.getElementById('hint-label').textContent='COMO SAIR!';}
+  renderGrid();
+}
+function bfspath(){
+  const lvl=LEVELS[curPhase];
+  const vis=Array.from({length:lvl.rows},()=>new Array(lvl.cols).fill(false));
+  const prev=Array.from({length:lvl.rows},()=>new Array(lvl.cols).fill(null));
+  const q=[[playerR,playerC]];vis[playerR][playerC]=true;
+  let er=-1,ec=-1;
+  outer:while(q.length){
+    const[r,c]=q.shift();
+    for(const[dr,dc]of[[-1,0],[1,0],[0,-1],[0,1]]){
+      const nr=r+dr,nc=c+dc;
+      if(nr<0||nr>=lvl.rows||nc<0||nc>=lvl.cols||vis[nr][nc]||lvl.grid[nr][nc]===1||lvl.grid[nr][nc]===6)continue;
+      vis[nr][nc]=true;prev[nr][nc]=[r,c];
+      if(lvl.grid[nr][nc]===3){er=nr;ec=nc;break outer;}
+      q.push([nr,nc]);
+    }
+  }
+  if(er<0)return[];
+  const path=[];let cr=er,cc=ec;
+  while(!(cr===playerR&&cc===playerC)){path.unshift([cr,cc]);[cr,cc]=prev[cr][cc];}
+  return path;
+}
+function bfsStart(){
+  const lvl=LEVELS[curPhase];
+  const vis=Array.from({length:lvl.rows},()=>new Array(lvl.cols).fill(false));
+  const q=[[startR,startC,0]];vis[startR][startC]=true;
+  while(q.length){
+    const[r,c,d]=q.shift();if(lvl.grid[r][c]===3)return d;
+    for(const[dr,dc]of[[-1,0],[1,0],[0,-1],[0,1]]){
+      const nr=r+dr,nc=c+dc;
+      if(nr<0||nr>=lvl.rows||nc<0||nc>=lvl.cols||vis[nr][nc]||lvl.grid[nr][nc]===1)continue;
+      vis[nr][nc]=true;q.push([nr,nc,d+1]);
+    }
+  }
+  return 1;
+}
+
+// ═══════════════════════════════════
+//  PHASE COMPLETE
+// ═══════════════════════════════════
+function phaseComplete(steps){
+  stopGame();executing=false;sfxWin();
+  const sp=bfsStart();
+  const extra=Math.max(0,steps-sp);
+  const tPen=Math.floor(timerSecs/12);
+  const hPen=penHint?50:0;
+  const score=Math.max(0,Math.min(100,100-extra*7-tPen-penMud-penRock-penWall-penQueue-hPen));
+  phaseScores[curPhase]=score;
+  updateGardenBg();
+
+  const stars=score>=80?'⭐⭐⭐':score>=50?'⭐⭐':'⭐';
+  document.getElementById('congrats-stars').textContent=stars;
+  document.getElementById('congrats-sub').textContent=curPhase<9?`Você passou a fase ${curPhase+1}!`:'Todas as fases completas!';
+
+  // Score breakdown + algorithm feedback
+  let bd='';
+  if(extra>0)    bd+=`<span style="color:#ffb0b0">−${extra*7} movimentos extras</span><br>`;
+  if(penMud>0)   bd+=`<span style="color:#c8a060">−${penMud} lama</span><br>`;
+  if(penRock>0)  bd+=`<span style="color:#ff6060">−${penRock} pedra</span><br>`;
+  if(penWall>0)  bd+=`<span style="color:#ff9040">−${penWall} parede</span><br>`;
+  if(penQueue>0) bd+=`<span style="color:#ffdd60">−${penQueue} fila incompleta</span><br>`;
+  if(hPen>0)     bd+=`<span style="color:#ff90ff">−${hPen} dica usada</span><br>`;
+  if(tPen>0)     bd+=`<span style="color:#a0d0ff">−${tPen} tempo</span><br>`;
+
+  // Algorithm efficiency feedback
+  const algoMsg = steps<=sp
+    ? `<span style="color:#80ff80;font-size:.82rem">🧠 Algoritmo ótimo! Você usou ${steps} passos (mínimo: ${sp})</span>`
+    : `<span style="color:#ffd0a0;font-size:.82rem">🧠 Você usou ${steps} passos. O caminho mínimo era ${sp}.</span>`;
+
+  document.getElementById('score-breakdown').innerHTML=
+    `<span style="font-size:1.6rem;color:#ffd700;display:block;margin-bottom:4px">${score} pts</span>`+
+    (bd||'<span style="color:#80ff80">Perfeito! Sem penalidades!</span><br>')+
+    algoMsg;
+
+  buildDressup();confetti();
+  const btn=document.getElementById('btn-next');
+  btn.textContent=curPhase>=9?'🏆 Resultado Final':'▶ PRÓXIMA FASE';
+  btn.onclick=curPhase>=9?showFinal:nextPhase;
+
+  // Store replay for congrats screen
+  document.getElementById('btn-replay').style.display='inline-flex';
+  showScreen('screen-congrats');
+}
+function nextPhase(){if(curPhase<9)startPhase(curPhase+1);else showFinal();}
+
+// ═══════════════════════════════════
+//  DRESS-UP
+// ═══════════════════════════════════
+let activeCat='hat';
+
+function switchCat(cat, btn){
+  activeCat=cat;
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderItemsGrid();
+}
+
+// Rarity colors per item
+const RARITY={
+  hat_coroa:  '#ffd700', // gold — legendary
+  hat_cartola:'#a855f7', // purple — epic
+  hat_flor:   '#3b82f6', // blue — rare
+  hat_laco:   '#22c55e', // green — common
+  out_capa:   '#ffd700', // gold
+  out_arcoirs:'#a855f7', // purple
+  out_estrela:'#3b82f6', // blue
+  out_coracao:'#22c55e', // green
+};
+
+function buildDressup(){
+  activeCat='hat';
+  document.querySelectorAll('.cat-tab').forEach((t,i)=>{t.classList.toggle('active',i===0);});
+  updateMimiPreview();
+  renderItemsGrid();
+}
+
+function updateMimiPreview(){
+  const stage=document.getElementById('mimi-stage');
+  if(stage) stage.innerHTML=makeMimi(118,equippedHat,equippedOutfit);
+
+  // equipped label
+  const lbl=document.getElementById('equipped-label');
+  if(lbl){
+    const h=ITEMS.find(x=>x.id===equippedHat);
+    const o=ITEMS.find(x=>x.id===equippedOutfit);
+    const parts=[];
+    if(h) parts.push(h.emoji+' '+h.label);
+    if(o) parts.push(o.emoji+' '+o.label);
+    lbl.textContent=parts.length?parts.join(' · '):'Sem acessórios';
+  }
+}
+
+function renderItemsGrid(){
+  const grid=document.getElementById('items-grid');
+  if(!grid)return;
+  grid.innerHTML='';
+  const filtered=ITEMS.filter(x=>x.type===activeCat);
+
+  filtered.forEach(item=>{
+    const unlocked=unlockedItems.has(item.id);
+    const isEq=(item.type==='hat'?equippedHat:equippedOutfit)===item.id;
+    const isNew=unlocked&&!seenItems.has(item.id);
+
+    const slot=document.createElement('button');
+    slot.className='item-slot'+(unlocked?'':' locked')+(isEq?' selected':'');
+    slot.style.setProperty('--rarity', RARITY[item.id]||'rgba(255,255,255,.3)');
+
+    if(unlocked){
+      slot.innerHTML=`
+        <span class="item-emoji">${item.emoji}</span>
+        <span class="item-name">${item.label}</span>
+        ${isNew?`<span class="item-new-badge">NOVO!</span>`:''}
+      `;
+      slot.onclick=()=>{
+        seenItems.add(item.id);
+        if(item.type==='hat') equippedHat=equippedHat===item.id?null:item.id;
+        else equippedOutfit=equippedOutfit===item.id?null:item.id;
+        updateMimiPreview();
+        renderItemsGrid();
+      };
+    } else {
+      slot.innerHTML=`<span class="item-lock">🔒</span><span class="item-name" style="opacity:.5">${item.label}</span>`;
+    }
+    grid.appendChild(slot);
+  });
+}
+
+// Track seen (new badge)
+const seenItems=new Set();
+
+// ═══════════════════════════════════
+//  FINAL
+// ═══════════════════════════════════
+function showFinal(){
+  const played=phaseScores.filter(s=>s!==null);
+  const avg=played.length?Math.round(played.reduce((a,b)=>a+b,0)/played.length):0;
+
+  // Check if ALL 10 phases completed with 3 stars (>=80 pts)
+  const perfect = phaseScores.every(s=>s!==null && s>=80);
+
+  if(perfect){
+    // 🌟 JARDIM SECRETO
+    document.getElementById('garden-score-num').textContent=avg;
+    document.getElementById('garden-mimi-small').innerHTML=makeMimi(64,equippedHat,equippedOutfit);
+    // spawn garden floating flowers
+    spawnGardenParticles();
+    confetti();
+    // extra big confetti burst after delay
+    setTimeout(()=>{ confetti(); confetti(); }, 600);
+    showScreen('screen-garden');
+  } else {
+    // tela final normal
+    document.getElementById('final-num').textContent=avg;
+    document.getElementById('final-stars').textContent=avg>=80?'⭐⭐⭐':avg>=50?'⭐⭐':'⭐';
+    document.getElementById('mimi-final-wrap').innerHTML=makeMimi(130,equippedHat,equippedOutfit);
+    confetti();
+    showScreen('screen-final');
+  }
+}
+
+function spawnGardenParticles(){
+  const flowers=['🌸','🌺','🌼','🌻','🌷','🍀','🦋','⭐','✨'];
+  for(let i=0;i<28;i++){
+    const el=document.createElement('div');
+    el.style.cssText=`
+      position:fixed;pointer-events:none;z-index:999;
+      font-size:${1.2+Math.random()*1.4}rem;
+      left:${Math.random()*100}vw;
+      top:-40px;
+      animation:gardenFall ${2.5+Math.random()*2}s ${Math.random()*.8}s ease-in both;
+    `;
+    el.textContent=flowers[Math.floor(Math.random()*flowers.length)];
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 5000);
+  }
+}
+
+// ═══════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════
+function confetti(){
+  const cols=['#ffd700','#ff6bcd','#48e090','#5ecfca','#b070d8','#ff8c42','#6ab0e0','#ff4488'];
+  for(let i=0;i<80;i++){
+    const el=document.createElement('div');el.className='confetti';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${cols[i%cols.length]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'3px'};--d:${1.1+Math.random()*.9}s;--dl:${Math.random()*.7}s`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),2600);
+  }
+}
+</script>
+</body>
+</html>
