@@ -701,6 +701,20 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 #mimi-token.sad .mimi-inner{animation:shakeRed .4s ease}
 #mimi-token.happy .mimi-inner{animation:bounce .3s 4 alternate ease-in-out}
 
+/* ══ CENÁRIO DA FASE ══ */
+#scenery{position:fixed;left:0;right:0;bottom:0;height:min(32vh,260px);z-index:1;pointer-events:none;opacity:0;transition:opacity .6s}
+#scenery.show{opacity:.92}
+#scenery svg{width:100%;height:100%;display:block}
+/* ══ MIMI COM HUMOR ══ */
+.congrats-mimi{display:flex;justify-content:center;margin-bottom:-4px;animation:bounce .8s infinite alternate ease-in-out}
+.congrats-mimi:empty{display:none}
+.toast-mimi{display:inline-flex;margin-right:4px}
+.lbl-scene{font-size:.8em;opacity:.8}
+.lbl-scene:not(:empty)::before{content:'· '}
+.q-msg{min-height:2.5em;line-height:1.25;display:flex;align-items:center;justify-content:center}
+@media (max-width:520px){.lbl-scene{display:none}}
+#error-icon{align-items:flex-end;gap:2px}
+
 /* ══ AVISOS: embaixo, para não cobrir o labirinto ══ */
 .toast{top:auto;bottom:18px;transform:translate(-50%,0) scale(0);padding:16px 28px;max-width:calc(100vw - 24px)}
 .toast.show{transform:translate(-50%,0) scale(1)}
@@ -720,6 +734,9 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 <body>
 
 <button id="btn-sound" class="btn-sound" onclick="toggleSound()" aria-label="Ligar ou desligar o som"></button>
+
+<!-- cenário da fase (desenhado em SVG por setScenery) -->
+<div id="scenery" aria-hidden="true"></div>
 
 <!-- ══ SCREEN: START ══ -->
 <div id="screen-start" class="screen active">
@@ -838,7 +855,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 <!-- ══ SCREEN: GAME ══ -->
 <div id="screen-game" class="screen">
   <div class="topbar glass">
-    <span class="lbl-phase" id="lbl-phase">Fase 1</span>
+    <span class="lbl-phase"><span id="lbl-phase">Fase 1</span> <span class="lbl-scene" id="lbl-scene"></span></span>
     <span class="lbl-timer" id="lbl-timer"><span data-ico="clock" data-size="20"></span> <span id="timer-text">00:00</span></span>
     <button class="btn-ghost" style="padding:5px 14px;font-size:.85rem" onclick="stopGame();showPhases()"><span data-ico="back" data-size="16"></span> Fases</button>
   </div>
@@ -883,6 +900,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 <!-- ══ SCREEN: CONGRATS ══ -->
 <div id="screen-congrats" class="screen">
   <div class="congrats-card glass">
+    <div class="congrats-mimi" id="congrats-mimi"></div>
     <div class="congrats-title" id="congrats-title">Parabéns!</div>
     <div class="congrats-sub" id="congrats-sub">Você passou de fase!</div>
     <div class="congrats-stars" id="congrats-stars"></div>
@@ -1117,7 +1135,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 // ═══════════════════════════════════
 //  KAWAII MIMI SVG
 // ═══════════════════════════════════
-function makeMimi(w=100, hat=null, outfit=null){
+function makeMimi(w=100, hat=null, outfit=null, mood='normal'){
   const vw=180, vh=120;
   const h=Math.round(vh*(w/vw));
   const uid=Math.random().toString(36).slice(2,8);
@@ -1222,31 +1240,40 @@ function makeMimi(w=100, hat=null, outfit=null){
     </g>`;
   }
 
-  return `<svg width="${w}" height="${h}" viewBox="0 0 ${vw} ${vh}" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <radialGradient id="mg1_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffb0e0"/><stop offset="100%" stop-color="#e060b8"/></radialGradient>
-    <radialGradient id="mg2_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffc8ec"/><stop offset="100%" stop-color="#e878c8"/></radialGradient>
-    <radialGradient id="eg1_${uid}" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ddeeff"/></radialGradient>
-  </defs>
-
-  ${outfitBehindSVG}
-
-  <!-- BODY SEGMENTS -->
-  <ellipse cx="28" cy="76" rx="24" ry="20" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
-  <ellipse cx="28" cy="72" rx="16" ry="9" fill="rgba(255,255,255,.2)"/>
-
-  <ellipse cx="54" cy="72" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
-  <ellipse cx="54" cy="68" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
-
-  <ellipse cx="78" cy="69" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
-  <ellipse cx="78" cy="65" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
-
-  ${outfitTopSVG}
-
-  <!-- HEAD -->
-  <ellipse cx="118" cy="64" rx="26" ry="26" fill="url(#mg2_${uid})" stroke="#c050a0" stroke-width="2.5"/>
-  <ellipse cx="107" cy="52" rx="9" ry="6" fill="rgba(255,255,255,.35)" transform="rotate(-25,107,52)"/>
-
+  // ROSTO: muda com o humor da Mimi
+  let faceSVG;
+  if(mood==='happy'){
+    faceSVG=`
+  <!-- OLHOS FECHADOS DE ALEGRIA -->
+  <path d="M101 61 Q109 51 117 61" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M120 61 Q128 51 136 61" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- BOCA ABERTA SORRINDO -->
+  <path d="M108 72 Q118 72 128 72 Q127 85 118 86 Q109 85 108 72Z" fill="#8a1a5a" stroke="#c050a0" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M112 80 Q118 76 124 80 Q122 85 118 85 Q114 85 112 80Z" fill="#ff7aa8"/>
+  <!-- BRILHOS -->
+  <path d="M146 40 L148 46 L154 48 L148 50 L146 56 L144 50 L138 48 L144 46Z" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/>
+  <path d="M90 34 L91.4 38 L95.4 39.4 L91.4 40.8 L90 44.8 L88.6 40.8 L84.6 39.4 L88.6 38Z" fill="#fff3a0" stroke="#e0b800" stroke-width=".7"/>`;
+  } else if(mood==='sad'){
+    faceSVG=`
+  <!-- SOBRANCELHAS PREOCUPADAS -->
+  <path d="M101 48 Q107 44 114 49" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round" transform="rotate(12,107,47)"/>
+  <path d="M122 49 Q129 44 136 48" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round" transform="rotate(-12,129,47)"/>
+  <!-- OLHOS OLHANDO PARA BAIXO -->
+  <ellipse cx="109" cy="61" rx="8.5" ry="9" fill="url(#eg1_${uid})" stroke="#333" stroke-width="1.2"/>
+  <ellipse cx="109" cy="64" rx="5.5" ry="6" fill="#1a1a3a"/>
+  <ellipse cx="109" cy="64" rx="4" ry="4.5" fill="#4444cc"/>
+  <circle  cx="110.5" cy="62" r="2" fill="white"/>
+  <ellipse cx="128" cy="61" rx="8.5" ry="9" fill="url(#eg1_${uid})" stroke="#333" stroke-width="1.2"/>
+  <ellipse cx="128" cy="64" rx="5.5" ry="6" fill="#1a1a3a"/>
+  <ellipse cx="128" cy="64" rx="4" ry="4.5" fill="#4444cc"/>
+  <circle  cx="129.5" cy="62" r="2" fill="white"/>
+  <!-- LÁGRIMA -->
+  <path d="M137 66 Q140 72 140 75 A3.2 3.2 0 0 1 133.6 75 Q133.6 72 137 66Z" fill="#7cc8ff" stroke="#3a90d0" stroke-width="1"/>
+  <ellipse cx="118" cy="70" rx="2.5" ry="1.8" fill="#d050a0" opacity=".6"/>
+  <!-- BOCA TRISTE -->
+  <path d="M111 81 Q118 74 125 81" stroke="#c050a0" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+  } else {
+    faceSVG=`
   <!-- LEFT EYE -->
   <ellipse cx="109" cy="60" rx="9" ry="10" fill="url(#eg1_${uid})" stroke="#333" stroke-width="1.2"/>
   <ellipse cx="110" cy="61" rx="6" ry="7" fill="#1a1a3a"/>
@@ -1272,6 +1299,36 @@ function makeMimi(w=100, hat=null, outfit=null){
 
   <!-- SMILE -->
   <path d="M110 75 Q118 84 127 75" stroke="#c050a0" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+
+`;
+  }
+
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${vw} ${vh}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="mg1_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffb0e0"/><stop offset="100%" stop-color="#e060b8"/></radialGradient>
+    <radialGradient id="mg2_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffc8ec"/><stop offset="100%" stop-color="#e878c8"/></radialGradient>
+    <radialGradient id="eg1_${uid}" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ddeeff"/></radialGradient>
+  </defs>
+
+  ${outfitBehindSVG}
+
+  <!-- BODY SEGMENTS -->
+  <ellipse cx="28" cy="76" rx="24" ry="20" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
+  <ellipse cx="28" cy="72" rx="16" ry="9" fill="rgba(255,255,255,.2)"/>
+
+  <ellipse cx="54" cy="72" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
+  <ellipse cx="54" cy="68" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
+
+  <ellipse cx="78" cy="69" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
+  <ellipse cx="78" cy="65" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
+
+  ${outfitTopSVG}
+
+  <!-- HEAD -->
+  <ellipse cx="118" cy="64" rx="26" ry="26" fill="url(#mg2_${uid})" stroke="#c050a0" stroke-width="2.5"/>
+  <ellipse cx="107" cy="52" rx="9" ry="6" fill="rgba(255,255,255,.35)" transform="rotate(-25,107,52)"/>
+
+  ${faceSVG}
 
   <!-- CHEEKS -->
   <ellipse cx="103" cy="73" rx="7" ry="5" fill="#ffaacc" opacity=".65"/>
@@ -1743,6 +1800,7 @@ document.getElementById('mimi-start-wrap').innerHTML=makeMimi(120,equippedHat,eq
 //  SCREEN
 // ═══════════════════════════════════
 function showScreen(id){
+  document.getElementById('scenery').classList.toggle('show',id==='screen-game');
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
   const el=document.getElementById(id);el.style.display='flex';
   requestAnimationFrame(()=>el.classList.add('active'));
@@ -1801,12 +1859,71 @@ function startPhase(idx){
   const lvl=LEVELS[idx];
   for(let r=0;r<lvl.rows;r++)for(let c=0;c<lvl.cols;c++)if(lvl.grid[r][c]===2){playerR=r;playerC=c;startR=r;startC=c;}
   document.getElementById('lbl-phase').textContent=idx===0?'Treino':`Fase ${idx}`;
+  document.getElementById('lbl-scene').textContent=idx===0?'':SCENES[idx].name;
+  setScenery(idx);
   const tm=document.getElementById('lbl-timer');
   if(idx===0){clearInterval(timer);tm.style.visibility='hidden';}
   else{tm.style.visibility='visible';startTimer();}
   showScreen('screen-game');
   renderGrid(true,true);renderQueue();
   if(idx===0)setTimeout(()=>speak('Treino! Toque nas setas para levar a Mimi até a estrela. Depois toque em executar.'),700);
+}
+
+
+// ═══════════════════════════════════
+//  CENÁRIOS — um por fase, desenhados em SVG (faixa no pé da tela do jogo)
+// ═══════════════════════════════════
+function flower(x,y,c,s=1){return `<g transform="translate(${x},${y}) scale(${s})"><rect x="-1.2" y="0" width="2.4" height="16" fill="#2f9a50"/><g fill="${c}"><circle cx="0" cy="-6" r="5"/><circle cx="6" cy="-1" r="5"/><circle cx="-6" cy="-1" r="5"/><circle cx="4" cy="5" r="5"/><circle cx="-4" cy="5" r="5"/></g><circle cx="0" cy="0" r="3.6" fill="#ffe14d"/></g>`;}
+function pine(x,y,s,c='#1f7a45'){return `<g transform="translate(${x},${y}) scale(${s})"><rect x="-5" y="0" width="10" height="22" fill="#6b3d1e"/><polygon points="0,-90 34,-30 -34,-30" fill="${c}"/><polygon points="0,-62 40,0 -40,0" fill="${c}"/><polygon points="0,-90 12,-68 -12,-68" fill="rgba(255,255,255,.18)"/></g>`;}
+function starPt(x,y,r,c='#fff6b0'){const p=[];for(let i=0;i<10;i++){const a=Math.PI/5*i-Math.PI/2,rr=i%2?r*.42:r;p.push(`${(x+Math.cos(a)*rr).toFixed(1)},${(y+Math.sin(a)*rr).toFixed(1)}`);}return `<polygon points="${p.join(' ')}" fill="${c}"/>`;}
+const SCENES=[
+  {name:'Jardim', svg:()=>`
+    <path d="M0 150 Q200 90 420 140 T840 130 T1200 120 V240 H0Z" fill="#7ad67a"/>
+    <path d="M0 190 Q300 140 600 185 T1200 175 V240 H0Z" fill="#4fbf62"/>
+    ${[60,180,330,470,610,760,900,1040,1150].map((x,i)=>flower(x,200+(i%3)*8,['#ff6fa8','#ffd23f','#b57aff','#ff8a5c','#5ec8ff'][i%5],1.1)).join('')}`},
+  {name:'Campo de flores', svg:()=>`
+    <circle cx="1080" cy="70" r="40" fill="#ffe66d" opacity=".9"/>
+    <path d="M0 140 Q250 80 520 135 T1000 120 T1200 130 V240 H0Z" fill="#9be38a"/>
+    <path d="M0 185 Q260 135 560 180 T1200 170 V240 H0Z" fill="#62c96c"/>
+    ${Array.from({length:22},(_,i)=>flower(30+i*54,190+(i*37%30),['#ff6fa8','#ffd23f','#ff8a5c','#ffffff','#c084fc'][i%5],.8+(i%3)*.15)).join('')}
+    <g fill="#ff80c0" opacity=".9"><ellipse cx="300" cy="105" rx="10" ry="6" transform="rotate(-25,300,105)"/><ellipse cx="312" cy="105" rx="10" ry="6" transform="rotate(25,312,105)"/></g>
+    <g fill="#ffd23f" opacity=".9"><ellipse cx="860" cy="85" rx="9" ry="5" transform="rotate(-25,860,85)"/><ellipse cx="871" cy="85" rx="9" ry="5" transform="rotate(25,871,85)"/></g>`},
+  {name:'Praia', svg:()=>`
+    <circle cx="140" cy="70" r="38" fill="#ffd96b"/>
+    <rect x="0" y="120" width="1200" height="70" fill="#3fb4e6"/>
+    <path d="M0 132 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#bfefff" stroke-width="4"/>
+    <path d="M0 165 q30 -8 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#8ddcf7" stroke-width="3"/>
+    <path d="M0 185 Q300 170 600 186 T1200 180 V240 H0Z" fill="#f6dc9a"/>
+    <g transform="translate(980,190)"><path d="M0 0 Q10 -60 -6 -120" stroke="#8a5a2b" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <g fill="#2fb55a"><path d="M-6 -120 Q-60 -130 -90 -95 Q-50 -112 -6 -112Z"/><path d="M-6 -120 Q50 -140 84 -100 Q40 -118 -6 -112Z"/><path d="M-6 -120 Q-30 -160 -70 -160 Q-30 -140 -8 -116Z"/><path d="M-6 -120 Q20 -165 60 -160 Q20 -140 -4 -116Z"/></g></g>
+    <g transform="translate(300,212)"><path d="M-14 0 A14 14 0 0 1 14 0Z" fill="#ff9a8a"/><path d="M-10 0 L0 -12 M0 0 V-14 M10 0 L0 -12" stroke="#d96a5a" stroke-width="1.5"/></g>
+    ${starPt(620,214,13,'#ff8a5c')}${starPt(1110,220,10,'#ffb35c')}`},
+  {name:'Floresta', svg:()=>`
+    <path d="M0 160 Q300 120 600 160 T1200 150 V240 H0Z" fill="#2f8f55"/>
+    ${[40,150,260,980,1090,1170].map((x,i)=>pine(x,175+(i%2)*10,.9+(i%3)*.15,'#1c6b3c')).join('')}
+    ${[100,210,1040,1130].map((x,i)=>pine(x,200,.75,'#279150')).join('')}
+    <path d="M0 205 Q400 180 800 205 T1200 200 V240 H0Z" fill="#3fa862"/>
+    <g transform="translate(420,214)"><rect x="-4" y="-10" width="8" height="12" rx="3" fill="#fff3e0"/><path d="M-16 -10 Q0 -32 16 -10Z" fill="#e8463a"/><circle cx="-6" cy="-17" r="2.5" fill="#fff"/><circle cx="5" cy="-20" r="2" fill="#fff"/></g>
+    <g transform="translate(760,218) scale(.8)"><rect x="-4" y="-10" width="8" height="12" rx="3" fill="#fff3e0"/><path d="M-16 -10 Q0 -32 16 -10Z" fill="#e8463a"/><circle cx="-6" cy="-17" r="2.5" fill="#fff"/></g>`},
+  {name:'Montanhas', svg:()=>`
+    <polygon points="0,200 160,70 320,200" fill="#7a8fb8"/><polygon points="160,70 196,100 170,96 150,110 124,100" fill="#ffffff"/>
+    <polygon points="230,200 450,40 670,200" fill="#5f75a3"/><polygon points="450,40 500,80 470,76 446,92 410,78" fill="#ffffff"/>
+    <polygon points="760,200 960,60 1160,200" fill="#7a8fb8"/><polygon points="960,60 1006,96 980,92 956,106 928,94" fill="#ffffff"/>
+    <polygon points="560,200 700,110 840,200" fill="#8ea2c8"/>
+    <path d="M0 195 Q300 175 600 195 T1200 190 V240 H0Z" fill="#9aa8bf"/>
+    <g fill="#6f788d" stroke="#e6ebf5" stroke-width="2"><path d="M140 222 L150 204 L170 200 L182 214 L176 226Z"/><path d="M880 226 L888 212 L904 208 L914 220 L908 228Z"/></g>`},
+  {name:'Céu estrelado', svg:()=>`
+    <rect x="0" y="0" width="1200" height="240" fill="rgba(20,16,60,.55)"/>
+    <circle cx="1040" cy="60" r="34" fill="#fff6c8"/><circle cx="1056" cy="50" r="30" fill="rgba(36,30,90,.95)"/>
+    ${[[80,40],[200,90],[330,30],[460,70],[590,25],[720,85],[850,40],[960,110],[1150,30],[400,120],[640,130],[130,130]].map(([x,y],i)=>starPt(x,y,5+(i%3)*2.5)).join('')}
+    <path d="M0 170 Q300 130 600 170 T1200 160 V240 H0Z" fill="#3b2f7a"/>
+    <path d="M0 205 Q350 175 700 205 T1200 198 V240 H0Z" fill="#2a2160"/>
+    <g fill="#ffe66d">${[[260,190],[300,175],[880,185],[930,200]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3"/>`).join('')}</g>`},
+];
+function setScenery(idx){
+  const sc=SCENES[idx]||SCENES[0];
+  document.getElementById('scenery').innerHTML=
+    `<svg viewBox="0 0 1200 240" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">${sc.svg()}</svg>`;
 }
 
 // Limite de comandos por fase (calculado automaticamente em MAX_QUEUE_PER_PHASE)
@@ -2219,7 +2336,7 @@ function showToast(id){document.getElementById(id).classList.add('show');}
 function hideToast(id){document.getElementById(id).classList.remove('show');}
 function hideAllToasts(){['toast-error','toast-mud','toast-pickup'].forEach(hideToast);}
 function showErrorToast(icon,msg,sub){
-  document.getElementById('error-icon').innerHTML=ico(icon,60);
+  document.getElementById('error-icon').innerHTML=`<span class="toast-mimi">${makeMimi(120,equippedHat,equippedOutfit,'sad')}</span>${ico(icon,44)}`;
   document.getElementById('error-msg').textContent=msg;
   document.getElementById('error-sub').textContent=sub;
   showToast('toast-error');
@@ -2338,6 +2455,7 @@ function phaseComplete(steps,blocks=steps){
     (bd||'<span style="color:#80ff80">Perfeito! Sem perda de pontos!</span><br>')+
     algoMsg+timeMsg+bestMsg;
 
+  document.getElementById('congrats-mimi').innerHTML=makeMimi(96,equippedHat,equippedOutfit,'happy');
   buildDressup();confetti();
   const btn=document.getElementById('btn-next');
   if(target){
@@ -2366,6 +2484,7 @@ function trainingComplete(){
   document.getElementById('score-breakdown').innerHTML=
     `<span style="color:#80ff80">Você aprendeu a usar as setas e o botão executar. Vamos para a fase 1!</span>`;
   document.querySelector('.dressup-card').style.display='none';
+  document.getElementById('congrats-mimi').innerHTML=makeMimi(96,equippedHat,equippedOutfit,'happy');
   const btn=document.getElementById('btn-next');
   btn.innerHTML=`${ico('play',18)} Ir para a fase 1`;
   btn.onclick=()=>startPhase(1);
@@ -2407,6 +2526,8 @@ function buildDressup(){
 function updateMimiPreview(){
   const stage=document.getElementById('mimi-stage');
   if(stage) stage.innerHTML=makeMimi(118,equippedHat,equippedOutfit);
+  const cm=document.getElementById('congrats-mimi');
+  if(cm&&cm.innerHTML)cm.innerHTML=makeMimi(96,equippedHat,equippedOutfit,'happy');
   const lbl=document.getElementById('equipped-label');
   if(lbl){
     const h=ITEMS.find(x=>x.id===equippedHat);
@@ -2467,7 +2588,7 @@ function showFinal(){
 
   if(perfect){
     document.getElementById('garden-score-num').textContent=avg;
-    document.getElementById('garden-mimi-small').innerHTML=makeMimi(64,equippedHat,equippedOutfit);
+    document.getElementById('garden-mimi-small').innerHTML=makeMimi(64,equippedHat,equippedOutfit,'happy');
     spawnGardenParticles();
     confetti();
     setTimeout(()=>{confetti();confetti();},600);
@@ -2475,7 +2596,7 @@ function showFinal(){
   } else {
     document.getElementById('final-num').textContent=avg;
     document.getElementById('final-stars').innerHTML=starsHTML(starsFor(avg),48);
-    document.getElementById('mimi-final-wrap').innerHTML=makeMimi(130,equippedHat,equippedOutfit);
+    document.getElementById('mimi-final-wrap').innerHTML=makeMimi(130,equippedHat,equippedOutfit,'happy');
     confetti();
     showScreen('screen-final');
   }
