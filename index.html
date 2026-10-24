@@ -729,6 +729,47 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
   .toast{padding:12px 18px}
   .toast-icon svg{width:44px;height:44px}
 }
+
+/* ══ ESTRELAS DO FUNDO: só nas beiradas; em telas estreitas somem ══ */
+@media (max-width:1100px){.star{display:none}}
+
+/* ══ ACESSÓRIOS: nomes cabendo nos quadrados ══ */
+.dressup-card{width:min(640px,calc(100vw - 24px))}
+.items-grid{grid-template-columns:repeat(auto-fill,minmax(86px,1fr))}
+.item-slot{aspect-ratio:auto;min-height:92px;padding:10px 4px 12px;justify-content:flex-start;gap:5px}
+.item-name{font-size:.68rem;letter-spacing:0;line-height:1.15;padding:0 2px;overflow-wrap:break-word}
+.item-lock{position:static;transform:none;height:34px;align-items:center}
+.item-new-badge{top:-1px;right:-1px;font-size:.6rem;padding:1px 5px;border-radius:0 12px 0 8px}
+
+/* ══ COMO JOGAR: mais largo, duas colunas no computador ══ */
+.how-card-outer{max-width:min(980px,calc(100vw - 24px))}
+.how-desc{font-size:1rem;line-height:1.45}
+.how-head{font-size:1.15rem}
+@media (min-width:900px){
+  .how-card-outer{padding:28px 32px 22px}
+  .how-title{font-size:2.4rem}
+  .how-steps{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .how-step-row{padding:14px 16px}
+  .how-step-row:last-child{grid-column:1 / -1}
+  .how-num{min-width:32px;height:32px;font-size:1rem}
+  .how-desc{font-size:1.05rem}
+}
+
+/* ══ JOGO: duas colunas no computador ══ */
+.game-main,.game-side{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:100%}
+@media (min-width:980px) and (min-height:560px){
+  #screen-game{flex-direction:row;align-items:center;gap:32px}
+  .game-main .topbar{width:100%}
+  .game-side{width:400px}
+  .game-side .queue-card,.game-side .hint-bar{width:100%}
+  .game-side .q-row{flex-wrap:wrap;height:176px;overflow-y:auto;overflow-x:hidden;align-content:flex-start}
+  .ctrl-btn{width:70px;height:70px}
+  .ctrl-space,.ctrl-tool{width:70px}
+  .ctrl-btn.tool{width:56px;height:56px}
+  .ctrl-cap{font-size:.8rem}
+  .ctrl-pad{gap:10px}.ctrl-row{gap:12px}
+  .btn-exec,.btn-clear,.btn-step{font-size:1.1rem;padding:12px 22px}
+}
 </style>
 </head>
 <body>
@@ -854,6 +895,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 
 <!-- ══ SCREEN: GAME ══ -->
 <div id="screen-game" class="screen">
+ <div class="game-main">
   <div class="topbar glass">
     <span class="lbl-phase"><span id="lbl-phase">Fase 1</span> <span class="lbl-scene" id="lbl-scene"></span></span>
     <span class="lbl-timer" id="lbl-timer"><span data-ico="clock" data-size="20"></span> <span id="timer-text">00:00</span></span>
@@ -865,6 +907,8 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
       <div id="mimi-token" class="instant" aria-hidden="true"><span class="mimi-inner"></span></div>
     </div>
   </div>
+ </div>
+ <div class="game-side">
   <div class="queue-card glass">
     <div class="q-row" id="queue-wrap" aria-label="Comandos da Mimi"></div>
     <div class="q-msg" id="queue-msg" aria-live="polite"></div>
@@ -895,6 +939,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
   <button class="hint-bar" onclick="toggleHint()">
     <span class="hint-label" id="hint-label">COMO SAIR!</span>
   </button>
+ </div>
 </div>
 
 <!-- ══ SCREEN: CONGRATS ══ -->
@@ -1696,7 +1741,8 @@ function loadState(){
 //  STARS (decoração de fundo)
 // ═══════════════════════════════════
 (function(){
-  const pts=[[8,10],[20,88],[90,12],[82,82],[50,4],[4,52],[96,52],[50,94],[26,28],[76,28],[24,72],[76,72],[40,15],[62,85],[10,64],[90,36],[33,50],[68,18]];
+  // só nas beiradas (esquerda e direita), para não ficar por cima dos cartões e textos
+  const pts=[[6,3],[18,96],[30,5],[42,97],[54,2],[66,95],[78,4],[90,97],[12,97],[24,2],[36,96],[48,5],[60,3],[72,98],[84,2],[94,94]];
   pts.forEach(([t,l],i)=>{
     const s=document.createElement('div');s.className='star';
     const sz=14+Math.random()*12;
@@ -2011,12 +2057,23 @@ function viewCols(lvl){
   for(let r=0;r<lvl.rows;r++)for(let c=0;c<lvl.cols;c++)if(lvl.grid[r][c]!==1){c0=Math.min(c0,c);c1=Math.max(c1,c);}
   return [c0,c1];
 }
+// Tela larga (computador): labirinto à esquerda, comandos à direita (ver CSS .game-side)
+function isWideLayout(){return window.innerWidth>=980&&window.innerHeight>=560;}
 function calcCell(lvl,ncols){
-  const side=window.innerWidth<=520?16:24;                                 // espaço do body nas laterais
-  const availW=Math.min(window.innerWidth-side,600)-24-(ncols-1)*3;        // 24 = margem + borda do cartão
-  const availH=window.innerHeight-440;
-  let cs=Math.min(50,availW/ncols);
-  if(availH>0)cs=Math.min(cs,availH/(lvl.rows*.92));
+  const gap=3,rows=lvl.rows;
+  let availW,availH,maxCs;
+  if(isWideLayout()){
+    availW=window.innerWidth-48-400-32-24-(ncols-1)*gap;   // body, coluna de comandos, espaço entre colunas, cartão
+    availH=window.innerHeight-28-64-14-24-24;              // body, barra do topo, espaço, cartão, folga
+    maxCs=92;
+  } else {
+    const side=window.innerWidth<=520?16:24;                // espaço do body nas laterais
+    availW=Math.min(window.innerWidth-side,760)-24-(ncols-1)*gap;
+    availH=window.innerHeight-440;
+    maxCs=64;
+  }
+  let cs=Math.min(maxCs,availW/ncols);
+  if(availH>0)cs=Math.min(cs,(availH-(rows-1)*gap)/(rows*.92));
   return Math.max(20,Math.floor(cs));
 }
 function renderGrid(animate=false,instant=false){
@@ -2173,7 +2230,10 @@ function renderQueue(activeIdx=-1){
   msgEl.textContent=msg;
   // mantém à vista o comando que está rodando (ou o último que entrou)
   const target=activeIdx>=0?w.children[activeIdx+1]:w.lastElementChild;
-  if(target)w.scrollLeft=Math.max(0,target.offsetLeft-w.clientWidth/2);
+  if(target){
+    w.scrollLeft=Math.max(0,target.offsetLeft-w.clientWidth/2);
+    w.scrollTop=Math.max(0,target.offsetTop-w.clientHeight/2);
+  }
 }
 
 // ═══════════════════════════════════
