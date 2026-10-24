@@ -784,7 +784,11 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
   --cream:#fffaf2;
   --gold:#ffd166;--gold-d:#e0a63c;
 }
-body{color:var(--ink);background:linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)}
+body{color:var(--ink);background:
+    radial-gradient(ellipse at 15% 25%,rgba(168,232,214,.7) 0%,transparent 45%),
+    radial-gradient(ellipse at 85% 70%,rgba(176,214,240,.7) 0%,transparent 45%),
+    radial-gradient(ellipse at 50% 50%,rgba(184,234,196,.5) 0%,transparent 60%),
+    linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a8d4ef 100%)}
 .glass{
   background:rgba(255,255,255,.6);
   border:2px solid rgba(255,255,255,.95);
@@ -835,9 +839,9 @@ body{color:var(--ink);background:linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#
 .btn-clear{background:linear-gradient(180deg,#ffd9dc,var(--coral));box-shadow:0 5px 0 var(--coral-d),0 8px 18px rgba(232,148,155,.3)}
 @media (hover:hover){.btn-clear:hover{box-shadow:0 7px 0 var(--coral-d)}}
 .btn-clear:active{box-shadow:0 2px 0 var(--coral-d)}
-.hint-bar{background:linear-gradient(180deg,#fff2c4,var(--butter));box-shadow:0 5px 0 var(--butter-d),0 8px 20px rgba(229,193,88,.28)}
-@media (hover:hover){.hint-bar:hover{box-shadow:0 7px 0 var(--butter-d)}}
-.hint-bar:active{box-shadow:0 2px 0 var(--butter-d)}
+.hint-bar{background:linear-gradient(180deg,#cdf3e2,var(--mint));box-shadow:0 5px 0 var(--mint-d),0 8px 20px rgba(118,201,166,.28)}
+@media (hover:hover){.hint-bar:hover{box-shadow:0 7px 0 var(--mint-d)}}
+.hint-bar:active{box-shadow:0 2px 0 var(--mint-d)}
 .hint-label{background:none;-webkit-text-fill-color:currentColor;color:var(--ink);filter:none}
 .btn-cta::after,.phase-btn::after,.ctrl-btn::after,.q-chip::after,.btn-exec::after,.btn-clear::after,.hint-bar::after{opacity:.6}
 .btn-ghost,.btn-how{background:rgba(255,255,255,.75);border:2px solid var(--lilac);color:var(--ink);box-shadow:0 3px 0 rgba(160,138,230,.35)}
@@ -854,10 +858,10 @@ button:focus-visible{outline:4px solid var(--lilac-d)}
 /* labirinto: caminho clarinho, paredes pastel da fase */
 .maze-card{background:rgba(255,255,255,.7)}
 .cell.wall{box-shadow:inset 0 2.5px 0 rgba(255,255,255,.6),inset 0 -3px 0 rgba(110,90,170,.12)}
-.cell.path{background:var(--cream);box-shadow:inset 0 2px 6px rgba(150,120,190,.16)}
-.cell.hint-path{background:#dcf6e9;box-shadow:inset 0 2px 6px rgba(118,201,166,.25);outline:2.5px dashed var(--mint-d);outline-offset:-4px}
-.cell.mud{background:#f3e0c8;box-shadow:inset 0 2px 6px rgba(154,106,58,.18),inset 0 0 0 2px rgba(201,154,107,.45)}
-.cell.rock{background:#e8ebf3;box-shadow:inset 0 2px 6px rgba(90,100,130,.18),inset 0 0 0 2px rgba(141,150,170,.4)}
+.cell.path{background:linear-gradient(145deg,#7084b8,#7d92c4);box-shadow:inset 0 3px 8px rgba(40,50,90,.25)}
+.cell.hint-path{background:linear-gradient(145deg,#79b893,#86c49f);box-shadow:inset 0 3px 8px rgba(30,70,40,.22);outline:2.5px solid rgba(230,255,180,.9);outline-offset:-2px}
+.cell.mud{background:linear-gradient(145deg,#b08a66,#bf9a74);box-shadow:inset 0 2px 6px rgba(154,106,58,.18),inset 0 0 0 2px rgba(201,154,107,.45)}
+.cell.rock{background:linear-gradient(145deg,#8a92aa,#9aa2b8);box-shadow:inset 0 2px 6px rgba(90,100,130,.18),inset 0 0 0 2px rgba(141,150,170,.4)}
 .cell.in-mud{box-shadow:inset 0 0 12px rgba(201,154,107,.6),inset 0 0 0 2px rgba(201,154,107,.6)}
 #mimi-token .mimi-inner{filter:drop-shadow(0 2px 3px rgba(110,90,170,.35))}
 .gift-bob{animation:giftBob 1.4s ease-in-out infinite alternate}
@@ -963,7 +967,7 @@ button:focus-visible{outline:4px solid var(--lilac-d)}
           <div class="how-emoji"><span id="how-mimi"></span></div>
           <div>
             <div class="how-head">Guie a Mimi!</div>
-            <div class="how-desc">Leve a Mimi até a <strong>estrela <span data-ico="star" data-size="20"></span></strong>. Os blocos coloridos são paredes. Ela só anda pelo caminho clarinho.</div>
+            <div class="how-desc">Leve a Mimi até a <strong>estrela <span data-ico="star" data-size="20"></span></strong>. Os blocos coloridos são paredes. Ela só anda pelos caminhos azuis.</div>
           </div>
         </div>
       </div>
@@ -1643,17 +1647,15 @@ const PHASE_PICKUPS=[
 ];
 
 // ═══════════════════════════════════
-//  CORES DAS PAREDES — uma cor pastel por fase, em dois tons (o caminho clarinho se destaca)
+//  WALL COLORS (paleta original, em tons pastel)
 // ═══════════════════════════════════
-const WALL_THEMES=[
-  ['#a6e5cc','#b8ecd7'],   // treino: menta
-  ['#ffbcd5','#ffcbdf'],   // fase 1: rosa
-  ['#ffcfa6','#ffdbb9'],   // fase 2: pêssego
-  ['#a9d5fb','#bcdffd'],   // fase 3: azul-céu
-  ['#c8b8fb','#d5c8ff'],   // fase 4: lilás
-  ['#b9bdf1','#c8cbf6'],   // fase 5: lavanda
+const WCOLS=[
+  ['#a4e3e0','#ade3a3','#a4e3e0','#ade3a3','#a4e3e0','#ade3a3','#a4e3e0','#ade3a3','#a4e3e0','#ade3a3','#a4e3e0'],
+  ['#a4e3e0','#f8bcd2','#cdb0ec','#f7dc93','#a4e3e0','#f8bcd2','#cdb0ec','#f7dc93','#a4e3e0','#f8bcd2','#a4e3e0'],
+  ['#ade3a3','#a4e3e0','#f8bcd2','#cdb0ec','#a4e3e0','#ade3a3','#a4e3e0','#f7dc93','#ade3a3','#a4e3e0','#ade3a3'],
+  ['#cdb0ec','#f7dc93','#a4e3e0','#ade3a3','#f8bcd2','#a4e3e0','#cdb0ec','#a4e3e0','#f7dc93','#ade3a3','#a4e3e0'],
 ];
-function wc(r,c){const t=WALL_THEMES[curPhase]||WALL_THEMES[0];return t[(r+c)%2];}
+function wc(r,c){return WCOLS[r%WCOLS.length][c%WCOLS[0].length];}
 
 // ═══════════════════════════════════
 //  LEVELS  0=caminho 1=parede 2=início 3=estrela 4=brinde A 5=lama 6=pedra 7=brinde B
@@ -2064,52 +2066,52 @@ function stopGame(){runId++;executing=false;clearInterval(timer);hideAllToasts()
 // ═══════════════════════════════════
 //  GARDEN BACKGROUND — evolui com as fases de 3 estrelas
 // ═══════════════════════════════════
-// fundo pastel: a cada fase com 3 estrelas aparecem mais flores (rosa), sol (amarelo) e grama (menta)
+// fundo verde-azulado em tons pastel: a cada fase com 3 estrelas aparecem mais flores (rosa) e sol (amarelo)
 const GARDEN_STAGES = [
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.25) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.15) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.35) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.28) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.19) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.39) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.32) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.23) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.43) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.35) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.27) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.47) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.39) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.31) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.51) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.42) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.35) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.55) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.46) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.39) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.59) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.49) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.43) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.63) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.53) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.47) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.67) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.56) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.51) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.71) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
-  `radial-gradient(ellipse at 12% 18%,rgba(255,214,232,0.60) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 22%,rgba(255,240,180,0.55) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 90%,rgba(190,240,210,0.75) 0%,transparent 55%),
-   linear-gradient(160deg,#dff2ff 0%,#ece4ff 48%,#ffe8f1 100%)`,
+  `radial-gradient(ellipse at 15% 25%,rgba(168,232,214,.7) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 70%,rgba(176,214,240,.7) 0%,transparent 45%),
+   radial-gradient(ellipse at 50% 50%,rgba(184,234,196,.5) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a8d4ef 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.10) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.10) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.53) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.14) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.14) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.56) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.18) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.18) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.59) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.23) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.23) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.62) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.28) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.28) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.65) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.32) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.32) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.68) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.36) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.36) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.71) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.41) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.41) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.74) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.46) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.46) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.77) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.50) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.50) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.80) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
 ];
 
 function updateGardenBg(){
@@ -2173,8 +2175,8 @@ function renderGrid(animate=false,instant=false){
         if(hintSet.has(key))div.classList.add('hint-path');
         else div.classList.add('path');
         if(trail.has(key)&&!(r===playerR&&c===playerC)&&v===0){
-          div.style.boxShadow='inset 0 0 0 2px rgba(242,156,192,.35),inset 0 2px 6px rgba(150,120,190,.12)';
-          div.style.background='#ffe8f2';
+          div.style.boxShadow='inset 0 0 10px rgba(255,190,225,.55)';
+          div.style.background='linear-gradient(145deg,#8494c6,#8f9fd0)';
         }
         if(v===3)div.innerHTML=`<span style="display:inline-flex;filter:drop-shadow(0 2px 3px rgba(224,166,60,.45))">${ico('star',Math.round(cs*.7))}</span>`;
         if(v===5){
