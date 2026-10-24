@@ -907,6 +907,15 @@ button:focus-visible{outline:4px solid var(--lilac-d)}
 .mimi-bubble::after{content:'';position:absolute;left:50%;bottom:-9px;width:14px;height:14px;background:#fff;
   border-right:2px solid var(--lilac);border-bottom:2px solid var(--lilac);transform:translateX(-50%) rotate(45deg)}
 @keyframes bubbleIn{from{opacity:0;transform:scale(.6) translateY(8px)}to{opacity:1;transform:none}}
+
+/* pergunta antes da dica */
+.modal-back{position:fixed;inset:0;z-index:950;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(74,63,107,.35)}
+.modal-back[hidden]{display:none}
+.modal-card{max-width:420px;width:100%;padding:22px 22px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:rgba(255,255,255,.97);animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both}
+.modal-msg{font-family:'Fredoka One','Segoe UI',sans-serif;font-size:1.35rem;color:var(--ink)}
+.modal-sub{font-family:'Nunito','Segoe UI',Arial,sans-serif;font-weight:800;font-size:1rem;color:var(--ink-soft)}
+.modal-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:8px}
 </style>
 </head>
 <body>
@@ -1117,7 +1126,7 @@ button:focus-visible{outline:4px solid var(--lilac-d)}
   </div>
   <div class="nav-row">
     <button class="btn-cta" id="btn-next" onclick="nextPhase()" style="font-size:1.1rem;padding:11px 26px">Próxima fase</button>
-    <button class="btn-ghost" id="btn-replay" onclick="showScreen('screen-game');setTimeout(replayPath,300)" style="display:none"><span data-ico="replay" data-size="16"></span> Rever caminho</button>
+    <button class="btn-ghost" id="btn-replay" onclick="reviewPath()" style="display:none"><span data-ico="replay" data-size="16"></span> Rever caminho</button>
     <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="16"></span> Fases</button>
   </div>
 </div>
@@ -1272,6 +1281,19 @@ button:focus-visible{outline:4px solid var(--lilac-d)}
     <div style="display:flex;gap:10px;margin-top:4px">
       <button class="btn-cta" onclick="showScreen('screen-start')" style="font-size:1rem;padding:10px 24px"><span data-ico="replay" data-size="20"></span> Jogar novamente</button>
       <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="16"></span> Ver fases</button>
+    </div>
+  </div>
+</div>
+
+<!-- PERGUNTA ANTES DA DICA -->
+<div class="modal-back" id="hint-confirm" hidden>
+  <div class="modal-card glass" role="dialog" aria-modal="true" aria-labelledby="hint-confirm-msg" aria-describedby="hint-confirm-sub">
+    <div class="modal-icon"><span data-ico="bulb" data-size="56"></span></div>
+    <div class="modal-msg" id="hint-confirm-msg">Tem certeza que quer ver a dica?</div>
+    <div class="modal-sub" id="hint-confirm-sub"></div>
+    <div class="modal-btns">
+      <button class="btn-exec" onclick="confirmHint(true)">Sim, quero a dica</button>
+      <button class="btn-ghost" id="hint-confirm-no" onclick="confirmHint(false)">Não, vou tentar</button>
     </div>
   </div>
 </div>
@@ -1784,6 +1806,7 @@ let equippedHat=null,equippedOutfit=null;
 let unlockedItems=new Set();
 let trail=new Set();
 let replayLog=[];
+let lastPath=null;     // último caminho que chegou na estrela: {phase, cmds} (usado em "Rever caminho")
 const seenItems=new Set();
 let soundOn=true;
 
@@ -1989,7 +2012,8 @@ function startPhase(idx){
   penMud=0;penRock=0;penWall=0;
   trail=new Set();replayLog=[];
   const rb=document.getElementById('btn-replay');
-  rb.style.display='none';rb.disabled=false;rb.innerHTML=`${ico('replay',16)} Rever caminho`;
+  rb.style.display='none';
+  closeHintConfirm();
   document.getElementById('hint-label').textContent=hintLabelText();
   const lvl=LEVELS[idx];
   for(let r=0;r<lvl.rows;r++)for(let c=0;c<lvl.cols;c++)if(lvl.grid[r][c]===2){playerR=r;playerC=c;startR=r;startC=c;}
@@ -2061,7 +2085,7 @@ function setScenery(idx){
 }
 
 // Limite de comandos por fase (calculado automaticamente em MAX_QUEUE_PER_PHASE)
-function stopGame(){runId++;executing=false;clearInterval(timer);hideAllToasts();}
+function stopGame(){runId++;executing=false;clearInterval(timer);hideAllToasts();closeHintConfirm();}
 
 // ═══════════════════════════════════
 //  GARDEN BACKGROUND — evolui com as fases de 3 estrelas
@@ -2230,6 +2254,7 @@ window.addEventListener('resize',()=>{
 // Teclado: setas = comandos, Enter = executar, Backspace = apagar o último, Esc = limpar
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('screen-game').classList.contains('active'))return;
+  if(!document.getElementById('hint-confirm').hidden){if(e.key==='Escape')confirmHint(false);return;}   // com a pergunta aberta, o teclado só responde a ela
   const map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
   const onArrowBtn=e.target.matches&&e.target.matches('.ctrl-btn:not(.tool)');
   if(map[e.key]){e.preventDefault();addCmd(map[e.key]);}
@@ -2361,7 +2386,7 @@ async function executeQueue(stepOnly=false){
         if(itemId){
           const isNew=!unlockedItems.has(itemId);
           unlockedItems.add(itemId);sfxPickup();
-          if(isNew)showPickupToast(itemId);
+          showPickupToast(itemId,isNew);
           saveState();
         }
         renderGrid();
@@ -2371,6 +2396,7 @@ async function executeQueue(stepOnly=false){
 
       // Estrela
       if(v===3){
+        lastPath={phase:curPhase,cmds:cmdQueue.slice(0,i+1).map(c=>({...c}))};
         renderQueue(i+1);mimiFeel('happy',1300);await sleep(400);if(myRun!==runId)return;
         phaseComplete(replayLog.length,i+1);return;
       }
@@ -2440,26 +2466,18 @@ function flashError(){
 }
 
 // ═══════════════════════════════════
-//  REPLAY
+//  REVER CAMINHO: abre a fase de novo com os comandos da última vitória na fila (sem executar),
+//  para o jogador conferir e mudar o que quiser
 // ═══════════════════════════════════
-async function replayPath(){
-  if(!replayLog.length||executing)return;
-  executing=true;const myRun=runId;
-  const btn=document.getElementById('btn-replay');
-  btn.disabled=true;btn.innerHTML=`${ico('play',16)} Reproduzindo...`;
-  playerR=startR;playerC=startC;trail=new Set();trail.add(`${playerR},${playerC}`);
-  renderGrid();await sleep(300);
-  for(const step of replayLog){
-    if(myRun!==runId)return;
-    playerR=step.r;playerC=step.c;
-    trail.add(`${playerR},${playerC}`);
-    renderGrid();sfxStep();
-    await sleep(350);
-  }
-  executing=false;
-  btn.disabled=false;btn.innerHTML=`${ico('replay',16)} Rever caminho`;
-  await sleep(900);
-  if(myRun===runId)showScreen('screen-congrats');   // volta para a tela de parabéns
+function reviewPath(){
+  if(!lastPath)return;
+  document.querySelectorAll('.confetti').forEach(el=>el.remove());   // confete da tela de parabéns não cai por cima da fase
+  startPhase(lastPath.phase);
+  cmdQueue=lastPath.cmds.map(c=>({...c}));
+  renderQueue();
+  const msg='Este foi o seu caminho. Mude o que quiser e toque em Executar.';
+  document.getElementById('queue-msg').textContent=msg;
+  speak(msg);
 }
 
 // ═══════════════════════════════════
@@ -2475,12 +2493,12 @@ function showErrorToast(icon,msg,sub){
   showToast('toast-error');
   speak(`${msg} ${sub}`);
 }
-function showPickupToast(itemId){
+function showPickupToast(itemId,isNew){
   const item=ITEMS.find(x=>x.id===itemId);if(!item)return;
   document.getElementById('pickup-icon').innerHTML=ico(item.icon,60);
-  document.getElementById('pickup-msg').textContent=`Novo acessório: ${item.label}!`;
-  showToast('toast-pickup');setTimeout(()=>hideToast('toast-pickup'),1400);
-  speak(`Novo acessório! ${item.label}!`);
+  document.getElementById('pickup-msg').textContent=isNew?`Novo acessório: ${item.label}!`:`Você pegou: ${item.label}!`;
+  showToast('toast-pickup');setTimeout(()=>hideToast('toast-pickup'),1800);
+  speak(isNew?`Novo acessório! ${item.label}!`:`Você pegou: ${item.label}!`);
 }
 
 // ═══════════════════════════════════
@@ -2489,10 +2507,27 @@ function showPickupToast(itemId){
 function refreshHint(){if(hintOn)hintPath=bfspath();}
 function toggleHint(){
   if(executing)return;
-  hintOn=!hintOn;
+  // a dica tira pontos: pergunta antes (no treino, ou se a dica já foi paga nesta fase, não pergunta)
+  if(!hintOn&&curPhase!==0&&!penHint){openHintConfirm();return;}
+  setHint(!hintOn);
+}
+function setHint(on){
+  hintOn=on;
   if(hintOn){hintPath=bfspath();if(curPhase!==0)penHint=true;sfxHint();document.getElementById('hint-label').textContent='Esconder dica';}
   else{hintPath=[];document.getElementById('hint-label').textContent=hintLabelText();}
   renderGrid();
+}
+function openHintConfirm(){
+  const m=document.getElementById('hint-confirm');
+  document.getElementById('hint-confirm-sub').textContent=`A dica mostra o caminho, mas tira ${HINT_COST} pontos desta fase.`;
+  m.hidden=false;
+  document.getElementById('hint-confirm-no').focus();
+  speak(`Tem certeza que quer ver a dica? Ela tira ${HINT_COST} pontos.`);
+}
+function closeHintConfirm(){document.getElementById('hint-confirm').hidden=true;}
+function confirmHint(yes){
+  closeHintConfirm();
+  if(yes&&!executing)setHint(true);
 }
 // Caminho mais curto entre duas casas. Pedra e parede bloqueiam; a lama só entra se não houver outro jeito.
 function shortestPath(lvl,fr,fc,tr,tc){
