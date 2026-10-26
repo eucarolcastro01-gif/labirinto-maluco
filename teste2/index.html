@@ -1414,12 +1414,12 @@ function makeMimi(w=100, hat=null, outfit=null, mood='normal'){
   const SEGB=[[28,76,22],[54,72,20],[78,70,20]];
   if(outfit==='out_tenis'){
     outfitTopSVG=SEGB.map(([x,y],i)=>[-9,9].map((d,k)=>`<ellipse cx="${x+d}" cy="${y+21}" rx="7" ry="4.5" fill="${['#ff3b55','#3d9ff0','#ffd23f','#43bf63'][(i+k)%4]}" stroke="#333" stroke-width="1"/><rect x="${x+d-7}" y="${y+23}" width="14" height="2.5" rx="1" fill="#fff"/>`).join('')).join('');
-  } else if(outfit==='out_sueter'){
-    outfitTopSVG=SEGB.map(([x,y,r])=>`<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r*.85}" fill="#e84a5f" stroke="#a82a3c" stroke-width="1.5"/><path d="M${x-r*.9},${y-4} H${x+r*.9} M${x-r*.85},${y+6} H${x+r*.85}" stroke="#fff" stroke-width="3"/><path d="M${x-r*.9},${y+1} H${x+r*.9}" stroke="#3d9ff0" stroke-width="2.5"/>`).join('');
-  } else if(outfit==='out_mochila'){
-    outfitTopSVG=`<g><rect x="40" y="38" width="28" height="26" rx="8" fill="#ff9638" stroke="#b5561a" stroke-width="1.8"/><path d="M40,48 Q54,40 68,48 V44 Q68,38 54,38 Q40,38 40,44Z" fill="#e0701c"/><rect x="47" y="52" width="14" height="8" rx="2" fill="#ffb35c"/><path d="M44,62 Q46,80 52,90 M64,62 Q62,80 58,90" stroke="#8a4a1c" stroke-width="3" fill="none"/></g>`;
-  } else if(outfit==='out_cachecol'){
-    outfitTopSVG=`<g><path d="M86,60 Q98,70 110,60 L112,70 Q98,80 84,70Z" fill="#ff3b55" stroke="#b81c2c" stroke-width="1.5"/><path d="M94,68 L90,94 L100,94 L102,70Z" fill="#ff3b55" stroke="#b81c2c" stroke-width="1.5"/><path d="M92,80 H101 M91,87 H100 M95,64 V72 M103,64 V72" stroke="#fff" stroke-width="2.5"/></g>`;
+  } else if(outfit==='out_galochas'){
+    outfitTopSVG=SEGB.map(([x,y])=>[-9,9].map(d=>`<rect x="${x+d-5}" y="${y+12}" width="10" height="11" rx="3" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2"/><ellipse cx="${x+d+2}" cy="${y+23}" rx="7" ry="3.5" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2"/>`).join('')).join('');
+  } else if(outfit==='out_vaquinha'){
+    outfitTopSVG=SEGB.map(([x,y,r],i)=>`<path d="M${x-r*.5},${y-r*.55} q8,-6 13,1 q4,7 -4,10 q-10,2 -9,-11z" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width="${i%2?0:1}"/><circle cx="${x+r*.35}" cy="${y+r*.15}" r="4" fill="${i%2?'#fff':'#1d1a2e'}"/>`).join('');
+  } else if(outfit==='out_abelha'){
+    outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-3},${y-r*.82} Q${x+2},${y} ${x-3},${y+r*.82}" stroke="#1d1a2e" stroke-width="5" fill="none" stroke-linecap="round"/>`).join('');
   } else if(outfit==='out_pintinhas'){
     outfitTopSVG=SEGB.map(([x,y,r])=>`<circle cx="${x-r*.35}" cy="${y-r*.3}" r="4.5" fill="#1d1a2e"/><circle cx="${x+r*.4}" cy="${y-r*.1}" r="3.6" fill="#1d1a2e"/><circle cx="${x}" cy="${y+r*.4}" r="3.2" fill="#1d1a2e"/>`).join('');
   }
@@ -1630,9 +1630,9 @@ function makeMimiTiny(){
   let outfitTopSVG = '';
   const SEGT=[[16,48,14],[30,45,13],[44,42,13]];
   if(outfit==='out_tenis') outfitTopSVG=SEGT.map(([x,y],i)=>`<ellipse cx="${x}" cy="${y+13}" rx="6" ry="3.5" fill="${['#ff3b55','#3d9ff0','#ffd23f'][i]}" stroke="#333" stroke-width=".8"/>`).join('');
-  else if(outfit==='out_sueter') outfitTopSVG=SEGT.map(([x,y,r])=>`<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r*.85}" fill="#e84a5f" stroke="#a82a3c" stroke-width="1"/><path d="M${x-r*.85},${y-2} H${x+r*.85} M${x-r*.8},${y+4} H${x+r*.8}" stroke="#fff" stroke-width="2"/>`).join('');
-  else if(outfit==='out_mochila') outfitTopSVG=`<rect x="22" y="26" width="17" height="15" rx="5" fill="#ff9638" stroke="#b5561a" stroke-width="1.2"/><path d="M22,32 Q30.5,27 39,32" stroke="#e0701c" stroke-width="3" fill="none"/>`;
-  else if(outfit==='out_cachecol') outfitTopSVG=`<path d="M52,48 Q60,54 68,50 L69,55 Q60,60 51,53Z" fill="#ff3b55" stroke="#b81c2c" stroke-width="1"/><path d="M56,54 L54,66 L60,66 L61,55Z" fill="#ff3b55" stroke="#b81c2c" stroke-width="1"/><path d="M55,60 H60" stroke="#fff" stroke-width="2"/>`;
+  else if(outfit==='out_galochas') outfitTopSVG=SEGT.map(([x,y])=>`<rect x="${x-4}" y="${y+8}" width="8" height="8" rx="2" fill="#ffd23f" stroke="#c98a00" stroke-width=".8"/>`).join('');
+  else if(outfit==='out_vaquinha') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<circle cx="${x-r*.25}" cy="${y-r*.3}" r="3.6" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width=".6"/>`).join('');
+  else if(outfit==='out_abelha') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x},${y-r*.8} V${y+r*.8}" stroke="#1d1a2e" stroke-width="3.5" stroke-linecap="round"/>`).join('');
   else if(outfit==='out_pintinhas') outfitTopSVG=SEGT.map(([x,y,r])=>`<circle cx="${x-r*.3}" cy="${y-r*.3}" r="2.6" fill="#1d1a2e"/><circle cx="${x+r*.35}" cy="${y}" r="2.2" fill="#1d1a2e"/>`).join('');
 
   return `<svg width="${tw}" height="${th}" viewBox="0 0 88 72" xmlns="http://www.w3.org/2000/svg">
@@ -1700,9 +1700,9 @@ const ICONS={
   heart:`<path d="M12 21 C3 14 2 9 5 6 C7.5 3.5 11 5 12 8 C13 5 16.5 3.5 19 6 C22 9 21 14 12 21 Z" fill="#ff4f9a" stroke="#c02070" stroke-width="1.2" stroke-linejoin="round"/>`,
   butterfly:`<g stroke="#6a30b0" stroke-width="1" stroke-linejoin="round"><path d="M12 12 C9 3.5 2 3 2.5 9 C3 14 8 14 12 12 Z" fill="#a060f0"/><path d="M12 12 C15 3.5 22 3 21.5 9 C21 14 16 14 12 12 Z" fill="#a060f0"/><path d="M12 12.5 C8 14 4 15.5 5.5 19.5 C8 21 11 17.5 12 12.5 Z" fill="#f080e0"/><path d="M12 12.5 C16 14 20 15.5 18.5 19.5 C16 21 13 17.5 12 12.5 Z" fill="#f080e0"/></g><rect x="11.1" y="6" width="1.8" height="13" rx=".9" fill="#4a2070"/><path d="M12 6 Q10 3 8.5 2.5 M12 6 Q14 3 15.5 2.5" fill="none" stroke="#4a2070" stroke-width="1" stroke-linecap="round"/>`,
   clover:`<g fill="#3fbf5a" stroke="#1f8a3a" stroke-width="1"><circle cx="8" cy="8" r="4.5"/><circle cx="16" cy="8" r="4.5"/><circle cx="8" cy="15" r="4.5"/><circle cx="16" cy="15" r="4.5"/></g><rect x="11.2" y="14" width="1.6" height="8" rx=".8" fill="#1f8a3a"/>`,
-  backpack:`<rect x="5" y="6" width="14" height="15" rx="4" fill="#ff9638" stroke="#b5561a" stroke-width="1.2"/><path d="M5 11 Q12 7 19 11 V9 Q19 6 12 6 Q5 6 5 9Z" fill="#e0701c"/><rect x="8" y="14" width="8" height="5" rx="1.5" fill="#ffb35c" stroke="#b5561a" stroke-width=".9"/><path d="M9 6 Q9 2 12 2 Q15 2 15 6" fill="none" stroke="#8a4a1c" stroke-width="1.6"/>`,
-  sweater:`<path d="M8 3 L3 7 L4 13 L6.5 12 V21 H17.5 V12 L20 13 L21 7 L16 3 Q12 6 8 3 Z" fill="#e84a5f" stroke="#a82a3c" stroke-width="1.1" stroke-linejoin="round"/><path d="M6.5 14 H17.5 M6.5 17.5 H17.5" stroke="#fff" stroke-width="1.6"/><path d="M6.5 15.8 H17.5" stroke="#3d9ff0" stroke-width="1.4"/><path d="M8 3 Q12 7 16 3" fill="none" stroke="#a82a3c" stroke-width="1.6"/>`,
-  scarf:`<path d="M4 7 Q12 12 20 7 L20 11 Q12 16 4 11Z" fill="#ff3b55" stroke="#b81c2c" stroke-width="1"/><path d="M14 12 L13 22 L17.5 22 L18 11Z" fill="#ff3b55" stroke="#b81c2c" stroke-width="1"/><path d="M8 9.2 L8 13 M12 10.5 L12 14 M13.3 16 L17.8 16 M13.2 19 L17.7 19" stroke="#fff" stroke-width="1.5"/><path d="M13 22 V23.5 M14.5 22 V23.5 M16 22 V23.5 M17.5 22 V23.5" stroke="#ffd23f" stroke-width="1"/>`,
+  cow:`<ellipse cx="12" cy="13" rx="9" ry="8" fill="#fff" stroke="#555" stroke-width="1.1"/><path d="M6 8 q3 -2 5 1 q1 3 -2 4 q-4 0 -3 -5z" fill="#1d1a2e"/><circle cx="16" cy="15" r="3" fill="#1d1a2e"/><circle cx="9" cy="17.5" r="1.8" fill="#1d1a2e"/>`,
+  boot:`<path d="M7 3 H15 V14 L20 15.5 Q22 16.5 22 19 V20 H7Z" fill="#ffd23f" stroke="#a87200" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 20 H22 V21.5 H7Z" fill="#c98a00"/><path d="M6.5 3 H15.5 V5.5 H6.5Z" fill="#ffe680" stroke="#a87200" stroke-width="1"/>`,
+  bee:`<ellipse cx="12" cy="14" rx="7.5" ry="6.5" fill="#ffd23f" stroke="#1d1a2e" stroke-width="1.1"/><path d="M9 8.3 V19.7 M14.5 7.8 V20.2" stroke="#1d1a2e" stroke-width="2.4"/><ellipse cx="9" cy="5.5" rx="4" ry="3" fill="#cfefff" stroke="#6aa" stroke-width=".9"/><ellipse cx="15" cy="5.5" rx="4" ry="3" fill="#cfefff" stroke="#6aa" stroke-width=".9"/>`,
   ladybug:`<circle cx="12" cy="13.5" r="8" fill="#e8323f" stroke="#8a1020" stroke-width="1.1"/><path d="M12 5.5 V21.5" stroke="#1d1a2e" stroke-width="1.2"/><circle cx="12" cy="5.5" r="3.6" fill="#1d1a2e"/><g fill="#1d1a2e"><circle cx="8" cy="11" r="1.8"/><circle cx="16" cy="11" r="1.8"/><circle cx="8.5" cy="16.5" r="1.6"/><circle cx="15.5" cy="16.5" r="1.6"/></g>`,
   sneaker:`<path d="M3 15 Q3 9 7 9 L10 9 Q11 12 15 12.5 L19 13.5 Q21.5 14.5 21.5 17 H3Z" fill="#3d9ff0" stroke="#1f5c9e" stroke-width="1.1" stroke-linejoin="round"/><path d="M3 17 H21.5 V19 Q21.5 20 20.5 20 H4 Q3 20 3 19Z" fill="#fff" stroke="#9aa" stroke-width=".9"/><path d="M9.5 11 L12 10.5 M10.5 12.5 L13 12" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>`,
   shirt:`<path d="M8 3 L3 6 L5 10 L7.5 9 V21 H16.5 V9 L19 10 L21 6 L16 3 Q12 6 8 3 Z" fill="#5ecfca" stroke="#2a8f8a" stroke-width="1.2" stroke-linejoin="round"/>`,
@@ -1747,9 +1747,9 @@ const ITEMS=[
   {id:'hat_flor',     type:'hat',    icon:'garland',   label:'Grinalda'},
   {id:'hat_laco',     type:'hat',    icon:'bow',       label:'Laço Fofo'},
   {id:'hat_bone',     type:'hat',    icon:'cap',       label:'Boné'},
-  {id:'out_mochila',  type:'outfit', icon:'backpack',  label:'Mochilinha'},
-  {id:'out_sueter',   type:'outfit', icon:'sweater',   label:'Suéter'},
-  {id:'out_cachecol', type:'outfit', icon:'scarf',     label:'Cachecol'},
+  {id:'out_vaquinha', type:'outfit', icon:'cow',       label:'Vaquinha'},
+  {id:'out_galochas', type:'outfit', icon:'boot',      label:'Galochas'},
+  {id:'out_abelha',   type:'outfit', icon:'bee',       label:'Abelhinha'},
   {id:'out_pintinhas',type:'outfit', icon:'ladybug',   label:'Pintinhas'},
   {id:'out_tenis',    type:'outfit', icon:'sneaker',   label:'Tênis'},
 ];
@@ -1759,9 +1759,9 @@ const PHASE_PICKUPS=[
   null,
   {4:'hat_laco',   7:'out_tenis'},
   {4:'hat_flor',   7:'out_pintinhas'},
-  {4:'hat_bone',   7:'out_cachecol'},
-  {4:'hat_cartola',7:'out_sueter'},
-  {4:'hat_coroa',  7:'out_mochila'},
+  {4:'hat_bone',   7:'out_abelha'},
+  {4:'hat_cartola',7:'out_galochas'},
+  {4:'hat_coroa',  7:'out_vaquinha'},
 ];
 
 // ═══════════════════════════════════
@@ -2072,7 +2072,7 @@ function loadState(){
     if(!raw)return;
     const data=JSON.parse(raw);
     // as roupas antigas viraram roupas novas (mesma fase em que a criança ganhou)
-    const OLD_OUT={out_capa:'out_mochila',out_borboleta:'out_sueter',out_arcoirs:'out_cachecol',out_estrela:'out_pintinhas',out_coracao:'out_tenis'};
+    const OLD_OUT={out_capa:'out_vaquinha',out_borboleta:'out_galochas',out_arcoirs:'out_abelha',out_mochila:'out_vaquinha',out_sueter:'out_galochas',out_cachecol:'out_abelha',out_estrela:'out_pintinhas',out_coracao:'out_tenis'};
     const mig=id=>OLD_OUT[id]||id;
     if(Array.isArray(data.unlockedItems))data.unlockedItems=data.unlockedItems.map(mig);
     if(Array.isArray(data.seenItems))data.seenItems=data.seenItems.map(mig);
@@ -3141,9 +3141,9 @@ function switchCat(cat, btn){
 
 // Cores de raridade por acessório
 const RARITY={
-  hat_coroa:'#ffd166', out_mochila:'#ffd166',          // dourado — lendário
-  hat_cartola:'#c3a6f5', out_sueter:'#c3a6f5',   // roxo — épico
-  hat_bone:'#7cb8f0', out_cachecol:'#7cb8f0',        // azul — raro
+  hat_coroa:'#ffd166', out_vaquinha:'#ffd166',          // dourado — lendário
+  hat_cartola:'#c3a6f5', out_galochas:'#c3a6f5',   // roxo — épico
+  hat_bone:'#7cb8f0', out_abelha:'#7cb8f0',        // azul — raro
   hat_flor:'#7fd8a6', out_pintinhas:'#7fd8a6',        // verde — comum
   hat_laco:'#ffb27a', out_tenis:'#ffb27a',        // laranja — inicial
 };
