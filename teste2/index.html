@@ -699,10 +699,10 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 /* ══ MIMI DESLIZANDO PELO LABIRINTO ══ */
 .grid-wrap{position:relative}
 #mimi-token{position:absolute;left:0;top:0;z-index:5;pointer-events:none;display:flex;align-items:center;justify-content:center;
-  transition:transform .26s cubic-bezier(.3,.7,.4,1)}
+  transition:transform .42s cubic-bezier(.3,.7,.4,1)}
 #mimi-token.instant{transition:none}
 #mimi-token .mimi-inner{display:inline-flex;filter:drop-shadow(0 0 6px rgba(255,150,220,.9)) drop-shadow(0 2px 4px rgba(0,0,0,.5))}
-#mimi-token.hop .mimi-inner{animation:mimiStep .26s ease}
+#mimi-token.hop .mimi-inner{animation:mimiStep .42s ease}
 #mimi-token.mud .mimi-inner{animation:mudWobble .45s ease-in-out infinite}
 #mimi-token.sad .mimi-inner{animation:shakeRed .4s ease}
 #mimi-token.happy .mimi-inner{animation:bounce .3s 4 alternate ease-in-out}
@@ -2034,6 +2034,9 @@ let hintOn=false,hintPath=[],penHint=false;
 const HINT_COST=15, MISSING_COST=15, EXTRA_STEP_COST=7;
 function hintLabelText(){return curPhase===0||penHint?'Como sair!':'Como sair! (menos '+HINT_COST+' pontos)';}
 let collected=new Set();
+// brinde que a criança já tem não aparece mais na fase (e não tira pontos)
+function giftOwned(v){const id=(PHASE_PICKUPS[curPhase]||{})[v];return !!id&&unlockedItems.has(id);}
+function giftPending(v){return !collected.has(v)&&!giftOwned(v);}
 let penMud=0,penRock=0,penWall=0;
 let equippedHat=null,equippedOutfit=null;
 let unlockedItems=new Set();
@@ -2048,13 +2051,13 @@ const MIMI_COLORS=[
   {id:'azul',label:'Azul',sw:'#3d9ff0',phase:0,hue:-115},
   {id:'verde',label:'Verde',sw:'#43bf63',phase:1,hue:-190},
   {id:'roxa',label:'Roxa',sw:'#9a68f0',phase:2,hue:-60},
-  {id:'laranja',label:'Laranja',sw:'#ff9638',phase:3,hue:60},
-  {id:'dourada',label:'Dourada',sw:'#f0b429',phase:4,hue:85},
+  {id:'vermelha',label:'Vermelha',sw:'#e53935',phase:3,hue:35,flt:'hue-rotate(35deg) saturate(1.3)'},
+  {id:'bege',label:'Bege',sw:'#efe3cc',phase:4,hue:0,flt:'saturate(.12) brightness(1.35) sepia(.25)'},
 ];
 let mimiColor='rosa';
 const seenColors=new Set(['rosa']);
 function colorUnlocked(c){return c.phase<0||phaseScores[c.phase]!==null;}
-function colorFilter(){const c=MIMI_COLORS.find(x=>x.id===mimiColor);return c&&c.hue?`hue-rotate(${c.hue}deg)`:'';}
+function colorFilter(){const c=MIMI_COLORS.find(x=>x.id===mimiColor);return c&&c.flt?c.flt:c&&c.hue?`hue-rotate(${c.hue}deg)`:'';}
 let motionOn=!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);   // animações de enfeite
 
 // ═══════════════════════════════════
@@ -2100,9 +2103,10 @@ function loadState(){
     if(Array.isArray(data.seenItems))data.seenItems.filter(valid).forEach(id=>seenItems.add(id));
     if(typeof data.soundOn==='boolean')soundOn=data.soundOn;
     if(typeof data.motionOn==='boolean')motionOn=data.motionOn;
-    const col=MIMI_COLORS.find(c=>c.id===data.mimiColor);
+    const OLD_COL={dourada:'bege',laranja:'vermelha'},cid=id=>OLD_COL[id]||id;
+    const col=MIMI_COLORS.find(c=>c.id===cid(data.mimiColor));
     if(col&&colorUnlocked(col))mimiColor=col.id;
-    if(Array.isArray(data.seenColors))data.seenColors.forEach(id=>{if(MIMI_COLORS.some(c=>c.id===id))seenColors.add(id);});
+    if(Array.isArray(data.seenColors))data.seenColors.map(cid).forEach(id=>{if(MIMI_COLORS.some(c=>c.id===id))seenColors.add(id);});
   }catch(e){console.warn('Não foi possível carregar o progresso salvo:',e);}
 }
 
@@ -2334,7 +2338,7 @@ function buildPhaseGrid(){
   let nodePx=Math.round(Math.max(64,Math.min(150,Math.min(MAP_W,MAP_H)*(mapWide?.19:.21))));
   const cur=currentNode();
   const from=(mapMimiAt!==null&&mapMimiAt<cur)?mapMimiAt:cur;   // a Mimi anda da fruta antiga até a nova
-  const walkMs=900;
+  const HOPS=6,HOP_MS=520,REST_MS=280,walkMs=HOPS*(HOP_MS+REST_MS);
   const use3D=Map3D.ok;
   map.classList.toggle('map3d-on',use3D);
   let html=use3D?'':mapSceneSVG();
@@ -2386,24 +2390,28 @@ function buildPhaseGrid(){
   mapMimiAt=cur;
   if(from===cur){mapHello(slot);return;}
   // anda pelo caminho, fase por fase
-  let seg=from,t0=null;
+  // um passinho de cada vez: anda até a próxima florzinha, para, e dá o próximo passo
+  let seg=from,hop=0,t0=null;
   const path=()=>document.getElementById('seg-'+seg);
-  if(slot)slot.setWalking(true);
   function step(now){
-    if(t0===null)t0=now;
-    const p=Math.min(1,(now-t0)/walkMs),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+    if(t0===null){t0=now;if(slot)slot.step();}
+    const q=Math.min(1,(now-t0)/HOP_MS),qe=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
+    const e=Math.min(1,(hop+qe)/HOPS);
     let pt,ahead;
     if(use3D){const a=Map3D.pathScreen(seg,e),b=Map3D.pathScreen(seg,Math.min(1,e+.02));pt={x:a[0],y:a[1]};ahead={x:b[0],y:b[1]};}
     else{const P=path();if(!P)return;const L=P.getTotalLength();pt=P.getPointAtLength(L*e);ahead=P.getPointAtLength(Math.min(L,L*e+4));}
     put(pt.x,pt.y);
     if(slot){const dx=ahead.x-pt.x,dy=ahead.y-pt.y;if(Math.abs(dx)+Math.abs(dy)>.5)slot.face(Math.atan2(-dy*.6,dx));}
-    if(p>=1){
-      seg++;t0=null;
+    if(now-t0<HOP_MS+REST_MS){mapAnim=requestAnimationFrame(step);return;}
+    t0=null;hop++;
+    if(use3D&&hop<HOPS)Map3D.bloom(seg,hop);
+    if(hop>=HOPS){
+      seg++;hop=0;
       const node=map.querySelector(`.map-node[data-i="${seg}"]`);
       if(node)node.classList.add('opened-now');
       if(use3D)Map3D.open(seg);
       if(seg>=cur){
-        if(slot){slot.setWalking(false);slot.face(MAP_FACE);slot.happy();setTimeout(()=>mapHello(slot),1300);}
+        if(slot){slot.face(MAP_FACE);slot.happy();setTimeout(()=>mapHello(slot),1300);}
         sfxPickup();
         speak(`Oba! ${FRUITS[cur].name} liberada!`);
         return;
@@ -2666,7 +2674,7 @@ function renderGrid(animate=false,instant=false){
           div.classList.add('rock');
           div.innerHTML=ico('rock',Math.round(cs*.94));
         }
-        if((v===4||v===7)&&!collected.has(v)){
+        if((v===4||v===7)&&giftPending(v)){
           const item=ITEMS.find(x=>x.id===(PHASE_PICKUPS[curPhase]||{})[v]);
           if(item)div.innerHTML=`<span style="display:inline-flex;filter:drop-shadow(0 2px 3px rgba(120,100,170,.3))" class="gift-bob">${ico(item.icon,isz)}</span>`;
         }
@@ -2857,13 +2865,13 @@ async function executeQueue(stepOnly=false){
       replayLog.push({r:playerR,c:playerC,dir:cmd.d});
 
       // Lama = lenta
-      const delay=v===5?860:320;
+      const delay=v===5?1100:560;
       if(v===5){penMud+=10;sfxMud();showToast('toast-mud');setTimeout(()=>hideToast('toast-mud'),700);}
       await sleep(delay);
       if(myRun!==runId)return;
 
       // Brindes (A = chapéu, B = roupa)
-      if((v===4||v===7)&&!collected.has(v)){
+      if((v===4||v===7)&&giftPending(v)){
         collected.add(v);
         const itemId=(PHASE_PICKUPS[curPhase]||{})[v];
         if(itemId){
@@ -3050,7 +3058,7 @@ function perms(a){return a.length<=1?[a]:a.flatMap((x,i)=>perms(a.filter((_,j)=>
 function bfspath(){
   const lvl=LEVELS[curPhase];
   const goal=findCells(lvl,3)[0];
-  const left=[4,7].filter(v=>!collected.has(v)).flatMap(v=>findCells(lvl,v));
+  const left=[4,7].filter(giftPending).flatMap(v=>findCells(lvl,v));
   let best=null;
   for(const order of perms(left)){
     let cur=[playerR,playerC],path=[],ok=true;
@@ -3076,7 +3084,7 @@ function phaseComplete(steps,blocks=steps){
   const picks=[...collected].flatMap(v=>findCells(lvl,v));
   const sp=minRoute(lvl,picks);
   const extra=Math.max(0,steps-sp);
-  const missing=findCells(lvl,4).length+findCells(lvl,7).length-collected.size;
+  const missing=[4,7].filter(giftPending).flatMap(v=>findCells(lvl,v)).length;
   const hPen=penHint?HINT_COST:0;
   const score=Math.max(0,Math.min(100,100-extra*EXTRA_STEP_COST-missing*MISSING_COST-penMud-penRock-penWall-hPen));
   const wasAllDone=phaseScores.slice(1).every(v=>v!==null);
@@ -3104,7 +3112,7 @@ function phaseComplete(steps,blocks=steps){
   if(penWall>0)  bd+=`<span style="color:#ffb27a">−${penWall} pontos: parede</span><br>`;
   if(hPen>0)     bd+=`<span style="color:#e2b0ff">−${hPen} pontos: dica usada</span><br>`;
 
-  const spAll=minRoute(lvl,[...findCells(lvl,4),...findCells(lvl,7)]);
+  const spAll=minRoute(lvl,[4,7].filter(v=>collected.has(v)||giftPending(v)).flatMap(v=>findCells(lvl,v)));
   const cmdTxt=blocks<steps?` com só ${blocks} comandos`:'';
   const algoMsg=missing>0
     ? `<span style="color:#ffe3a8;font-size:.95rem">${ico('bulb',18)} Você usou ${steps} passos${cmdTxt}. Pegando ${missing===1?'o brinde que faltou':'os brindes que faltaram'}, o caminho mínimo é ${spAll} passos.</span>`

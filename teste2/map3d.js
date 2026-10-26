@@ -182,7 +182,7 @@ M.build=function(container,opts){
       const on=flower(p.x,p.z,PET[(s2+k)%4]);on.position.y=y-.06;on.scale.setScalar(1.15);
       const bud=ball(.06,std('#f4f7ee',{roughness:.6}),p.x,y+.05,p.z,1,1.2,1);
       on.visible=!!opts.segOpen[s2];bud.visible=!opts.segOpen[s2];
-      scene.add(on);scene.add(bud);stones.push({on,bud,seg:s2});
+      scene.add(on);scene.add(bud);stones.push({on,bud,seg:s2,k});
     }
   }
 
@@ -257,6 +257,8 @@ M.open=function(i){
   const f=cur.fruits[i];if(f){tint(f,false);cur.pop.push({f,t:0,y:f.position.y});}
   cur.stones.forEach(s=>{if(s.seg===i-1){s.on.visible=true;s.bud.visible=false;}});
 };
+// a florzinha k do caminho i abre quando a Mimi pisa nela
+M.bloom=function(i,k){if(cur)cur.stones.forEach(s=>{if(s.seg===i&&s.k===k){s.on.visible=true;s.bud.visible=false;}});};
 M.setCalm=function(b){M.calm=b;};
 function loop(){
   if(!cur)return;

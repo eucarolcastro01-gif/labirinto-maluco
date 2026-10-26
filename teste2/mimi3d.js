@@ -51,8 +51,8 @@ const COLORS={
   azul:   {body:'#3d9ff0',head:'#5ab3f6',belly:'#c4e4ff',leg:'#2f88d8',stalk:'#2a76c0',tip:'#ffd166'},
   verde:  {body:'#43bf63',head:'#5fd07e',belly:'#ccf3d6',leg:'#35a553',stalk:'#2c8f47',tip:'#ffd166'},
   roxa:   {body:'#9a68f0',head:'#ac82f6',belly:'#e0d3ff',leg:'#8553de',stalk:'#7144c8',tip:'#ffd166'},
-  laranja:{body:'#ff9638',head:'#ffaa58',belly:'#ffe2c2',leg:'#e97f26',stalk:'#d26f1c',tip:'#fff07a'},
-  dourada:{body:'#f0b429',head:'#f7c64a',belly:'#fff0bf',leg:'#d99c1c',stalk:'#c58a12',tip:'#ff6fb5'},
+  vermelha:{body:'#e53935',head:'#ef5350',belly:'#ffcdd2',leg:'#c62828',stalk:'#b71c1c',tip:'#ffd166'},
+  bege:   {body:'#efe3cc',head:'#f6ecda',belly:'#fffaf0',leg:'#d9c7a6',stalk:'#bfa983',tip:'#ff8fc4'},
 };
 M3.COLORS=COLORS;
 function setColor(rig,id){
@@ -471,7 +471,7 @@ function updateRig(slot,dt){
   st.yawVel=d*Math.min(1,dt*12)/Math.max(dt,1e-3);
   st.yaw+=d*Math.min(1,dt*12);
   // passos: uma onda que corre do rabo até a cabeça, como uma lagarta de verdade
-  if(st.walkT>0)st.walkT=Math.max(0,st.walkT-dt/.34);
+  if(st.walkT>0)st.walkT=Math.max(0,st.walkT-dt/.5);
   const moving=st.walking||st.walkT>0;
   if(moving)st.crawl+=dt*(st.mud?7:15);
   const crawlAmp=st.walking?1:Math.min(1,st.walkT*1.6);
