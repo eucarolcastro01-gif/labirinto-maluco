@@ -404,6 +404,7 @@ function buildScene(view){
 // ── LUGARES (slots) ──
 const slots=new Set();
 const DIR_YAW={right:0,left:Math.PI,down:-Math.PI/2,up:Math.PI/2};
+const STEP_S=.56;   // duração de um passinho (o mesmo tempo do deslize no labirinto)
 function angDiff(a,b){let d=(b-a)%(Math.PI*2);if(d>Math.PI)d-=Math.PI*2;if(d<-Math.PI)d+=Math.PI*2;return d;}
 
 M3.mount=function(container,opts={}){
@@ -422,7 +423,7 @@ M3.mount=function(container,opts={}){
   const ctx=canvas.getContext('2d');
   container.innerHTML='';container.appendChild(canvas);
   const yaw0=opts.yaw!=null?opts.yaw:(VIEWS[view]||VIEWS.front).yaw;
-  const st={t:Math.random()*10,yaw:yaw0,yawT:yaw0,yawVel:0,walkT:0,walking:false,crawl:0,happyT:0,sadT:0,mud:false,
+  const st={t:Math.random()*10,yaw:yaw0,yawT:yaw0,yawVel:0,walkT:0,walkFade:0,walking:false,crawl:0,happyT:0,sadT:0,mud:false,
     blink:0,nextBlink:1+Math.random()*2,mood:opts.mood||'normal',prevHeadY:0,prevVel:0,idleHop:opts.idleHop||false,nextHop:2,waveT:0,metaT:-1,danceT:0,biteT:0,comfortT:0,biteDelay:0};
   const slot={canvas,ctx,scene,cam,rig,st,view,size:0,container,
     setSize(px){
@@ -466,15 +467,20 @@ function updateRig(slot,dt){
   const idle=M3.calm?0:1;
   st.t+=dt*idle;const t=st.t;
   // virar para a direção do passo (gira pelo lado mais curto)
+  // mola amortecida: começa a girar devagar, acelera e chega sem tranco
   const d=angDiff(st.yaw,st.yawT);
   const yawVelPrev=st.yawVel;
-  st.yawVel=d*Math.min(1,dt*12)/Math.max(dt,1e-3);
-  st.yaw+=d*Math.min(1,dt*12);
+  const W=13;
+  st.yawVel+=(W*W*d-2*W*st.yawVel)*dt;
+  st.yaw+=st.yawVel*dt;
   // passos: uma onda que corre do rabo até a cabeça, como uma lagarta de verdade
-  if(st.walkT>0)st.walkT=Math.max(0,st.walkT-dt/.5);
-  const moving=st.walking||st.walkT>0;
-  if(moving)st.crawl+=dt*(st.mud?7:15);
-  const crawlAmp=st.walking?1:Math.min(1,st.walkT*1.6);
+  // cada passo é uma onda inteira do rabo até a cabeça, que começa e termina suave
+  if(st.walkT>0)st.walkT=Math.max(0,st.walkT-dt/STEP_S);
+  const moving=st.walking||st.walkT>0||st.walkFade>0;
+  if(st.walking||st.walkT>0)st.walkFade=1;else st.walkFade=Math.max(0,st.walkFade-dt/.25);
+  if(moving)st.crawl+=dt*(st.walking?(st.mud?7:15):(st.mud?.5:1)*Math.PI*2/STEP_S*(st.walkT>0?1:.35));
+  const sp=1-st.walkT,env=st.walkT>0?Math.sin(Math.PI*Math.min(1,sp*1.15))**.6:0;
+  const crawlAmp=st.walking?1:st.walkT>0?Math.max(env,.15):.15*st.walkFade;
   rig.segs.forEach((s,i)=>{
     const breathe=1+.028*Math.sin(t*2.3-i*.7)*idle;
     const ph=st.crawl-(rig.segs.length-1-i)*1.1;

@@ -586,7 +586,7 @@ body{
 .flash-error{animation:shakeRed .4s ease}
 
 @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-15px)}}
-@keyframes mimiStep{0%{transform:scale(1)}40%{transform:scale(1.18) translateY(-3px)}100%{transform:scale(1)}}
+@keyframes mimiStep{0%{transform:scale(1)}20%{transform:scale(1.04,.97)}45%{transform:scale(1.1) translateY(-3px)}70%{transform:scale(1.03,.98) translateY(-1px)}100%{transform:scale(1)}}
 @keyframes gardenFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(540deg);opacity:0}}
 
 /* ══ ADAPTAÇÕES PARA CRIANÇAS ══ */
@@ -699,10 +699,10 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 /* ══ MIMI DESLIZANDO PELO LABIRINTO ══ */
 .grid-wrap{position:relative}
 #mimi-token{position:absolute;left:0;top:0;z-index:5;pointer-events:none;display:flex;align-items:center;justify-content:center;
-  transition:transform .42s cubic-bezier(.3,.7,.4,1)}
+  transition:transform .56s cubic-bezier(.45,.05,.35,1);will-change:transform}
 #mimi-token.instant{transition:none}
 #mimi-token .mimi-inner{display:inline-flex;filter:drop-shadow(0 0 6px rgba(255,150,220,.9)) drop-shadow(0 2px 4px rgba(0,0,0,.5))}
-#mimi-token.hop .mimi-inner{animation:mimiStep .42s ease}
+#mimi-token.hop .mimi-inner{animation:mimiStep .56s ease-in-out}
 #mimi-token.mud .mimi-inner{animation:mudWobble .45s ease-in-out infinite}
 #mimi-token.sad .mimi-inner{animation:shakeRed .4s ease}
 #mimi-token.happy .mimi-inner{animation:bounce .3s 4 alternate ease-in-out}
@@ -878,7 +878,7 @@ canvas.map3d{position:absolute;inset:0;display:block;z-index:0;border-radius:24p
 .map3d-on .map-node.current:not(.just-opened),.map3d-on .map-node.opened-now{animation:nodeRing 1.1s ease-in-out infinite alternate}
 @keyframes nodeRing{from{box-shadow:0 0 0 0 rgba(255,209,102,0)}to{box-shadow:0 0 0 8px rgba(255,209,102,.75)}}
 .map3d-on .map-node:focus-visible{outline:4px solid #ffd700;outline-offset:2px}
-.map-mimi{position:absolute;z-index:3;pointer-events:none;transform:translate(-50%,-96%);display:flex;align-items:flex-end;justify-content:center}
+.map-mimi{position:absolute;z-index:3;pointer-events:none;transform:translate(-50%,-96%);will-change:transform;display:flex;align-items:flex-end;justify-content:center}
 #screen-phases{gap:6px;width:100%;padding:4px 0}
 #screen-phases .phases-bottom{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center}
 #screen-phases .phases-header{font-size:2rem}
@@ -2338,7 +2338,7 @@ function buildPhaseGrid(){
   let nodePx=Math.round(Math.max(64,Math.min(150,Math.min(MAP_W,MAP_H)*(mapWide?.19:.21))));
   const cur=currentNode();
   const from=(mapMimiAt!==null&&mapMimiAt<cur)?mapMimiAt:cur;   // a Mimi anda da fruta antiga até a nova
-  const HOPS=6,HOP_MS=520,REST_MS=280,walkMs=HOPS*(HOP_MS+REST_MS);
+  const HOPS=6,HOP_MS=560,REST_MS=240,walkMs=HOPS*(HOP_MS+REST_MS);
   const use3D=Map3D.ok;
   map.classList.toggle('map3d-on',use3D);
   let html=use3D?'':mapSceneSVG();
@@ -2385,7 +2385,8 @@ function buildPhaseGrid(){
   let slot=null;
   if(Mimi3D.ok){slot=Mimi3D.mount(mm,{size:nodePx*(use3D?1.55:1.5),yaw:MAP_FACE});slot.setLook(equippedHat,equippedOutfit);slot.setColor(mimiColor);slot.setMood('normal');slot.face(MAP_FACE);}
   else{mm.innerHTML=makeMimi(Math.round(nodePx*1.1),equippedHat,equippedOutfit);mm.style.filter=colorFilter();}
-  const put=(x,y)=>{mm.style.left=(x/MAP_W*100)+'%';mm.style.top=(y/MAP_H*100)+'%';};
+  // move com transform (fica liso, sem pular de pixel em pixel)
+  const put=(x,y)=>{mm.style.left='0';mm.style.top='0';mm.style.transform=`translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-96%)`;};
   put(...(use3D?Map3D.standScreen(from):MAP_PTS[from]));
   mapMimiAt=cur;
   if(from===cur){mapHello(slot);return;}
@@ -2865,7 +2866,7 @@ async function executeQueue(stepOnly=false){
       replayLog.push({r:playerR,c:playerC,dir:cmd.d});
 
       // Lama = lenta
-      const delay=v===5?1100:560;
+      const delay=v===5?1100:600;
       if(v===5){penMud+=10;sfxMud();showToast('toast-mud');setTimeout(()=>hideToast('toast-mud'),700);}
       await sleep(delay);
       if(myRun!==runId)return;

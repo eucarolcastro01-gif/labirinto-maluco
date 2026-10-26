@@ -263,7 +263,7 @@ M.setCalm=function(b){M.calm=b;};
 function loop(){
   if(!cur)return;
   if(!cur.container.isConnected){M.dispose();return;}
-  const dt=1/60;cur.t+=dt;
+  const now=performance.now(),dt=Math.min(.05,(now-(cur.last||now))/1000);cur.last=now;cur.t+=dt;
   if(!M.calm){
     cur.fruits.forEach((f,i)=>{f.rotation.y=Math.sin(cur.t*.8+i)*.35;});
     cur.clouds.forEach((c,i)=>{c.position.x+=dt*.25*(i%2?1:.7);if(c.position.x>14)c.position.x=-14;});
