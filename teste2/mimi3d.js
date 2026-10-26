@@ -6,7 +6,7 @@
 //  continua usando a Mimi desenhada em SVG.
 // ═══════════════════════════════════════════════════════════════
 (function(){
-const M3={ok:false};
+const M3={ok:false,calm:false};   // calm = sem animações paradas "de enfeite" (botão parar animações)
 window.Mimi3D=M3;
 if(!window.THREE)return;
 
@@ -45,6 +45,20 @@ const MAT={
   sweat: phys({color:'#bfe3ff',roughness:.05,transmission:.4,transparent:true,opacity:.85,clearcoat:1}),
   gold:  new THREE.MeshStandardMaterial({color:'#ffd166',metalness:.75,roughness:.28}),
 };
+// cores que a criança ganha jogando (cada fase vencida libera uma). Sem compras e sem sorteio.
+const COLORS={
+  rosa:   {body:'#ee5fae',head:'#f477bd',belly:'#ffb3d9',leg:'#d9579f',stalk:'#c94f97',tip:'#ffd166'},
+  azul:   {body:'#3d9ff0',head:'#5ab3f6',belly:'#c4e4ff',leg:'#2f88d8',stalk:'#2a76c0',tip:'#ffd166'},
+  verde:  {body:'#43bf63',head:'#5fd07e',belly:'#ccf3d6',leg:'#35a553',stalk:'#2c8f47',tip:'#ffd166'},
+  roxa:   {body:'#9a68f0',head:'#ac82f6',belly:'#e0d3ff',leg:'#8553de',stalk:'#7144c8',tip:'#ffd166'},
+  laranja:{body:'#ff9638',head:'#ffaa58',belly:'#ffe2c2',leg:'#e97f26',stalk:'#d26f1c',tip:'#fff07a'},
+  dourada:{body:'#f0b429',head:'#f7c64a',belly:'#fff0bf',leg:'#d99c1c',stalk:'#c58a12',tip:'#ff6fb5'},
+};
+M3.COLORS=COLORS;
+function setColor(rig,id){
+  const c=COLORS[id]||COLORS.rosa;if(rig.color===id)return;rig.color=id;
+  Object.keys(rig.mats).forEach(k=>rig.mats[k].color.set(c[k]));
+}
 const std=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.5},o));
 
 const G={
@@ -85,14 +99,15 @@ function buildMimi(){
   const yawG=new THREE.Group();          // para onde ela olha
   root.add(yawG);
   const body=new THREE.Group();yawG.add(body);
+  const mats={};['body','head','belly','leg','stalk','tip'].forEach(k=>mats[k]=MAT[k].clone());   // cada Mimi tem as suas cores
   const segs=[];
   SEGS.forEach((s,i)=>{
     const g=new THREE.Group();g.position.set(s.x,s.r+LEG_H,0);
-    const b=ball(s.r,MAT.body);g.add(b);
-    const belly=ball(s.r*.82,MAT.belly,0,-s.r*.32,0,1,.55,1.02);belly.castShadow=false;g.add(belly);
+    const b=ball(s.r,mats.body);g.add(b);
+    const belly=ball(s.r*.82,mats.belly,0,-s.r*.32,0,1,.55,1.02);belly.castShadow=false;g.add(belly);
     const legs=[];
     [-1,1].forEach(side=>{
-      const l=mesh(G.leg,MAT.leg);
+      const l=mesh(G.leg,mats.leg);
       l.position.set(0,-s.r-.02,side*s.r*.45);
       g.add(l);legs.push(l);
     });
@@ -102,7 +117,7 @@ function buildMimi(){
   // cabeça
   const headPivot=new THREE.Group();headPivot.position.set(1.05,.84,0);yawG.add(headPivot);
   const head=new THREE.Group();headPivot.add(head);
-  const skull=ball(.6,MAT.head);head.add(skull);
+  const skull=ball(.6,mats.head);head.add(skull);
   // rostinho (na frente, +x)
   const face=new THREE.Group();head.add(face);
   const eyes=[],happyEyes=[],eyeHi=[];
@@ -137,16 +152,23 @@ function buildMimi(){
   [-1,1].forEach(side=>{
     const piv=new THREE.Group();piv.position.set(.05,.5,side*.2);head.add(piv);
     const curve=new THREE.QuadraticBezierCurve3(new THREE.Vector3(0,0,0),new THREE.Vector3(-.05,.32,side*.05),new THREE.Vector3(-.2,.55,side*.2));
-    const st=mesh(new THREE.TubeGeometry(curve,16,.032,8,false),MAT.stalk);piv.add(st);
-    const tip=ball(.11,MAT.tip,-.2,.57,side*.2);piv.add(tip);
+    const st=mesh(new THREE.TubeGeometry(curve,16,.032,8,false),mats.stalk);piv.add(st);
+    const tip=ball(.11,mats.tip,-.2,.57,side*.2);piv.add(tip);
     ants.push({piv,side,ang:0,vel:0,ang2:0,vel2:0});
   });
 
   const hatSlot=new THREE.Group();hatSlot.position.set(-.05,.5,0);head.add(hatSlot);
   const outfitSlot=new THREE.Group();yawG.add(outfitSlot);
 
+  // pedacinho da fruta que ela morde quando chega na estrela
+  const bitePiece=ball(.36,new THREE.MeshPhysicalMaterial({color:'#ffd166',roughness:.45,clearcoat:.4}),1.6,.32,0);
+  bitePiece.visible=false;yawG.add(bitePiece);
+  // coraçãozinho do carinho quando ela erra
+  const heart=mesh(GHEART,new THREE.MeshStandardMaterial({color:'#ff4f9a',roughness:.35,emissive:new THREE.Color('#ff4f9a'),emissiveIntensity:.25,transparent:true}),false);
+  heart.visible=false;
+
   return {root,yawG,body,segs,headPivot,head,eyes,eyeHi,happyEyes,smile,oMouth,sweat,ants,hatSlot,outfitSlot,
-    look:'',cape:null,wings:null};
+    bitePiece,heart,mats,color:'rosa',look:'',cape:null,wings:null};
 }
 
 // ── ACESSÓRIOS EM 3D ──
@@ -315,14 +337,15 @@ M3.mount=function(container,opts={}){
   }
   const view=opts.view||'front';
   const {scene,cam}=buildScene(view);
-  const rig=buildMimi();scene.add(rig.root);
+  const rig=buildMimi();scene.add(rig.root);scene.add(rig.heart);
+  setColor(rig,opts.color||M3.color||'rosa');
   const canvas=document.createElement('canvas');canvas.className='mimi3d';
   canvas.setAttribute('aria-hidden','true');
   const ctx=canvas.getContext('2d');
   container.innerHTML='';container.appendChild(canvas);
   const yaw0=opts.yaw!=null?opts.yaw:(VIEWS[view]||VIEWS.front).yaw;
   const st={t:Math.random()*10,yaw:yaw0,yawT:yaw0,yawVel:0,walkT:0,walking:false,crawl:0,happyT:0,sadT:0,mud:false,
-    blink:0,nextBlink:1+Math.random()*2,mood:opts.mood||'normal',prevHeadY:0,prevVel:0,idleHop:opts.idleHop||false,nextHop:2};
+    blink:0,nextBlink:1+Math.random()*2,mood:opts.mood||'normal',prevHeadY:0,prevVel:0,idleHop:opts.idleHop||false,nextHop:2,waveT:0,danceT:0,biteT:0,comfortT:0,biteDelay:0};
   const slot={canvas,ctx,scene,cam,rig,st,view,size:0,container,
     setSize(px){
       px=Math.max(24,Math.round(px));if(px===this.size)return;this.size=px;
@@ -334,7 +357,14 @@ M3.mount=function(container,opts={}){
     step(){st.walkT=1;},
     setWalking(b){st.walking=b;},
     happy(){st.happyT=1;},
-    sad(){st.sadT=1;},
+    wave(){st.waveT=1;st.happyT=Math.max(st.happyT,.5);},   // "oi!": levanta a cabeça e balança as antenas
+    sad(){st.sadT=1;st.comfortT=0;},
+    // comemoração na estrela: dancinha e depois uma mordidinha na fruta (cor da fruta)
+    celebrate(fruitColor){st.danceT=1;st.happyT=0;st.biteDelay=1.5;rig.bitePiece.material.color.set(fruitColor||'#ffd166');},
+    // carinho depois do erro: acena "sim, tudo bem" com a cabeça e solta um coraçãozinho
+    comfort(){st.comfortT=1;},
+    busy(){return st.danceT>0||st.biteDelay>0||st.biteT>0;},
+    setColor(id){setColor(rig,id);},
     setMud(b){st.mud=!!b;},
     setMood(m){st.mood=m||'normal';},
     setLook(h,o){setLook(rig,h,o);},
@@ -350,7 +380,10 @@ M3.mount=function(container,opts={}){
 
 // ── ANIMAÇÃO (tudo calculado por código a cada quadro) ──
 function updateRig(slot,dt){
-  const {rig,st}=slot;st.t+=dt;const t=st.t;
+  const {rig,st}=slot;
+  // no modo calmo, os movimentos de enfeite (respirar, balançar) ficam parados; os de ação continuam
+  const idle=M3.calm?0:1;
+  st.t+=dt*idle;const t=st.t;
   // virar para a direção do passo (gira pelo lado mais curto)
   const d=angDiff(st.yaw,st.yawT);
   const yawVelPrev=st.yawVel;
@@ -362,7 +395,7 @@ function updateRig(slot,dt){
   if(moving)st.crawl+=dt*(st.mud?7:15);
   const crawlAmp=st.walking?1:Math.min(1,st.walkT*1.6);
   rig.segs.forEach((s,i)=>{
-    const breathe=1+.028*Math.sin(t*2.3-i*.7);
+    const breathe=1+.028*Math.sin(t*2.3-i*.7)*idle;
     const ph=st.crawl-(rig.segs.length-1-i)*1.1;
     const lift=moving?Math.max(0,Math.sin(ph))*.13*crawlAmp:0;
     const squash=moving?1+.07*Math.sin(ph+1.2)*crawlAmp:1;
@@ -373,7 +406,10 @@ function updateRig(slot,dt){
   });
   // cabeça: balança de leve, acompanha a onda
   const hph=st.crawl+.3;
-  let headY=.82+(moving?Math.max(0,Math.sin(hph))*.09*crawlAmp:0)+Math.sin(t*2.3+.5)*.02;
+  let headY=.84+(moving?Math.max(0,Math.sin(hph))*.09*crawlAmp:0)+Math.sin(t*2.3+.5)*.02*idle;
+  // aceno: a cabeça sobe e balança de um lado para o outro
+  let waveLift=0;
+  if(st.waveT>0){st.waveT=Math.max(0,st.waveT-dt/1.6);const p=1-st.waveT;waveLift=Math.sin(p*Math.PI);headY+=waveLift*.35;}
   rig.headPivot.position.y=headY;
   rig.head.rotation.z=Math.sin(t*1.3)*.05+(moving?Math.sin(hph)*.06*crawlAmp:0);
   rig.head.rotation.y=Math.sin(t*.9)*.08;
@@ -388,7 +424,7 @@ function updateRig(slot,dt){
     y=hop*.55;spin=p<.5?p*2*Math.PI*2:0;
     const land=1-hop;sy=1-.18*land*land*(1-p);sx=1+.12*land*land*(1-p);
   }else if(st.idleHop){
-    st.nextHop-=dt;if(st.nextHop<0){st.happyT=.5;st.nextHop=3+Math.random()*3;}
+    st.nextHop-=dt*idle;if(st.nextHop<0){st.happyT=.5;st.nextHop=3+Math.random()*3;}
   }
   // tristeza (bateu): balança a cabeça "não"
   let shake=0;
@@ -397,16 +433,51 @@ function updateRig(slot,dt){
   // lama: afunda e treme
   if(st.mud){y-=.12;rig.yawG.rotation.z=Math.sin(t*10)*.06;rig.yawG.rotation.x=Math.sin(t*7)*.05;}
   else{rig.yawG.rotation.z=0;rig.yawG.rotation.x=0;}
+  // dancinha: o corpo faz uma onda de um lado para o outro e ela pula no ritmo
+  let dance=0;
+  if(st.danceT>0){
+    st.danceT=Math.max(0,st.danceT-dt/1.5);const p=1-st.danceT;dance=Math.sin(p*Math.PI);
+    const beat=p*Math.PI*8;
+    rig.segs.forEach((s,i)=>{s.g.position.z=Math.sin(beat-i*.9)*.3*dance;});
+    rig.headPivot.position.z=Math.sin(beat+.9)*.3*dance;
+    y+=Math.abs(Math.sin(beat/2))*.22*dance;
+    spin+=(p<.5?0:(1-Math.cos((p-.5)*2*Math.PI))/2*Math.PI*2);   // no fim, um giro completo
+  }else{rig.segs.forEach(s=>{s.g.position.z=0;});rig.headPivot.position.z=0;}
+  // mordidinha: 3 nhacs no pedaço da fruta, que vai diminuindo
+  let chomp=0;
+  if(st.biteDelay>0){st.biteDelay-=dt;if(st.biteDelay<=0){st.biteT=1;rig.bitePiece.visible=true;}}
+  if(st.biteT>0){
+    st.biteT=Math.max(0,st.biteT-dt/1.5);const p=1-st.biteT;
+    chomp=Math.max(0,Math.sin(p*Math.PI*6));
+    const left=1-Math.floor(p*3+.15)/3;
+    rig.bitePiece.scale.setScalar(.36*Math.max(.05,left));
+    rig.bitePiece.position.y=.3*Math.max(.3,left);
+    if(st.biteT===0)rig.bitePiece.visible=false;
+  }
+  // carinho: a cabeça diz "sim" devagar e um coração sobe
+  let nod=0;
+  if(st.comfortT>0){
+    st.comfortT=Math.max(0,st.comfortT-dt/1.8);const p=1-st.comfortT;
+    nod=Math.sin(p*Math.PI*4)*.2*(1-p*.6);
+    const hp=new THREE.Vector3();rig.head.getWorldPosition(hp);
+    rig.heart.visible=true;
+    rig.heart.position.set(hp.x,hp.y+.8+p*1.1,hp.z);
+    rig.heart.quaternion.copy(slot.cam.quaternion);
+    const sc=.42*Math.min(1,p*5);rig.heart.scale.setScalar(sc);
+    rig.heart.material.opacity=Math.min(1,(1-p)*3);
+    if(st.comfortT===0)rig.heart.visible=false;
+  }
   rig.root.position.y=y;
   rig.root.scale.set(sx,sy,sx);
   rig.yawG.rotation.y=st.yaw+spin;
 
   // humor
-  const happyFace=st.mood==='happy'||st.happyT>0;
-  const sadFace=st.mood==='sad'||st.sadT>0||st.mud;
+  const happyFace=st.mood==='happy'||st.happyT>0||st.danceT>0||st.biteT>0;
+  const sadFace=(st.mood==='sad'||st.sadT>0||st.mud)&&!(st.comfortT>0&&st.sadT===0);
   rig.eyes.forEach(e=>e.visible=!happyFace);
   rig.happyEyes.forEach(e=>e.visible=happyFace);
-  rig.smile.visible=!sadFace;rig.oMouth.visible=sadFace;
+  rig.smile.visible=!sadFace&&chomp<.35;rig.oMouth.visible=sadFace||chomp>=.35;
+  if(chomp>=.35)rig.oMouth.scale.set(.06*1.6,.06*1.6*chomp,.03);else rig.oMouth.scale.set(.06,.051,.03);
   rig.sweat.visible=sadFace;
   if(sadFace)rig.sweat.position.y=.42-((t*.6)%1)*.15;
   // piscar
@@ -426,12 +497,17 @@ function updateRig(slot,dt){
     const k=90,c=7;
     const f=-k*(a.ang-droop)-c*a.vel-Math.max(-60,Math.min(60,acc))*.9;
     a.vel+=f*dt;a.ang+=a.vel*dt;
-    const f2=-k*a.ang2-c*a.vel2-Math.max(-200,Math.min(200,yawAcc))*.12+Math.sin(t*1.7+a.side)*1.5;
+    const f2=-k*a.ang2-c*a.vel2-Math.max(-200,Math.min(200,yawAcc))*.12+Math.sin(t*1.7+a.side)*1.5*idle+(st.waveT>0?Math.sin(performance.now()/60)*40*waveLift:0);
     a.vel2+=f2*dt;a.ang2+=a.vel2*dt;
     a.piv.rotation.z=a.ang;a.piv.rotation.x=a.ang2*a.side*.8+a.side*.08;
   });
   if(rig.cape)rig.cape.userData.update(t*(moving?1.8:1));
   if(rig.wings)rig.wings.userData.update(t);
+  if(waveLift){rig.head.rotation.z+=waveLift*.35;rig.head.rotation.x=Math.sin(performance.now()/130)*.35*waveLift;rig.segs[0].g.position.y+=waveLift*.18;}
+  else rig.head.rotation.x=0;
+  if(chomp)rig.head.rotation.z-=chomp*.55;         // abaixa a cabeça para morder
+  if(nod)rig.head.rotation.z+=nod;
+  if(dance)rig.head.rotation.x+=Math.sin((1-st.danceT)*Math.PI*8)*.25*dance;
 }
 
 let running=false,last=0;
