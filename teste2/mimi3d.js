@@ -32,16 +32,16 @@ M3.ok=true;
 // ── MATERIAIS (compartilhados por todas as Mimis) ──
 const phys=(o)=>new THREE.MeshPhysicalMaterial(o);
 const MAT={
-  body:  phys({color:'#f497c2',roughness:.6,sheen:.55,sheenColor:new THREE.Color('#fff0f8'),sheenRoughness:.45,clearcoat:.12,clearcoatRoughness:.6}),
-  head:  phys({color:'#f8aacd',roughness:.55,sheen:.55,sheenColor:new THREE.Color('#fff4fa'),sheenRoughness:.4,clearcoat:.18,clearcoatRoughness:.5}),
-  belly: phys({color:'#ffd9ea',roughness:.7,sheen:.6,sheenColor:new THREE.Color('#ffffff')}),
+  body:  phys({color:'#ee5fae',roughness:.55,sheen:.45,sheenColor:new THREE.Color('#fff0f8'),sheenRoughness:.45,clearcoat:.12,clearcoatRoughness:.6}),
+  head:  phys({color:'#f477bd',roughness:.5,sheen:.45,sheenColor:new THREE.Color('#fff4fa'),sheenRoughness:.4,clearcoat:.18,clearcoatRoughness:.5}),
+  belly: phys({color:'#ffb3d9',roughness:.7,sheen:.6,sheenColor:new THREE.Color('#ffffff')}),
   eye:   phys({color:'#3b3058',roughness:.12,clearcoat:1,clearcoatRoughness:.05}),
   white: new THREE.MeshBasicMaterial({color:'#ffffff'}),
-  cheek: new THREE.MeshStandardMaterial({color:'#ff86b8',roughness:.9,transparent:true,opacity:.55}),
+  cheek: new THREE.MeshStandardMaterial({color:'#ff4f9a',roughness:.9,transparent:true,opacity:.55}),
   mouth: new THREE.MeshStandardMaterial({color:'#b84e86',roughness:.6}),
-  stalk: phys({color:'#e690bf',roughness:.5}),
+  stalk: phys({color:'#c94f97',roughness:.5}),
   tip:   phys({color:'#ffd166',roughness:.25,clearcoat:.8,emissive:new THREE.Color('#5a3a00'),emissiveIntensity:.25}),
-  leg:   phys({color:'#ec97c3',roughness:.6,sheen:.6,sheenColor:new THREE.Color('#ffffff')}),
+  leg:   phys({color:'#d9579f',roughness:.6,sheen:.6,sheenColor:new THREE.Color('#ffffff')}),
   sweat: phys({color:'#bfe3ff',roughness:.05,transmission:.4,transparent:true,opacity:.85,clearcoat:1}),
   gold:  new THREE.MeshStandardMaterial({color:'#ffd166',metalness:.75,roughness:.28}),
 };
@@ -77,7 +77,7 @@ const GHEART=new THREE.ExtrudeGeometry(heartShape(),EXT);GHEART.center();
 
 // ── O CORPO DA MIMI ──
 // A cabeça olha para +x. Segmentos do corpo vão para trás (−x).
-const SEGS=[{r:.5,x:.36},{r:.46,x:-.2},{r:.42,x:-.71}];
+const SEGS=[{r:.52,x:.42},{r:.5,x:-.13},{r:.46,x:-.66},{r:.41,x:-1.13}];   // 4 gomos do corpo, do pescoço até o rabinho
 const LEG_H=.11;
 
 function buildMimi(){
@@ -100,9 +100,9 @@ function buildMimi(){
   });
 
   // cabeça
-  const headPivot=new THREE.Group();headPivot.position.set(.98,.82,0);yawG.add(headPivot);
+  const headPivot=new THREE.Group();headPivot.position.set(1.05,.84,0);yawG.add(headPivot);
   const head=new THREE.Group();headPivot.add(head);
-  const skull=ball(.62,MAT.head);head.add(skull);
+  const skull=ball(.6,MAT.head);head.add(skull);
   // rostinho (na frente, +x)
   const face=new THREE.Group();head.add(face);
   const eyes=[],happyEyes=[],eyeHi=[];
@@ -195,18 +195,18 @@ function buildHat(id){
 }
 
 function makeCape(){
-  const geo=new THREE.PlaneGeometry(1.75,1.25,24,10);
+  const geo=new THREE.PlaneGeometry(2.1,1.3,28,10);
   const pos=geo.attributes.position;const base=new Float32Array(pos.array);
-  const m=new THREE.Mesh(geo,phys({color:'#ff8f9b',roughness:.55,sheen:1,sheenColor:new THREE.Color('#ffd0d6'),side:THREE.DoubleSide}));
+  const m=new THREE.Mesh(geo,phys({color:'#ff3b55',roughness:.55,sheen:.6,sheenColor:new THREE.Color('#ff9aa8'),side:THREE.DoubleSide}));
   m.castShadow=true;
   m.rotation.x=-Math.PI/2;
-  m.position.set(-.18,1.02,0);
+  m.position.set(-.35,1.04,0);
   const gold=mesh(new THREE.TorusGeometry(.2,.035,8,24),MAT.gold);gold.position.set(.72,.92,0);gold.rotation.y=Math.PI/2;
   const g=new THREE.Group();g.add(m);g.add(gold);
   g.userData.update=(t)=>{
     for(let i=0;i<pos.count;i++){
       const x=base[i*3],y=base[i*3+1];          // y do plano = largura (vai virar z)
-      const back=(.88-x)/1.75;                   // 0 perto da cabeça, 1 na ponta
+      const back=(1.05-x)/2.1;                   // 0 perto da cabeça, 1 na ponta
       const drape=-1.35*y*y;                     // cai pelos lados do corpo
       const wave=Math.sin(t*5-x*4)*.06*back;
       pos.array[i*3+2]=drape+wave-back*.12;
@@ -222,7 +222,7 @@ function makeWings(){
   const s2=new THREE.Shape();
   s2.moveTo(0,0);s2.bezierCurveTo(.5,-.1,.95,-.35,.75,-.6);s2.bezierCurveTo(.5,-.85,.15,-.4,0,0);
   const geo=new THREE.ExtrudeGeometry([s,s2],{depth:.02,bevelEnabled:true,bevelThickness:.01,bevelSize:.01,bevelSegments:1});
-  const mat=phys({color:'#c9b2ff',roughness:.25,transparent:true,opacity:.88,side:THREE.DoubleSide,sheen:1,sheenColor:new THREE.Color('#ffd0f5'),iridescence:.6});
+  const mat=phys({color:'#a66bff',roughness:.25,transparent:true,opacity:.9,side:THREE.DoubleSide,sheen:1,sheenColor:new THREE.Color('#ffd0f5'),iridescence:.6});
   const g=new THREE.Group();g.position.set(-.2,.98,0);
   const L=new THREE.Group(),R=new THREE.Group();
   const dotM=std('#ffd166');
@@ -242,7 +242,7 @@ function buildOutfit(id,rig){
   if(id==='out_capa'){const c=makeCape();g.add(c);rig.cape=c;}
   else if(id==='out_borboleta'){const w=makeWings();g.add(w);rig.wings=w;}
   else if(id==='out_arcoirs'){
-    const cols=['#ff9a9a','#ffc48a','#ffe38a','#9ee0a0','#9cc8ff','#c7a8ff'];
+    const cols=['#ff3d3d','#ff9f00','#ffe000','#2ecc55','#3db5ff','#b03dff'];
     rig.segs.forEach((s,i)=>{
       [-1,0,1].forEach((k,j)=>{
         const c=cols[(i*3+j)%cols.length];
@@ -282,8 +282,8 @@ function setLook(rig,hat,outfit){
 
 // ── CENA (luzes + chão que recebe a sombra) ──
 const VIEWS={
-  front:{pos:[1.2,2.3,6.6],look:[0,.75,0],fov:30,yaw:-.85},
-  game: {pos:[0,4.3,5.3],look:[0,.5,0],fov:30,yaw:0},
+  front:{pos:[1.0,2.4,7.6],look:[-.05,.72,0],fov:30,yaw:-.55},
+  game: {pos:[0,4.5,5.9],look:[0,.5,0],fov:30,yaw:0},
 };
 function buildScene(view){
   const scene=new THREE.Scene();
@@ -306,7 +306,7 @@ function buildScene(view){
 
 // ── LUGARES (slots) ──
 const slots=new Set();
-const DIR_YAW={right:0,left:Math.PI,down:-Math.PI/2,up:Math.PI/2};
+const DIR_YAW={right:0,left:Math.PI,down:-Math.PI/2+.6,up:Math.PI/2-.6};
 function angDiff(a,b){let d=(b-a)%(Math.PI*2);if(d>Math.PI)d-=Math.PI*2;if(d<-Math.PI)d+=Math.PI*2;return d;}
 
 M3.mount=function(container,opts={}){
@@ -363,7 +363,7 @@ function updateRig(slot,dt){
   const crawlAmp=st.walking?1:Math.min(1,st.walkT*1.6);
   rig.segs.forEach((s,i)=>{
     const breathe=1+.028*Math.sin(t*2.3-i*.7);
-    const ph=st.crawl-(2-i)*1.1;
+    const ph=st.crawl-(rig.segs.length-1-i)*1.1;
     const lift=moving?Math.max(0,Math.sin(ph))*.13*crawlAmp:0;
     const squash=moving?1+.07*Math.sin(ph+1.2)*crawlAmp:1;
     s.g.position.y=s.baseY+lift;
