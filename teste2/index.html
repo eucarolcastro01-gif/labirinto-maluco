@@ -867,6 +867,17 @@ canvas.mimi3d{display:block;pointer-events:none;position:relative;z-index:1}
 @keyframes nodePulse{from{box-shadow:0 5px 0 #cdbdf3,0 0 0 0 rgba(255,209,102,.0)}to{box-shadow:0 5px 0 #cdbdf3,0 0 0 9px rgba(255,209,102,.55)}}
 @keyframes lockOff{0%{transform:none;opacity:1}30%{transform:rotate(-14deg) scale(1.1)}100%{transform:translateY(-60%) scale(.4);opacity:0}}
 @keyframes nodeNope{0%,100%{transform:translate(-50%,-50%)}25%{transform:translate(-56%,-50%)}75%{transform:translate(-44%,-50%)}}
+/* mapa 3D: o terreno é o desenho; o botão é uma área de toque transparente em cima da fruta */
+.fruit-map.map3d-on{overflow:hidden;background:#9fdcff}
+canvas.map3d{position:absolute;inset:0;display:block;z-index:0;border-radius:24px}
+.map3d-on .map-node{background:transparent;box-shadow:none}
+.map3d-on .map-node .mn-fruit{visibility:hidden}
+.map3d-on .map-node .mn-num{bottom:-30%;font-size:calc(var(--node,80px)*.2);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.map3d-on .map-node .mn-stars{top:-38%}
+.map3d-on .map-node .mn-lock{inset:auto;width:44%;height:44%;left:28%;top:-6%;background:rgba(255,255,255,.92);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.map3d-on .map-node.current:not(.just-opened),.map3d-on .map-node.opened-now{animation:nodeRing 1.1s ease-in-out infinite alternate}
+@keyframes nodeRing{from{box-shadow:0 0 0 0 rgba(255,209,102,0)}to{box-shadow:0 0 0 8px rgba(255,209,102,.75)}}
+.map3d-on .map-node:focus-visible{outline:4px solid #ffd700;outline-offset:2px}
 .map-mimi{position:absolute;z-index:3;pointer-events:none;transform:translate(-50%,-96%);display:flex;align-items:flex-end;justify-content:center}
 #screen-phases{gap:6px;width:100%;padding:4px 0}
 #screen-phases .phases-bottom{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center}
@@ -1397,6 +1408,7 @@ body.calm .confetti{display:none!important}
 
 <script src="three.min.js"></script>
 <script src="mimi3d.js"></script>
+<script src="map3d.js"></script>
 <script>
 // ═══════════════════════════════════
 //  KAWAII MIMI SVG
@@ -2187,6 +2199,7 @@ function updateMotionBtn(){
   const b=document.getElementById('btn-motion');
   document.body.classList.toggle('calm',!motionOn);
   if(window.Mimi3D)Mimi3D.calm=!motionOn;
+  if(window.Map3D&&Map3D.ok)Map3D.setCalm(!motionOn);
   if(!b)return;
   b.innerHTML=motionOn
     ?'<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="#fff"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="#fff"/></svg>'
@@ -2220,7 +2233,7 @@ refreshStart();
 //  SCREEN
 // ═══════════════════════════════════
 function showScreen(id){
-  if(id!=='screen-phases'&&typeof stopMapWalk==='function')stopMapWalk();
+  if(id!=='screen-phases'&&typeof stopMapWalk==='function'){stopMapWalk();if(window.Map3D)Map3D.dispose();}
   document.getElementById('scenery').classList.toggle('show',id==='screen-game');
   document.getElementById('garden-bg').classList.toggle('show',id==='screen-garden'||id==='screen-meta');
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
@@ -2318,12 +2331,13 @@ function buildPhaseGrid(){
   const map=document.getElementById('fruit-map');
   cancelAnimationFrame(mapAnim);
   layoutMap(map);
-  const nodePx=Math.round(Math.max(64,Math.min(150,Math.min(MAP_W,MAP_H)*(mapWide?.19:.21))));
-  map.style.setProperty('--node',nodePx+'px');
+  let nodePx=Math.round(Math.max(64,Math.min(150,Math.min(MAP_W,MAP_H)*(mapWide?.19:.21))));
   const cur=currentNode();
   const from=(mapMimiAt!==null&&mapMimiAt<cur)?mapMimiAt:cur;   // a Mimi anda da fruta antiga até a nova
   const walkMs=900;
-  let html=mapSceneSVG();
+  const use3D=Map3D.ok;
+  map.classList.toggle('map3d-on',use3D);
+  let html=use3D?'':mapSceneSVG();
   for(let i=0;i<=PHASE_COUNT;i++){
     const [x,y]=MAP_PTS[i];
     const open=isUnlocked(i),sc=phaseScores[i],justOpened=open&&i>from&&i<=cur;
@@ -2338,6 +2352,18 @@ function buildPhaseGrid(){
   }
   html+=`<div class="map-mimi" id="map-mimi"></div>`;
   map.innerHTML=html;
+  // MAPA 3D: terreno de verdade por baixo; os botões ficam em cima de cada fruta
+  if(use3D){
+    const opened=i=>isUnlocked(i)&&!(i>from&&i<=cur);          // as que vão abrir agora ficam cinza até a Mimi chegar
+    Map3D.build(map,{wide:mapWide,count:PHASE_COUNT+1,ids:FRUITS.map(f=>f.id),
+      open:FRUITS.map((_,i)=>opened(i)),done:FRUITS.map((_,i)=>phaseScores[i]!==null),
+      segOpen:FRUITS.slice(1).map((_,s)=>opened(s+1))});
+    Map3D.setCalm(!motionOn);
+    nodePx=Math.round(Math.max(56,Math.min(140,Map3D.nodeSize(0)*.95)));
+    MAP_PTS=FRUITS.map((_,i)=>Map3D.nodeScreen(i,.55));
+    map.querySelectorAll('.map-node').forEach(b=>{const [x,y]=MAP_PTS[+b.dataset.i];b.style.left=(x/MAP_W*100)+'%';b.style.top=(y/MAP_H*100)+'%';});
+  }
+  map.style.setProperty('--node',nodePx+'px');
   map.querySelectorAll('.map-node').forEach(b=>{
     const i=+b.dataset.i;
     b.onclick=()=>{
@@ -2353,10 +2379,10 @@ function buildPhaseGrid(){
   // Mimi no mapa (em cima da fruta onde ela está)
   const mm=document.getElementById('map-mimi');
   let slot=null;
-  if(Mimi3D.ok){slot=Mimi3D.mount(mm,{size:nodePx*1.5,yaw:-.55});slot.setLook(equippedHat,equippedOutfit);slot.setColor(mimiColor);slot.setMood('normal');}
+  if(Mimi3D.ok){slot=Mimi3D.mount(mm,{size:nodePx*(use3D?1.2:1.5),yaw:-.55});slot.setLook(equippedHat,equippedOutfit);slot.setColor(mimiColor);slot.setMood('normal');}
   else{mm.innerHTML=makeMimi(Math.round(nodePx*1.1),equippedHat,equippedOutfit);mm.style.filter=colorFilter();}
   const put=(x,y)=>{mm.style.left=(x/MAP_W*100)+'%';mm.style.top=(y/MAP_H*100)+'%';};
-  put(...MAP_PTS[from]);
+  put(...(use3D?Map3D.standScreen(from):MAP_PTS[from]));
   mapMimiAt=cur;
   if(from===cur)return;
   // anda pelo caminho, fase por fase
@@ -2366,14 +2392,16 @@ function buildPhaseGrid(){
   function step(now){
     if(t0===null)t0=now;
     const p=Math.min(1,(now-t0)/walkMs),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
-    const P=path();if(!P)return;
-    const L=P.getTotalLength(),pt=P.getPointAtLength(L*e),ahead=P.getPointAtLength(Math.min(L,L*e+4));
+    let pt,ahead;
+    if(use3D){const a=Map3D.pathScreen(seg,e),b=Map3D.pathScreen(seg,Math.min(1,e+.02));pt={x:a[0],y:a[1]};ahead={x:b[0],y:b[1]};}
+    else{const P=path();if(!P)return;const L=P.getTotalLength();pt=P.getPointAtLength(L*e);ahead=P.getPointAtLength(Math.min(L,L*e+4));}
     put(pt.x,pt.y);
     if(slot){const dx=ahead.x-pt.x,dy=ahead.y-pt.y;if(Math.abs(dx)+Math.abs(dy)>.5)slot.face(Math.atan2(-dy*.6,dx));}
     if(p>=1){
       seg++;t0=null;
       const node=map.querySelector(`.map-node[data-i="${seg}"]`);
       if(node)node.classList.add('opened-now');
+      if(use3D)Map3D.open(seg);
       if(seg>=cur){
         if(slot){slot.setWalking(false);slot.face(-.55);slot.happy();}
         sfxPickup();
