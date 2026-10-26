@@ -58,6 +58,7 @@ M3.COLORS=COLORS;
 function setColor(rig,id){
   const c=COLORS[id]||COLORS.rosa;if(rig.color===id)return;rig.color=id;
   Object.keys(rig.mats).forEach(k=>rig.mats[k].color.set(c[k]));
+  if(rig.fly){const u=rig.fly.userData.mats;u.wingMat.color.set(c.body);u.dotMat.color.set(c.tip);u.dotMat.emissive.set(c.tip);u.bellyMat.color.set(c.belly);}
 }
 const std=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.5},o));
 
@@ -300,6 +301,83 @@ function setLook(rig,hat,outfit){
   rig.outfitSlot.clear();rig.cape=null;rig.wings=null;
   if(hat)rig.hatSlot.add(buildHat(hat));
   if(outfit){const o=buildOutfit(outfit,rig);rig.outfitSlot.add(o);rig.outfitSlot.userData.cur=o;}
+  flyDeco(rig);if(rig.fly)setButterfly(rig,rig.isFly);
+}
+
+// ── BORBOLETA: a Mimi depois do casulo (asas com as cores dela) ──
+function wingGeo(fore){
+  const sh=new THREE.Shape();
+  if(fore){sh.moveTo(0,0);sh.bezierCurveTo(.55,.25,1.25,1.05,1.05,1.75);sh.bezierCurveTo(.85,2.15,.1,2.05,-.25,1.55);sh.bezierCurveTo(-.45,1.05,-.3,.4,0,0);}
+  else{sh.moveTo(0,0);sh.bezierCurveTo(-.15,.55,-.35,1.2,-.85,1.35);sh.bezierCurveTo(-1.35,1.45,-1.45,.85,-1.05,.45);sh.bezierCurveTo(-.75,.15,-.35,0,0,0);}
+  const g=new THREE.ShapeGeometry(sh,24);g.rotateX(Math.PI/2);   // a asa fica deitada e cresce para +z
+  const pts=sh.getSpacedPoints(80).map(p=>new THREE.Vector3(p.x,0,p.y));
+  g.userData.edge=new THREE.BufferGeometry().setFromPoints(pts);
+  return g;
+}
+const WG={fore:wingGeo(true),hind:wingGeo(false),dot:new THREE.CircleGeometry(1,24).rotateX(Math.PI/2)};
+function buildButterfly(rig){
+  const g=new THREE.Group();
+  const m=rig.mats;
+  const wingMat=new THREE.MeshPhysicalMaterial({color:m.body.color,roughness:.45,sheen:.6,sheenColor:new THREE.Color('#ffffff'),side:THREE.DoubleSide,clearcoat:.3});
+  const edgeMat=new THREE.MeshStandardMaterial({color:'#3b3058',roughness:.6,side:THREE.DoubleSide});
+  const dotMat=new THREE.MeshStandardMaterial({color:m.tip.color,roughness:.4,side:THREE.DoubleSide,emissive:m.tip.color,emissiveIntensity:.15});
+  const whiteMat=new THREE.MeshStandardMaterial({color:'#ffffff',roughness:.5,side:THREE.DoubleSide});
+  const bellyMat=new THREE.MeshPhysicalMaterial({color:m.belly.color,roughness:.5,side:THREE.DoubleSide});
+  g.userData.mats={wingMat,dotMat,bellyMat};
+  // corpinho: tórax e abdômen listrado
+  const thorax=ball(.4,m.body,.3,.84,0,1.1,1,1);g.add(thorax);
+  const abd=ball(.3,m.body,-.45,.72,0,2.1,1,1);g.add(abd);
+  [-.2,-.5,-.8].forEach(x=>{const r=mesh(new THREE.TorusGeometry(.27*(1-Math.abs(x+.3)*.35),.04,8,24),edgeMat);r.position.set(x,.72,0);r.rotation.y=Math.PI/2;g.add(r);});
+  const wings=[];
+  [-1,1].forEach(side=>{
+    const piv=new THREE.Group();piv.position.set(.15,1.08,side*.12);g.add(piv);
+    const inner=new THREE.Group();inner.scale.z=side;piv.add(inner);
+    [[WG.fore,0],[WG.hind,-.1]].forEach(([geo,x],k)=>{
+      const w=mesh(geo,wingMat,true);w.position.x=x;inner.add(w);
+      const edge=new THREE.LineLoop(geo.userData.edge,new THREE.LineBasicMaterial({color:'#3b3058'}));edge.position.x=x;inner.add(edge);
+      [.01,-.01].forEach(o=>{const patch=mesh(geo,bellyMat,false);patch.position.set(x,o,0);patch.scale.setScalar(.45);inner.add(patch);});
+    });
+    [[.55,1.45,.22,dotMat],[.1,1.7,.13,whiteMat],[.75,1.05,.1,whiteMat],[-.8,.95,.2,dotMat],[-1.0,.6,.09,whiteMat]].forEach(([x,z,r,mt])=>{
+      [.018,-.018].forEach(o=>{const d=mesh(WG.dot,mt,false);d.position.set(x,o,z);d.scale.setScalar(r);inner.add(d);});
+    });
+    wings.push({piv,side,inner});
+  });
+  g.userData.wings=wings;g.visible=false;
+  g.userData.deco=new THREE.Group();g.add(g.userData.deco);
+  return g;
+}
+function buildCocoon(){
+  const g=new THREE.Group();
+  const silk=new THREE.MeshPhysicalMaterial({color:'#f6e7bf',roughness:.75,sheen:1,sheenColor:new THREE.Color('#ffffff'),emissive:new THREE.Color('#ffe9a8'),emissiveIntensity:0,transparent:true});
+  const shell=ball(1,silk,0,0,0,1.75,.95,.95);g.add(shell);
+  const band=new THREE.MeshStandardMaterial({color:'#e2c98a',roughness:.8,transparent:true});
+  [-1.05,-.45,.2,.85].forEach((x,i)=>{const r=1-Math.pow(x/1.8,2);const t=mesh(new THREE.TorusGeometry(.95*Math.sqrt(Math.max(.1,r)),.05,8,32),band);t.position.x=x;t.rotation.y=Math.PI/2;t.rotation.x=.25*(i%2?1:-1);g.add(t);});
+  g.position.set(-.05,.85,0);g.visible=false;
+  g.userData={silk,band};
+  const sparks=[];
+  const gold=new THREE.MeshStandardMaterial({color:'#ffd166',emissive:new THREE.Color('#ffb400'),emissiveIntensity:.5,roughness:.3,transparent:true});
+  for(let i=0;i<10;i++){const sp=mesh(GSTAR,gold,false);sp.visible=false;const a=i/10*Math.PI*2;sp.userData.dir=new THREE.Vector3(Math.cos(a)*1.2,.6+Math.sin(a*3)*.5,Math.sin(a)*1.2);sparks.push(sp);}
+  return {g,sparks,gold};
+}
+// a roupa escolhida também aparece na borboleta
+function flyDeco(rig){
+  if(!rig.fly)return;
+  const u=rig.fly.userData;
+  (u.decoParts||[]).forEach(m=>m.parent&&m.parent.remove(m));u.decoParts=[];
+  const add=(par,m)=>{par.add(m);u.decoParts.push(m);};
+  const outfit=(rig.look||'').split('|')[1];
+  if(outfit==='out_arcoirs'){
+    ['#ff3d3d','#ffe000','#2ecc55','#3db5ff'].forEach((c,i)=>{const x=-.15-i*.22;const r=mesh(new THREE.TorusGeometry(.29*(1-Math.abs(x+.3)*.3),.05,8,24),std(c,{roughness:.45}));r.position.set(x,.72,0);r.rotation.y=Math.PI/2;add(u.deco,r);});
+  }else if(outfit==='out_estrela'||outfit==='out_coracao'){
+    const geo=outfit==='out_estrela'?GSTAR:GHEART;
+    const mat=outfit==='out_estrela'?std('#ffd166',{metalness:.3,roughness:.3}):phys({color:'#ff7fae',roughness:.3,clearcoat:.8});
+    u.wings.forEach(w=>{[[.35,1.2,.22],[-.75,.8,.17]].forEach(([x,z,sc])=>{const m=mesh(geo,mat,false);m.scale.set(sc,sc,.25*sc);m.position.set(x,.04,z);m.rotation.x=-Math.PI/2;add(w.inner,m);});});
+  }
+}
+function setButterfly(rig,on){
+  rig.isFly=!!on;
+  rig.body.visible=!on;rig.fly.visible=!!on;
+  rig.outfitSlot.visible=!on||(rig.look||'').endsWith('|out_capa');
 }
 
 // ── CENA (luzes + chão que recebe a sombra) ──
@@ -339,13 +417,16 @@ M3.mount=function(container,opts={}){
   const {scene,cam}=buildScene(view);
   const rig=buildMimi();scene.add(rig.root);scene.add(rig.heart);
   setColor(rig,opts.color||M3.color||'rosa');
+  rig.fly=buildButterfly(rig);rig.yawG.add(rig.fly);
+  rig.cocoon=buildCocoon();rig.yawG.add(rig.cocoon.g);rig.cocoon.sparks.forEach(sp=>rig.yawG.add(sp));
+  if(opts.butterfly)setButterfly(rig,true);
   const canvas=document.createElement('canvas');canvas.className='mimi3d';
   canvas.setAttribute('aria-hidden','true');
   const ctx=canvas.getContext('2d');
   container.innerHTML='';container.appendChild(canvas);
   const yaw0=opts.yaw!=null?opts.yaw:(VIEWS[view]||VIEWS.front).yaw;
   const st={t:Math.random()*10,yaw:yaw0,yawT:yaw0,yawVel:0,walkT:0,walking:false,crawl:0,happyT:0,sadT:0,mud:false,
-    blink:0,nextBlink:1+Math.random()*2,mood:opts.mood||'normal',prevHeadY:0,prevVel:0,idleHop:opts.idleHop||false,nextHop:2,waveT:0,danceT:0,biteT:0,comfortT:0,biteDelay:0};
+    blink:0,nextBlink:1+Math.random()*2,mood:opts.mood||'normal',prevHeadY:0,prevVel:0,idleHop:opts.idleHop||false,nextHop:2,waveT:0,metaT:-1,danceT:0,biteT:0,comfortT:0,biteDelay:0};
   const slot={canvas,ctx,scene,cam,rig,st,view,size:0,container,
     setSize(px){
       px=Math.max(24,Math.round(px));if(px===this.size)return;this.size=px;
@@ -363,7 +444,10 @@ M3.mount=function(container,opts={}){
     celebrate(fruitColor){st.danceT=1;st.happyT=0;st.biteDelay=1.5;rig.bitePiece.material.color.set(fruitColor||'#ffd166');},
     // carinho depois do erro: acena "sim, tudo bem" com a cabeça e solta um coraçãozinho
     comfort(){st.comfortT=1;},
-    busy(){return st.danceT>0||st.biteDelay>0||st.biteT>0;},
+    busy(){return st.danceT>0||st.biteDelay>0||st.biteT>0||st.metaT>=0;},
+    // vira borboleta: casulo, brilho, "puf!" e as asas abrem (uns 4,5 segundos)
+    metamorph(){setButterfly(rig,false);st.metaT=0;},
+    setButterfly(b){setButterfly(rig,b);},
     setColor(id){setColor(rig,id);},
     setMud(b){st.mud=!!b;},
     setMood(m){st.mood=m||'normal';},
@@ -466,6 +550,42 @@ function updateRig(slot,dt){
     const sc=.42*Math.min(1,p*5);rig.heart.scale.setScalar(sc);
     rig.heart.material.opacity=Math.min(1,(1-p)*3);
     if(st.comfortT===0)rig.heart.visible=false;
+  }
+  // borboleta: flutua e bate as asas
+  if(rig.isFly){
+    const fl=st.flyIn!=null?st.flyIn:1;
+    y+=(.3+Math.sin(t*2.2)*.1*idle)*fl;sx*=.74;sy*=.74;
+    const flap=Math.sin(performance.now()/(M3.calm?260:110));
+    const open=st.wingOpen!=null?st.wingOpen:1;
+    rig.fly.userData.wings.forEach(w=>{w.piv.rotation.x=-w.side*((.95+.45*flap)*open+(1-open)*1.5);w.piv.scale.setScalar(.2+.8*open);});
+    rig.yawG.rotation.z=.12+Math.sin(t*2.2+1)*.05*idle;
+  }
+  // metamorfose
+  if(st.metaT>=0){
+    st.metaT+=dt;const T=st.metaT,c=rig.cocoon;
+    if(T<1.2){                       // o casulo vai crescendo em volta dela
+      const k=T/1.2;c.g.visible=true;c.g.scale.setScalar(.15+.85*(1-Math.pow(1-k,3)));
+      c.g.userData.silk.opacity=1;c.g.userData.band.opacity=1;c.g.userData.silk.emissiveIntensity=0;
+      rig.body.scale.setScalar(1-.25*k);rig.headPivot.scale.setScalar(1-.3*k);
+    }else if(T<2.8){                 // balança e começa a brilhar
+      const k=(T-1.2)/1.6;c.g.scale.setScalar(1+.04*Math.sin(T*18)*k);
+      c.g.rotation.z=Math.sin(T*(6+k*14))*.12*k;c.g.userData.silk.emissiveIntensity=k*.9;
+      rig.body.visible=false;rig.headPivot.visible=false;
+    }else if(T<3.4){                 // puf! as estrelinhas voam e a borboleta aparece
+      const k=(T-2.8)/.6;
+      if(!rig.isFly){setButterfly(rig,true);rig.headPivot.visible=true;rig.headPivot.scale.setScalar(1);c.sparks.forEach(sp=>sp.visible=true);}
+      c.g.scale.setScalar(1+k*.8);c.g.userData.silk.opacity=1-k;c.g.userData.band.opacity=1-k;
+      st.wingOpen=k;st.flyIn=k;
+    }else{
+      c.g.visible=false;c.g.rotation.z=0;st.wingOpen=1;st.flyIn=1;
+      if(T>4.6){st.metaT=-1;c.sparks.forEach(sp=>sp.visible=false);rig.body.scale.setScalar(1);}
+    }
+    if(T>=2.8&&T<=4.6){
+      const k=(T-2.8)/1.8;c.gold.opacity=1-k;
+      c.sparks.forEach(sp=>{sp.position.set(-.05+sp.userData.dir.x*k*2.2,.85+sp.userData.dir.y*k*2.2,sp.userData.dir.z*k*2.2);sp.scale.setScalar(.14*(1-k*.5));sp.rotation.z=k*6;});
+    }
+    if(T<2.8){y=0;spin=0;}
+    if(T>=2.8&&T<4.6)spin+=Math.sin((T-2.8)/1.8*Math.PI)*.6;
   }
   rig.root.position.y=y;
   rig.root.scale.set(sx,sy,sx);

@@ -399,7 +399,7 @@ body{
 .cat-tab{
   font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:.82rem;
   padding:5px 14px;border:none;border-radius:20px;cursor:pointer;
-  background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);
+  background:rgba(255,255,255,.15);color:#fff;
   transition:all .15s;
   border:1.5px solid rgba(255,255,255,.15);
 }
@@ -943,6 +943,35 @@ canvas.mimi3d{display:block;pointer-events:none;position:relative;z-index:1}
   .mimi-touch{width:176px}
   .stage-dots{width:56px}
 }
+/* ══ RESULTADO FINAL: cartão claro, textos escuros ══ */
+.garden-card.glass{background:rgba(255,255,255,.95)!important;border:3px solid #fff!important;box-shadow:0 14px 40px rgba(20,70,40,.25)!important;max-width:600px}
+.garden-badge{color:#3a1d00;background:linear-gradient(135deg,#ffe14d,#ffb020)}
+.garden-badge[hidden]{display:none}
+.garden-title{color:#7a2fc0;-webkit-text-stroke:0;text-shadow:0 3px 0 #f1e4ff;font-size:2.4rem}
+.garden-subtitle{color:#1d3b2a;opacity:1;font-size:.95rem}
+.garden-scene{position:relative;border:3px solid #cfeedd}
+.garden-fly-path{position:absolute;left:34%;top:-4%;width:34%;aspect-ratio:1;animation:flyPath 7s ease-in-out infinite;pointer-events:none}
+#garden-fly{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+#garden-fly canvas{width:100%!important;height:100%!important}
+@keyframes flyPath{0%{transform:translate(0,4%)}25%{transform:translate(-95%,-6%)}50%{transform:translate(-40%,8%)}75%{transform:translate(105%,-4%)}100%{transform:translate(0,4%)}}
+body.calm .garden-fly-path,body.calm .garden-badge{animation:none!important}
+.garden-msg{color:#5a3a00;background:#fff4c2;border:2px solid #ffd966;font-size:1rem}
+.garden-score-box{background:#eafbef;border:2px solid #a8e0b8}
+.garden-score-num{color:#0b6b33}
+.garden-score-lbl{color:#1d4d32;opacity:1;font-weight:800}
+.garden-card .btn-ghost{background:#1f5c3a;border-color:#1f5c3a;color:#fff;backdrop-filter:none}
+.garden-card .btn-cta,.garden-card .btn-ghost{white-space:nowrap}
+@media (max-width:520px){.garden-card .btn-cta{font-size:.9rem!important;padding:10px 16px!important}.garden-card .btn-ghost{padding:8px 14px}}
+.final-dress-slot{width:min(600px,100%);margin-top:12px;position:relative;z-index:2}
+.final-dress-slot .dressup-card{width:100%;max-width:none}
+#screen-meta{gap:0}
+.meta-card{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 20px;
+  width:min(520px,calc(100vw - 28px));box-sizing:border-box;border-radius:30px;background:rgba(255,255,255,.95);border:3px solid #fff;box-shadow:0 14px 40px rgba(20,70,40,.25)}
+.meta-title{font-family:'Fredoka One','Segoe UI',sans-serif;font-size:1.7rem;color:#7a2fc0;text-align:center;min-height:2.4em;display:flex;align-items:center}
+.meta-stage{width:min(340px,76vw);aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:24px;
+  background:radial-gradient(circle at 50% 60%,#fff8d6 0%,#d8f5e0 60%,#bfe8cb 100%)}
+#meta-go[hidden]{display:none}
+@media (max-width:520px){.garden-title{font-size:1.9rem}.meta-title{font-size:1.35rem}}
 /* botão de parar/ligar animações (WCAG 2.2.2) */
 .btn-motion{top:72px}
 @media (max-width:520px){.btn-motion{top:58px}}
@@ -1190,15 +1219,25 @@ body.calm .confetti{display:none!important}
   <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="16"></span> Ver fases</button>
 </div>
 
+<!-- ══ SCREEN: A MIMI VIRA BORBOLETA (depois da última fruta) ══ -->
+<div id="screen-meta" class="screen">
+  <div class="meta-card">
+    <div class="meta-title" id="meta-title" aria-live="polite">A Mimi comeu todas as frutas!</div>
+    <div class="meta-stage" id="meta-stage"></div>
+    <button class="btn-cta" id="meta-go" onclick="showFinal()" hidden><span data-ico="trophy" data-size="22"></span> Ver o resultado</button>
+  </div>
+</div>
+
 <!-- ══ SCREEN: JARDIM SECRETO (3 estrelas em todas as fases) ══ -->
 <div id="screen-garden" class="screen">
   <div class="garden-card glass">
-    <div class="garden-badge"><span data-ico="star" data-size="24"></span> Perfeito! <span data-ico="star" data-size="24"></span></div>
-    <div class="garden-title">Novo Jardim<br>Desbloqueado!</div>
-    <div class="garden-subtitle">Você conquistou 3 estrelas em todas as 5 fases!<br>A Mimi encontrou um jardim secreto!</div>
+    <div class="garden-badge" id="garden-badge"><span data-ico="star" data-size="24"></span> Perfeito! 3 estrelas em tudo <span data-ico="star" data-size="24"></span></div>
+    <div class="garden-title">A Mimi virou<br>uma borboleta!</div>
+    <div class="garden-subtitle">Você ajudou a Mimi a passar por todas as 5 frutas.<br>Agora ela pode voar pelo jardim!</div>
 
-    <!-- Mimi no jardim -->
+    <!-- Mimi borboleta voando no jardim -->
     <div class="garden-scene">
+      <div class="garden-fly-path" aria-hidden="true"><div id="garden-fly"></div></div>
       <!-- animated garden SVG -->
       <svg class="garden-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
         <!-- sky gradient -->
@@ -1295,8 +1334,6 @@ body.calm .confetti{display:none!important}
           <path d="M171,88 Q168,82 166,80" stroke="#7d7399" stroke-width="1" fill="none"/>
           <path d="M171,88 Q174,82 176,80" stroke="#7d7399" stroke-width="1" fill="none"/>
         </g>
-        <!-- Mimi no jardim (desenhada por makeMimi em showFinal, com os acessórios escolhidos) -->
-        <g id="garden-mimi-scene" transform="translate(236,84)"></g>
         <!-- sparkles around Mimi -->
         <g fill="#ffd166" opacity=".9">
           <polygon points="232,75 234,81 240,81 235,85 237,91 232,87 227,91 229,85 224,81 230,81" transform="scale(.6) translate(162,50)"/>
@@ -1307,8 +1344,7 @@ body.calm .confetti{display:none!important}
     </div>
 
     <div class="garden-msg">
-      A Mimi está <strong>feliz</strong> no novo jardim! <span data-ico="garland" data-size="22"></span><br>
-      <span>Você foi um programador incrível!</span>
+      <span data-ico="garland" data-size="22"></span> Você foi um programador incrível! <span data-ico="garland" data-size="22"></span>
     </div>
 
     <div class="garden-score-row">
@@ -1317,12 +1353,8 @@ body.calm .confetti{display:none!important}
         <div class="garden-score-lbl">Pontuação Final</div>
       </div>
       <div class="garden-score-box">
-        <div class="stars-row" data-stars="3"></div>
-        <div class="garden-score-lbl">5 de 5 fases perfeitas</div>
-      </div>
-      <div class="garden-score-box" id="garden-mimi-box">
-        <div id="garden-mimi-small"></div>
-        <div class="garden-score-lbl">Mimi personalizada</div>
+        <div class="stars-row" id="garden-stars"></div>
+        <div class="garden-score-lbl" id="garden-perfect-lbl">5 de 5 fases com 3 estrelas</div>
       </div>
     </div>
 
@@ -1331,6 +1363,7 @@ body.calm .confetti{display:none!important}
       <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="16"></span> Ver fases</button>
     </div>
   </div>
+  <div id="final-dress-slot" class="final-dress-slot"></div>
 </div>
 
 <!-- PERGUNTA ANTES DA DICA -->
@@ -1607,7 +1640,7 @@ function showMimi(el,w,mood='normal',idleHop=false){
   if(Mimi3D.ok){
     el.style.animation='none';
     const s=Mimi3D.mount(el,{size:Math.round(w*1.25),mood,idleHop});
-    s.setMood(mood);s.setLook(equippedHat,equippedOutfit);s.setColor(mimiColor);
+    s.setMood(mood);s.setLook(equippedHat,equippedOutfit);s.setColor(mimiColor);s.setButterfly(!!el.dataset.fly);   // data-fly = Mimi borboleta (final)
     if(mood==='happy')s.happy();
     return;
   }
@@ -2212,7 +2245,7 @@ refreshStart();
 function showScreen(id){
   if(id!=='screen-phases'&&typeof stopMapWalk==='function')stopMapWalk();
   document.getElementById('scenery').classList.toggle('show',id==='screen-game');
-  document.getElementById('garden-bg').classList.toggle('show',id==='screen-garden');
+  document.getElementById('garden-bg').classList.toggle('show',id==='screen-garden'||id==='screen-meta');
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
   const el=document.getElementById(id);el.style.display='flex';
   requestAnimationFrame(()=>el.classList.add('active'));
@@ -2423,49 +2456,53 @@ function startPhase(idx){
 function flower(x,y,c,s=1){return `<g transform="translate(${x},${y}) scale(${s})"><rect x="-1.2" y="0" width="2.4" height="16" fill="#2f9a50"/><g fill="${c}"><circle cx="0" cy="-6" r="5"/><circle cx="6" cy="-1" r="5"/><circle cx="-6" cy="-1" r="5"/><circle cx="4" cy="5" r="5"/><circle cx="-4" cy="5" r="5"/></g><circle cx="0" cy="0" r="3.6" fill="#ffe14d"/></g>`;}
 function pine(x,y,s,c='#1f7a45'){return `<g transform="translate(${x},${y}) scale(${s})"><rect x="-5" y="0" width="10" height="22" fill="#6b3d1e"/><polygon points="0,-90 34,-30 -34,-30" fill="${c}"/><polygon points="0,-62 40,0 -40,0" fill="${c}"/><polygon points="0,-90 12,-68 -12,-68" fill="rgba(255,255,255,.18)"/></g>`;}
 function starPt(x,y,r,c='#fff6b0'){const p=[];for(let i=0;i<10;i++){const a=Math.PI/5*i-Math.PI/2,rr=i%2?r*.42:r;p.push(`${(x+Math.cos(a)*rr).toFixed(1)},${(y+Math.sin(a)*rr).toFixed(1)}`);}return `<polygon points="${p.join(' ')}" fill="${c}"/>`;}
+// pomar: árvore com frutinhas (kind: 'round' = maçã/laranja, 'pear' = pera)
+function fruitTree(x,y,sc,fc,kind='round',leaf='#2f9a50',leaf2='#3fb862'){
+  const fr=[[-34,-92],[-8,-118],[26,-100],[40,-74],[-44,-62],[6,-80],[-18,-58],[30,-50]];
+  const fruit=([fx,fy])=>kind==='pear'
+    ?`<path d="M${fx},${fy-9} q-3,6 -7,12 q-4,8 3,11 q4,2 8,0 q7,-3 3,-11 q-4,-6 -7,-12z" fill="${fc}" stroke="rgba(0,0,0,.15)"/>`
+    :`<circle cx="${fx}" cy="${fy}" r="8" fill="${fc}"/><circle cx="${fx-3}" cy="${fy-3}" r="2.4" fill="rgba(255,255,255,.55)"/>`;
+  return `<g transform="translate(${x},${y}) scale(${sc})">
+    <path d="M-8,0 Q-6,-40 -14,-62 M8,0 Q6,-40 16,-60" stroke="#7a4a24" stroke-width="7" fill="none"/>
+    <rect x="-9" y="-46" width="18" height="48" rx="6" fill="#7a4a24"/>
+    <circle cx="-30" cy="-78" r="38" fill="${leaf}"/><circle cx="28" cy="-80" r="40" fill="${leaf}"/><circle cx="0" cy="-108" r="40" fill="${leaf2}"/>
+    <circle cx="-12" cy="-118" r="14" fill="rgba(255,255,255,.12)"/>
+    ${fr.map(fruit).join('')}</g>`;
+}
+function fence(x0,x1,y){let g=`<rect x="${x0}" y="${y-22}" width="${x1-x0}" height="6" rx="3" fill="#c98a4b"/><rect x="${x0}" y="${y-8}" width="${x1-x0}" height="6" rx="3" fill="#c98a4b"/>`;for(let x=x0+6;x<x1;x+=34)g+=`<path d="M${x},${y+8} V${y-30} l7,-8 l7,8 V${y+8}z" fill="#e0a865" stroke="#a8692f" stroke-width="2"/>`;return g;}
+function strawPlant(x,y,s=1){return `<g transform="translate(${x},${y}) scale(${s})">
+  <g fill="#2f9a50"><ellipse cx="-14" cy="-10" rx="14" ry="8" transform="rotate(-25,-14,-10)"/><ellipse cx="14" cy="-10" rx="14" ry="8" transform="rotate(25,14,-10)"/><ellipse cx="0" cy="-18" rx="10" ry="12"/></g>
+  ${[[-18,0],[10,2],[22,-4]].map(([a,b])=>`<path d="M${a},${b-6} q-8,0 -7,7 q2,8 7,11 q5,-3 7,-11 q1,-7 -7,-7z" fill="#e8323f"/><path d="M${a-4},${b-6} l4,-4 l4,4z" fill="#2fb55a"/><circle cx="${a-2}" cy="${b}" r="1" fill="#ffe14d"/><circle cx="${a+2}" cy="${b+3}" r="1" fill="#ffe14d"/>`).join('')}</g>`;}
+function melon(x,y,s=1){return `<g transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="0" rx="34" ry="22" fill="#2f9a50"/>
+  ${[-22,-8,6,20].map(a=>`<path d="M${a},-21 Q${a+6},0 ${a},21" stroke="#1d6b34" stroke-width="5" fill="none"/>`).join('')}
+  <ellipse cx="-12" cy="-10" rx="10" ry="4" fill="rgba(255,255,255,.25)"/></g>`;}
+function pinePlant(x,y,s=1){const lv=[-70,-48,-25,0,25,48,70].map(a=>`<path d="M0,0 Q${a*.4},-30 ${a*.9},${-46+Math.abs(a)*.35}" stroke="#3a9a4f" stroke-width="7" fill="none" stroke-linecap="round"/>`).join('');
+  return `<g transform="translate(${x},${y}) scale(${s})">${lv}<ellipse cx="0" cy="-30" rx="13" ry="18" fill="#f5b014"/>
+  <path d="M-12,-40 L12,-20 M-12,-28 L10,-14 M12,-40 L-12,-20 M12,-28 L-10,-14" stroke="#c97a0a" stroke-width="2"/>
+  <g fill="#2fa84f"><path d="M0,-46 l-6,-14 l6,6 l6,-6z"/><path d="M0,-50 l-2,-16 l4,0z"/></g></g>`;}
+function basket(x,y,fc){return `<g transform="translate(${x},${y})"><circle cx="-10" cy="-18" r="9" fill="${fc}"/><circle cx="6" cy="-20" r="9" fill="${fc}"/><circle cx="-2" cy="-26" r="9" fill="${fc}"/>
+  <path d="M-26,-14 H26 L20,8 H-20z" fill="#c98a4b" stroke="#8a5a2b" stroke-width="2"/><path d="M-22,-6 H22 M-21,1 H21" stroke="#8a5a2b" stroke-width="2"/></g>`;}
+const HILLS=(a,b)=>`<path d="M0 150 Q200 100 420 140 T840 128 T1200 122 V240 H0Z" fill="${a}"/><path d="M0 195 Q300 160 600 192 T1200 182 V240 H0Z" fill="${b}"/>`;
 const SCENES=[
-  {name:'Jardim', svg:()=>`
-    <path d="M0 150 Q200 90 420 140 T840 130 T1200 120 V240 H0Z" fill="#7ad67a"/>
-    <path d="M0 190 Q300 140 600 185 T1200 175 V240 H0Z" fill="#4fbf62"/>
-    ${[60,180,330,470,610,760,900,1040,1150].map((x,i)=>flower(x,200+(i%3)*8,['#ff6fa8','#ffd23f','#b57aff','#ff8a5c','#5ec8ff'][i%5],1.1)).join('')}`},
-  {name:'Campo de flores', svg:()=>`
-    <circle cx="1080" cy="70" r="40" fill="#ffe66d" opacity=".9"/>
-    <path d="M0 140 Q250 80 520 135 T1000 120 T1200 130 V240 H0Z" fill="#9be38a"/>
-    <path d="M0 185 Q260 135 560 180 T1200 170 V240 H0Z" fill="#62c96c"/>
-    ${Array.from({length:22},(_,i)=>flower(30+i*54,190+(i*37%30),['#ff6fa8','#ffd23f','#ff8a5c','#ffffff','#c084fc'][i%5],.8+(i%3)*.15)).join('')}
-    <g fill="#ff80c0" opacity=".9"><ellipse cx="300" cy="105" rx="10" ry="6" transform="rotate(-25,300,105)"/><ellipse cx="312" cy="105" rx="10" ry="6" transform="rotate(25,312,105)"/></g>
-    <g fill="#ffd23f" opacity=".9"><ellipse cx="860" cy="85" rx="9" ry="5" transform="rotate(-25,860,85)"/><ellipse cx="871" cy="85" rx="9" ry="5" transform="rotate(25,871,85)"/></g>`},
-  {name:'Praia', svg:()=>`
-    <circle cx="140" cy="70" r="38" fill="#ffd96b"/>
-    <rect x="0" y="120" width="1200" height="70" fill="#3fb4e6"/>
-    <path d="M0 132 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#bfefff" stroke-width="4"/>
-    <path d="M0 165 q30 -8 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#8ddcf7" stroke-width="3"/>
-    <path d="M0 185 Q300 170 600 186 T1200 180 V240 H0Z" fill="#f6dc9a"/>
-    <g transform="translate(980,190)"><path d="M0 0 Q10 -60 -6 -120" stroke="#8a5a2b" stroke-width="12" fill="none" stroke-linecap="round"/>
-      <g fill="#2fb55a"><path d="M-6 -120 Q-60 -130 -90 -95 Q-50 -112 -6 -112Z"/><path d="M-6 -120 Q50 -140 84 -100 Q40 -118 -6 -112Z"/><path d="M-6 -120 Q-30 -160 -70 -160 Q-30 -140 -8 -116Z"/><path d="M-6 -120 Q20 -165 60 -160 Q20 -140 -4 -116Z"/></g></g>
-    <g transform="translate(300,212)"><path d="M-14 0 A14 14 0 0 1 14 0Z" fill="#ff9a8a"/><path d="M-10 0 L0 -12 M0 0 V-14 M10 0 L0 -12" stroke="#d96a5a" stroke-width="1.5"/></g>
-    ${starPt(620,214,13,'#ff8a5c')}${starPt(1110,220,10,'#ffb35c')}`},
-  {name:'Floresta', svg:()=>`
-    <path d="M0 160 Q300 120 600 160 T1200 150 V240 H0Z" fill="#2f8f55"/>
-    ${[40,150,260,980,1090,1170].map((x,i)=>pine(x,175+(i%2)*10,.9+(i%3)*.15,'#1c6b3c')).join('')}
-    ${[100,210,1040,1130].map((x,i)=>pine(x,200,.75,'#279150')).join('')}
-    <path d="M0 205 Q400 180 800 205 T1200 200 V240 H0Z" fill="#3fa862"/>
-    <g transform="translate(420,214)"><rect x="-4" y="-10" width="8" height="12" rx="3" fill="#fff3e0"/><path d="M-16 -10 Q0 -32 16 -10Z" fill="#e8463a"/><circle cx="-6" cy="-17" r="2.5" fill="#fff"/><circle cx="5" cy="-20" r="2" fill="#fff"/></g>
-    <g transform="translate(760,218) scale(.8)"><rect x="-4" y="-10" width="8" height="12" rx="3" fill="#fff3e0"/><path d="M-16 -10 Q0 -32 16 -10Z" fill="#e8463a"/><circle cx="-6" cy="-17" r="2.5" fill="#fff"/></g>`},
-  {name:'Montanhas', svg:()=>`
-    <polygon points="0,200 160,70 320,200" fill="#7a8fb8"/><polygon points="160,70 196,100 170,96 150,110 124,100" fill="#ffffff"/>
-    <polygon points="230,200 450,40 670,200" fill="#5f75a3"/><polygon points="450,40 500,80 470,76 446,92 410,78" fill="#ffffff"/>
-    <polygon points="760,200 960,60 1160,200" fill="#7a8fb8"/><polygon points="960,60 1006,96 980,92 956,106 928,94" fill="#ffffff"/>
-    <polygon points="560,200 700,110 840,200" fill="#8ea2c8"/>
-    <path d="M0 195 Q300 175 600 195 T1200 190 V240 H0Z" fill="#9aa8bf"/>
-    <g fill="#6f788d" stroke="#e6ebf5" stroke-width="2"><path d="M140 222 L150 204 L170 200 L182 214 L176 226Z"/><path d="M880 226 L888 212 L904 208 L914 220 L908 228Z"/></g>`},
-  {name:'Céu estrelado', svg:()=>`
-    <rect x="0" y="0" width="1200" height="240" fill="rgba(20,16,60,.55)"/>
-    <circle cx="1040" cy="60" r="34" fill="#fff6c8"/><circle cx="1056" cy="50" r="30" fill="rgba(36,30,90,.95)"/>
-    ${[[80,40],[200,90],[330,30],[460,70],[590,25],[720,85],[850,40],[960,110],[1150,30],[400,120],[640,130],[130,130]].map(([x,y],i)=>starPt(x,y,5+(i%3)*2.5)).join('')}
-    <path d="M0 170 Q300 130 600 170 T1200 160 V240 H0Z" fill="#3b2f7a"/>
-    <path d="M0 205 Q350 175 700 205 T1200 198 V240 H0Z" fill="#2a2160"/>
-    <g fill="#ffe66d">${[[260,190],[300,175],[880,185],[930,200]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3"/>`).join('')}</g>`},
+  {name:'Pomar de maçãs', svg:()=>`${HILLS('#8fdc7f','#5cc46a')}
+    ${[70,250,950,1130].map((x,i)=>fruitTree(x,200+(i%2)*8,.95+(i%2)*.15,'#e8323f')).join('')}
+    ${fence(380,820,214)}${basket(600,226,'#e8323f')}`},
+  {name:'Canteiro de morangos', svg:()=>`${HILLS('#9be38a','#6ccc6c')}
+    <path d="M0 214 Q600 196 1200 214 V240 H0Z" fill="#c8964f"/>
+    ${Array.from({length:16},(_,i)=>strawPlant(30+i*76,206+(i%2)*10,.9+(i%3)*.12)).join('')}`},
+  {name:'Laranjal', svg:()=>`${HILLS('#9ad87a','#62c160')}
+    ${[60,230,400,820,990,1150].map((x,i)=>fruitTree(x,200+(i%2)*10,.8+(i%3)*.12,'#ff9500','round','#2a8f45','#38a855')).join('')}
+    ${basket(610,224,'#ff9500')}`},
+  {name:'Pomar de peras', svg:()=>`${HILLS('#a6e08a','#6dc86a')}
+    ${[90,280,920,1110].map((x,i)=>fruitTree(x,200+(i%2)*8,.95+(i%2)*.12,'#c8e04a','pear')).join('')}
+    ${fence(420,800,214)}${basket(610,226,'#b4d63a')}`},
+  {name:'Plantação de melancias', svg:()=>`${HILLS('#a0e08c','#6ccc6c')}
+    <path d="M0 200 Q300 230 600 205 T1200 210" stroke="#2f9a50" stroke-width="4" fill="none"/>
+    ${[[90,214],[260,222],[430,212],[780,220],[950,212],[1120,222]].map(([x,y],i)=>melon(x,y,.9+(i%3)*.15)).join('')}
+    ${[[180,206],[520,208],[860,206],[1040,210]].map(([x,y])=>`<g fill="#3fb862"><ellipse cx="${x}" cy="${y}" rx="12" ry="6"/><ellipse cx="${x+14}" cy="${y-4}" rx="9" ry="5"/></g>`).join('')}`},
+  {name:'Plantação de abacaxis', svg:()=>`${HILLS('#b2dc7a','#86c45a')}
+    <path d="M0 214 Q600 198 1200 214 V240 H0Z" fill="#d9a85a"/>
+    ${Array.from({length:12},(_,i)=>pinePlant(50+i*100,214+(i%2)*6,.85+(i%3)*.12)).join('')}`},
 ];
 function setScenery(idx){
   const sc=SCENES[idx]||SCENES[0];
@@ -3028,12 +3065,16 @@ function phaseComplete(steps,blocks=steps){
   const missing=findCells(lvl,4).length+findCells(lvl,7).length-collected.size;
   const hPen=penHint?HINT_COST:0;
   const score=Math.max(0,Math.min(100,100-extra*EXTRA_STEP_COST-missing*MISSING_COST-penMud-penRock-penWall-hPen));
+  const wasAllDone=phaseScores.slice(1).every(v=>v!==null);
   const prevBest=phaseScores[curPhase];
   const improved=prevBest===null||score>prevBest;
   if(improved)phaseScores[curPhase]=score;     // guarda sempre a MELHOR nota
   const best=phaseScores[curPhase];
   saveState();
   updateGardenBg();
+  // acabou a última fruta pela primeira vez: a Mimi vira borboleta e o jogo vai direto para o resultado
+  if(!wasAllDone&&phaseScores.slice(1).every(v=>v!==null)){showMetamorphosis();return;}
+  dressHomeBack();
 
   document.getElementById('congrats-title').innerHTML=`Parabéns! ${ico('sparkle',34)}`;
   document.getElementById('congrats-stars').innerHTML=starsHTML(starsFor(score),44);
@@ -3081,7 +3122,16 @@ function phaseComplete(steps,blocks=steps){
 // As fases abrem em sequência: depois da fase N vem a N+1 (0 = acabaram as fases)
 function nextTarget(){return curPhase<PHASE_COUNT?curPhase+1:0;}
 
+// O "Vista a Mimi" mora na tela de parabéns e vai para o resultado final quando ele aparece
+const dressCard=document.querySelector('.dressup-card');
+const dressHome=document.createComment('vista a mimi');
+dressCard.parentNode.insertBefore(dressHome,dressCard);
+function dressHomeBack(){
+  dressHome.parentNode.insertBefore(dressCard,dressHome.nextSibling);
+  delete document.getElementById('mimi-stage').dataset.fly;
+}
 function trainingComplete(){
+  dressHomeBack();
   phaseScores[0]=100;saveState();
   document.getElementById('congrats-title').innerHTML=`Treino completo! ${ico('sparkle',34)}`;
   document.getElementById('congrats-stars').innerHTML=starsHTML(3,44);
@@ -3133,6 +3183,8 @@ function updateMimiPreview(){
   if(stage) showMimi(stage,104,'normal');          // a mesma Mimi 3D do jogo, com o que ela está vestindo
   const cm=document.getElementById('congrats-mimi');
   if(cm&&(cm.__m3||cm.innerHTML))showMimi(cm,120,'happy');
+  const gf=document.getElementById('garden-fly');
+  if(gf&&gf.dataset.fly&&document.getElementById('screen-garden').classList.contains('active'))showMimi(gf,110,'normal');
   const lbl=document.getElementById('equipped-label');
   if(lbl){
     const h=ITEMS.find(x=>x.id===equippedHat);
@@ -3211,27 +3263,45 @@ function renderItemsGrid(){
 function showFinal(){
   const firstMissing=phaseScores.findIndex((v,i)=>i>=1&&v===null);
   if(firstMissing>0){startPhase(firstMissing);return;}   // só mostra o final com as 5 fases concluídas
+  metaRun++;
   const real=phaseScores.slice(1);
-  const played=real.filter(s=>s!==null);
-  const avg=played.length?Math.round(played.reduce((a,b)=>a+b,0)/played.length):0;
-  const perfect=real.every(s=>s!==null&&s>=80);   // todas as 5 fases com 3 estrelas
+  const avg=Math.round(real.reduce((a,b)=>a+b,0)/real.length);
+  const perfectCount=real.filter(s=>s>=80).length;   // fases com 3 estrelas
+  document.getElementById('garden-badge').hidden=perfectCount<real.length;
+  document.getElementById('garden-score-num').textContent=avg;
+  document.getElementById('garden-stars').innerHTML=starsHTML(starsFor(avg),36);
+  document.getElementById('garden-perfect-lbl').textContent=`${perfectCount} de ${real.length} fases com 3 estrelas`;
+  // personalizar a Mimi borboleta aqui também
+  document.getElementById('final-dress-slot').appendChild(dressCard);
+  dressCard.style.display='';
+  document.getElementById('mimi-stage').dataset.fly='1';
+  buildDressup();
+  showScreen('screen-garden');
+  const gf=document.getElementById('garden-fly');gf.dataset.fly='1';
+  showMimi(gf,110,'happy');
+  spawnGardenParticles();confetti();
+  speak('A Mimi virou uma borboleta! Você foi um programador incrível!');
+}
 
-  if(perfect){
-    document.getElementById('garden-score-num').textContent=avg;
-    showMimi(document.getElementById('garden-mimi-small'),90,'happy');
-    showMimi(document.getElementById('garden-mimi-scene'),110,'happy',true);
-    spawnGardenParticles();
-    confetti();
-    setTimeout(()=>{confetti();confetti();},600);
-    showScreen('screen-garden');
-  } else {
-    document.getElementById('final-num').textContent=avg;
-    document.getElementById('final-stars').innerHTML=starsHTML(starsFor(avg),48);
-    showMimi(document.getElementById('mimi-final-wrap'),130,'happy',true);
-    confetti();
-    showScreen('screen-final');
-  }
-  speak('Fim de jogo! Você foi muito bem!');
+// TRANSFORMAÇÃO: lagarta → casulo → borboleta, e depois o resultado final
+let metaRun=0;
+function showMetamorphosis(){
+  const run=++metaRun;
+  showScreen('screen-meta');
+  const stage=document.getElementById('meta-stage'),title=document.getElementById('meta-title'),go=document.getElementById('meta-go');
+  go.hidden=true;
+  const say=t=>{title.textContent=t;speak(t);};
+  say('A Mimi comeu todas as frutas!');
+  delete stage.dataset.fly;
+  const size=Math.min(340,window.innerWidth*.76);
+  let slot=null;
+  if(Mimi3D.ok){slot=Mimi3D.mount(stage,{size,mood:'happy'});slot.setLook(equippedHat,equippedOutfit);slot.setColor(mimiColor);slot.setButterfly(false);slot.happy();}
+  else stage.innerHTML=makeMimi(Math.round(size*.7),equippedHat,equippedOutfit,'happy');
+  const later=(ms,f)=>setTimeout(()=>{if(run===metaRun)f();},ms);
+  later(1800,()=>{say('Ela está fazendo um casulo...');if(slot)slot.metamorph();});
+  later(4600,()=>{say('Puf! A Mimi virou uma borboleta!');sfxWin();confetti();if(slot)slot.face(-.75);else stage.innerHTML=ico('butterfly',Math.round(size*.6));});
+  later(5600,()=>{go.hidden=false;go.focus();});
+  later(9000,()=>{if(document.getElementById('screen-meta').classList.contains('active'))showFinal();});
 }
 
 function spawnGardenParticles(){
