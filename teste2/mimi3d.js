@@ -283,7 +283,7 @@ function setLook(rig,hat,outfit){
 // ── CENA (luzes + chão que recebe a sombra) ──
 const VIEWS={
   front:{pos:[1.0,2.4,7.6],look:[-.05,.72,0],fov:30,yaw:-.55},
-  game: {pos:[0,4.5,5.9],look:[0,.5,0],fov:30,yaw:0},
+  game: {pos:[0,6.4,3.7],look:[0,.4,0],fov:30,yaw:0},
 };
 function buildScene(view){
   const scene=new THREE.Scene();
@@ -306,7 +306,7 @@ function buildScene(view){
 
 // ── LUGARES (slots) ──
 const slots=new Set();
-const DIR_YAW={right:0,left:Math.PI,down:-Math.PI/2+.6,up:Math.PI/2-.6};
+const DIR_YAW={right:0,left:Math.PI,down:-Math.PI/2,up:Math.PI/2};
 function angDiff(a,b){let d=(b-a)%(Math.PI*2);if(d>Math.PI)d-=Math.PI*2;if(d<-Math.PI)d+=Math.PI*2;return d;}
 
 M3.mount=function(container,opts={}){
@@ -367,7 +367,7 @@ function updateRig(slot,dt){
     const lift=moving?Math.max(0,Math.sin(ph))*.13*crawlAmp:0;
     const squash=moving?1+.07*Math.sin(ph+1.2)*crawlAmp:1;
     s.g.position.y=s.baseY+lift;
-    s.g.position.x=s.x+(moving?Math.cos(ph)*.03*crawlAmp:0);
+    s.g.position.x=s.x+(moving?Math.cos(ph)*.07*crawlAmp*(1+i*.3):0);   // o corpo estica e encolhe, dá para ver até de cima
     s.ball.scale.set(s.r*squash,s.r*breathe/squash,s.r*breathe);
     s.legs.forEach((l,k)=>{l.rotation.z=moving?Math.sin(ph*1.0+k*Math.PI)*.6*crawlAmp:Math.sin(t*1.5+i+k)*.05;});
   });
@@ -377,6 +377,8 @@ function updateRig(slot,dt){
   rig.headPivot.position.y=headY;
   rig.head.rotation.z=Math.sin(t*1.3)*.05+(moving?Math.sin(hph)*.06*crawlAmp:0);
   rig.head.rotation.y=Math.sin(t*.9)*.08;
+  // no labirinto, quando ela vem para baixo (na direção de quem joga), levanta o rosto para aparecer
+  if(slot.view==='game'){const toward=Math.max(0,-Math.sin(st.yaw));rig.head.rotation.z+=toward*.75;}
 
   // pulo de alegria (2 pulinhos com giro)
   let y=0,spin=0,sx=1,sy=1;

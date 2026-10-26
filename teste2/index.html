@@ -838,11 +838,12 @@ button:focus-visible{outline:4px solid #ffd700}
 #game-grid.flash-error{animation:shakeRed .4s ease}
 #mimi-token{overflow:visible}
 #mimi-token.m3 .mimi-inner{animation:none!important;filter:none!important}
-canvas.mimi3d{display:block;pointer-events:none}
+canvas.mimi3d{display:block;pointer-events:none;position:relative;z-index:1}
 
 /* mapa das frutas */
-.fruit-map{position:relative;width:100%;height:calc(100vh - 150px);height:calc(100dvh - 150px);min-height:340px;margin:0 auto;
+.fruit-map{position:relative;width:min(100%,1080px);height:min(calc(100vh - 150px),600px);height:min(calc(100dvh - 150px),600px);min-height:320px;margin:0 auto;
   border-radius:24px;box-shadow:0 12px 30px rgba(0,40,30,.3),0 0 0 4px rgba(255,255,255,.9)}
+@media (max-aspect-ratio:1/1){.fruit-map{width:min(100%,520px);height:min(calc(100vh - 150px),900px);height:min(calc(100dvh - 150px),900px)}}
 .fruit-map>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .map-node{position:absolute;width:var(--node,80px);height:var(--node,80px);transform:translate(-50%,-50%);border:none;padding:0;cursor:pointer;
   border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffffff,#f3eeff 70%);
@@ -1823,15 +1824,26 @@ const FRUITS=[
     '  ##*##  ',
     '    #    ',
    ],
-   body:'M4.5,2.7 C7.1,2.7 8.95,4.6 8.95,7.4 C8.95,10.2 7.1,11.95 4.5,11.95 C1.9,11.95 0.05,10.2 0.05,7.4 C0.05,4.6 1.9,2.7 4.5,2.7Z',
-   skin:['#ffe066','#ffb800','#e08e00'],line:'#b87100',tunnel:['#24467f','#10264d'],
-   deco:()=>{let s='<g stroke="#b87100" stroke-width=".08" opacity=".75">';for(let k=-12;k<14;k+=1.1){s+=`<line x1="${k}" y1="2" x2="${k+10}" y2="12"/><line x1="${k+10}" y1="2" x2="${k}" y2="12"/>`;}return s+'</g>';},
-   top:()=>`<g stroke="#1f8a3a" stroke-width=".07" stroke-linejoin="round">
-     <path d="M4.5,3.0 C3.6,2.4 2.4,1.9 1.6,1.3 C2.6,1.4 3.5,1.8 4.2,2.3Z" fill="#2fb84f"/>
-     <path d="M4.5,3.0 C5.4,2.4 6.6,1.9 7.4,1.3 C6.4,1.4 5.5,1.8 4.8,2.3Z" fill="#2fb84f"/>
-     <path d="M4.5,3.0 C3.7,2.0 3.0,1.1 2.8,0.2 C3.5,0.8 4.0,1.5 4.4,2.2Z" fill="#4fd06a"/>
-     <path d="M4.5,3.0 C5.3,2.0 6.0,1.1 6.2,0.2 C5.5,0.8 5.0,1.5 4.6,2.2Z" fill="#4fd06a"/>
-     <path d="M4.5,3.0 C4.0,2.0 4.1,0.7 4.5,-0.3 C4.9,0.7 5.0,2.0 4.5,3.0Z" fill="#3fc35a"/></g>`},
+   body:'M4.5,2.6 C6.9,2.6 8.15,4.8 8.15,7.3 C8.15,9.9 6.9,11.95 4.5,11.95 C2.1,11.95 0.85,9.9 0.85,7.3 C0.85,4.8 2.1,2.6 4.5,2.6Z',
+   skin:['#ffe066','#f5b014','#c97a0a'],line:'#9a5a06',tunnel:['#24467f','#10264d'],
+   // escamas em losango, cada uma com um "olhinho" escuro e um brilho, como num abacaxi de verdade
+   deco:()=>{let s='<g stroke="#a8650a" stroke-width=".09" opacity=".85">';
+     for(let k=-14;k<16;k+=1.05){s+=`<line x1="${k}" y1="2" x2="${k+11}" y2="13"/><line x1="${k+11}" y1="2" x2="${k}" y2="13"/>`;}
+     s+='</g>';
+     for(let r=0;r<12;r++)for(let c=0;c<10;c++){
+       const x=(c+(r%2?.5:0))*1.05-.6,y=2.6+r*.525;
+       s+=`<ellipse cx="${x.toFixed(2)}" cy="${(y+.12).toFixed(2)}" rx=".16" ry=".1" fill="#ffef9a" opacity=".55"/><circle cx="${x.toFixed(2)}" cy="${(y-.02).toFixed(2)}" r=".07" fill="#7a4306"/>`;
+     }
+     return s;},
+   // coroa: várias folhas compridas e pontudas, em leque (as de trás mais escuras)
+   top:()=>{
+     const leaf=(deg,L,w,c,stroke)=>{const a=deg*Math.PI/180,bx=4.5,by=3.0,tx=bx+Math.sin(a)*L,ty=by-Math.cos(a)*L,mx=(bx+tx)/2,my=(by+ty)/2,nx=Math.cos(a)*w,ny=Math.sin(a)*w;
+       return `<path d="M${(bx-nx).toFixed(2)},${(by-ny).toFixed(2)} Q${(mx-nx*1.1).toFixed(2)},${(my-ny*1.1).toFixed(2)} ${tx.toFixed(2)},${ty.toFixed(2)} Q${(mx+nx*1.1).toFixed(2)},${(my+ny*1.1).toFixed(2)} ${(bx+nx).toFixed(2)},${(by+ny).toFixed(2)}Z" fill="${c}" stroke="${stroke}" stroke-width=".06" stroke-linejoin="round"/>`;};
+     let s='';
+     [[-70,2.0],[-52,2.6],[-34,3.0],[34,3.0],[52,2.6],[70,2.0]].forEach(([d,L])=>s+=leaf(d,L,.3,'#1f9a4a','#126b32'));
+     [[-40,2.3],[-20,3.2],[0,3.6],[20,3.2],[40,2.3]].forEach(([d,L])=>s+=leaf(d,L,.33,'#3fc35a','#1f8a3a'));
+     [[-9,2.5],[9,2.5]].forEach(([d,L])=>s+=leaf(d,L,.26,'#6fe08a','#2fae55'));
+     return s;}},
 ];
 const MAP_CH={' ':1,'#':1,'.':0,'S':2,'*':3,'A':4,'M':5,'R':6,'B':7};
 const LEVELS=FRUITS.map(f=>({rows:f.map.length,cols:f.map[0].length,grid:f.map.map(row=>[...row].map(ch=>MAP_CH[ch]))}));
@@ -2092,7 +2104,7 @@ loadState();
 fillIcons();
 document.querySelectorAll('[data-stars]').forEach(e=>{e.innerHTML=starsHTML(3,36);});
 updateSoundBtn();
-document.getElementById('how-mimi').innerHTML=makeMimi(54,null,null);
+showMimi(document.getElementById('how-mimi'),52,'normal');
 showMimi(document.getElementById('mimi-start-wrap'),150,'normal',true);
 
 // ═══════════════════════════════════
@@ -2171,7 +2183,7 @@ function buildPhaseGrid(){
   const map=document.getElementById('fruit-map');
   cancelAnimationFrame(mapAnim);
   layoutMap(map);
-  const nodePx=Math.round(Math.max(64,Math.min(150,Math.min(MAP_W,MAP_H)*(mapWide?.2:.21))));
+  const nodePx=Math.round(Math.max(64,Math.min(150,Math.min(MAP_W,MAP_H)*(mapWide?.19:.21))));
   map.style.setProperty('--node',nodePx+'px');
   const cur=currentNode();
   const from=(mapMimiAt!==null&&mapMimiAt<cur)?mapMimiAt:cur;   // a Mimi anda da fruta antiga até a nova
@@ -2775,7 +2787,9 @@ function showToast(id){document.getElementById(id).classList.add('show');}
 function hideToast(id){document.getElementById(id).classList.remove('show');}
 function hideAllToasts(){['toast-error','toast-mud','toast-pickup'].forEach(hideToast);}
 function showErrorToast(icon,msg,sub){
-  document.getElementById('error-icon').innerHTML=`<span class="toast-mimi">${makeMimi(120,equippedHat,equippedOutfit,'sad')}</span>${ico(icon,44)}`;
+  const ei=document.getElementById('error-icon');
+  ei.innerHTML=`<span class="toast-mimi"></span>${ico(icon,44)}`;
+  showMimi(ei.querySelector('.toast-mimi'),96,'sad');
   document.getElementById('error-msg').textContent=msg;
   document.getElementById('error-sub').textContent=sub;
   showToast('toast-error');
@@ -2977,7 +2991,7 @@ function buildDressup(){
 
 function updateMimiPreview(){
   const stage=document.getElementById('mimi-stage');
-  if(stage) stage.innerHTML=makeMimi(118,equippedHat,equippedOutfit);
+  if(stage) showMimi(stage,104,'normal');          // a mesma Mimi 3D do jogo, com o que ela está vestindo
   const cm=document.getElementById('congrats-mimi');
   if(cm&&(cm.__m3||cm.innerHTML))showMimi(cm,120,'happy');
   const lbl=document.getElementById('equipped-label');
@@ -3040,8 +3054,8 @@ function showFinal(){
 
   if(perfect){
     document.getElementById('garden-score-num').textContent=avg;
-    document.getElementById('garden-mimi-small').innerHTML=makeMimi(90,equippedHat,equippedOutfit,'happy');
-    document.getElementById('garden-mimi-scene').innerHTML=makeMimi(110,equippedHat,equippedOutfit,'happy');
+    showMimi(document.getElementById('garden-mimi-small'),90,'happy');
+    showMimi(document.getElementById('garden-mimi-scene'),110,'happy',true);
     spawnGardenParticles();
     confetti();
     setTimeout(()=>{confetti();confetti();},600);
