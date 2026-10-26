@@ -148,7 +148,7 @@ M.build=function(container,opts){
   lake.rotation.x=-Math.PI/2;lake.scale.set(1.15,1,1);lake.position.set(lakeAt[0],H(...lakeAt)+.06,lakeAt[1]);scene.add(lake);
   const shore=mesh(new THREE.RingGeometry(1.2,1.42,40),std('#e8d39a'),false,true);shore.rotation.x=-Math.PI/2;shore.scale.set(1.15,1,1);shore.position.copy(lake.position);shore.position.y-=.01;scene.add(shore);
 
-  // caminho de terra (uma fita que acompanha o chão)
+  // caminho de grama clarinha (uma fita que acompanha o chão), com flores dos lados
   const pts=NODES.map(([x,z])=>new THREE.Vector3(x,0,z));
   const curve=new THREE.CatmullRomCurve3(pts,false,'catmullrom',.5);
   function ribbon(width,y,mat){
@@ -161,18 +161,28 @@ M.build=function(container,opts){
     }
     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.setIndex(idx);g.computeVertexNormals();
     mat.side=THREE.DoubleSide;
-    return mesh(g,mat,false,true);
+    return mesh(g,mat,false,false);
   }
-  scene.add(ribbon(.48,.03,std('#b07a3a',{polygonOffset:true,polygonOffsetFactor:-1})));
-  scene.add(ribbon(.38,.05,std('#f0c47e',{polygonOffset:true,polygonOffsetFactor:-2})));
-  // pedrinhas no meio do caminho: laranja = caminho aberto, bege = ainda fechado
+  scene.add(ribbon(.5,.07,std('#2f9a48',{roughness:.95,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4})));
+  scene.add(ribbon(.4,.1,std('#b6f08e',{roughness:.95,polygonOffset:true,polygonOffsetFactor:-4,polygonOffsetUnits:-8})));
+  // flores na beira do caminho
+  const PET=['#ff6fa8','#ffd23f','#b57aff','#ff8a5c','#ffffff','#5ec8ff'];
+  for(let k=0,N=150;k<N;k++){
+    const t=(k+.5)/N,p=curve.getPoint(t),tg2=curve.getTangent(t),l=Math.hypot(tg2.x,tg2.z)||1;
+    const side=k%2?1:-1,off=.5+((k*37)%10)/40;
+    const x=p.x-tg2.z/l*off*side,z=p.z+tg2.x/l*off*side;
+    if(NODES.some(([nx,nz])=>Math.hypot(nx-x,nz-z)<1.0))continue;
+    const fl=flower(x,z,PET[(k*7)%PET.length]);fl.scale.setScalar(1.25);scene.add(fl);
+  }
+  // no meio do caminho, florzinhas mostram os passos: coloridas = caminho aberto, botões brancos = ainda fechado
   const stones=[];
-  const stoneG=new THREE.CylinderGeometry(.07,.08,.04,12);
   for(let s2=0;s2<n-1;s2++){
-    const open=opts.segOpen[s2];
     for(let k=1;k<6;k++){
-      const t=(s2+k/6)/(n-1),p=curve.getPoint(t);
-      const m=mesh(stoneG,std(open?'#ff9f00':'#c9a670',{roughness:.5}),false);m.position.set(p.x,H(p.x,p.z)+.08,p.z);scene.add(m);stones.push({m,seg:s2});
+      const t=(s2+k/6)/(n-1),p=curve.getPoint(t),y=H(p.x,p.z)+.05;
+      const on=flower(p.x,p.z,PET[(s2+k)%4]);on.position.y=y-.06;on.scale.setScalar(1.15);
+      const bud=ball(.06,std('#f4f7ee',{roughness:.6}),p.x,y+.05,p.z,1,1.2,1);
+      on.visible=!!opts.segOpen[s2];bud.visible=!opts.segOpen[s2];
+      scene.add(on);scene.add(bud);stones.push({on,bud,seg:s2});
     }
   }
 
@@ -241,11 +251,11 @@ M.pathScreen=function(seg,u){
 M.standScreen=function(i){const [x,z]=NODES[i];return toScreen(new THREE.Vector3(x+SIDE,H(x+SIDE,z+FRONT)+.12,z+FRONT));};
 // tamanho (em pixels) da ilha de uma fruta na tela
 M.nodeSize=function(i){const [x,z]=NODES[i],h=H(x,z);const a=toScreen(new THREE.Vector3(x-.82,h,z)),b=toScreen(new THREE.Vector3(x+.82,h,z));return Math.hypot(b[0]-a[0],b[1]-a[1]);};
-// fruta que acabou de abrir: ganha cor e dá um pulinho; o caminho até ela fica laranja
+// fruta que acabou de abrir: ganha cor e dá um pulinho; as florzinhas do caminho até ela abrem
 M.open=function(i){
   if(!cur)return;
   const f=cur.fruits[i];if(f){tint(f,false);cur.pop.push({f,t:0,y:f.position.y});}
-  cur.stones.forEach(s=>{if(s.seg===i-1)s.m.material.color.set('#ff9f00');});
+  cur.stones.forEach(s=>{if(s.seg===i-1){s.on.visible=true;s.bud.visible=false;}});
 };
 M.setCalm=function(b){M.calm=b;};
 function loop(){

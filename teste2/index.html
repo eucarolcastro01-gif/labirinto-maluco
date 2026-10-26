@@ -2329,7 +2329,7 @@ function mapSceneSVG(){
 }
 function buildPhaseGrid(){
   const map=document.getElementById('fruit-map');
-  cancelAnimationFrame(mapAnim);
+  cancelAnimationFrame(mapAnim);clearInterval(mapWaveTimer);
   layoutMap(map);
   let nodePx=Math.round(Math.max(64,Math.min(150,Math.min(MAP_W,MAP_H)*(mapWide?.19:.21))));
   const cur=currentNode();
@@ -2379,12 +2379,12 @@ function buildPhaseGrid(){
   // Mimi no mapa (em cima da fruta onde ela está)
   const mm=document.getElementById('map-mimi');
   let slot=null;
-  if(Mimi3D.ok){slot=Mimi3D.mount(mm,{size:nodePx*(use3D?1.2:1.5),yaw:-.55});slot.setLook(equippedHat,equippedOutfit);slot.setColor(mimiColor);slot.setMood('normal');}
+  if(Mimi3D.ok){slot=Mimi3D.mount(mm,{size:nodePx*(use3D?1.55:1.5),yaw:MAP_FACE});slot.setLook(equippedHat,equippedOutfit);slot.setColor(mimiColor);slot.setMood('normal');slot.face(MAP_FACE);}
   else{mm.innerHTML=makeMimi(Math.round(nodePx*1.1),equippedHat,equippedOutfit);mm.style.filter=colorFilter();}
   const put=(x,y)=>{mm.style.left=(x/MAP_W*100)+'%';mm.style.top=(y/MAP_H*100)+'%';};
   put(...(use3D?Map3D.standScreen(from):MAP_PTS[from]));
   mapMimiAt=cur;
-  if(from===cur)return;
+  if(from===cur){mapHello(slot);return;}
   // anda pelo caminho, fase por fase
   let seg=from,t0=null;
   const path=()=>document.getElementById('seg-'+seg);
@@ -2403,7 +2403,7 @@ function buildPhaseGrid(){
       if(node)node.classList.add('opened-now');
       if(use3D)Map3D.open(seg);
       if(seg>=cur){
-        if(slot){slot.setWalking(false);slot.face(-.55);slot.happy();}
+        if(slot){slot.setWalking(false);slot.face(MAP_FACE);slot.happy();setTimeout(()=>mapHello(slot),1300);}
         sfxPickup();
         speak(`Oba! ${FRUITS[cur].name} liberada!`);
         return;
@@ -2413,7 +2413,16 @@ function buildPhaseGrid(){
   }
   mapAnim=requestAnimationFrame(step);
 }
-function stopMapWalk(){cancelAnimationFrame(mapAnim);const mm=document.getElementById('map-mimi');if(mm&&mm.__m3)mm.__m3.setWalking(false);}
+// no mapa a Mimi fica de frente para a criança, sorrindo, e acena de tempos em tempos
+const MAP_FACE=-1.15;
+let mapWaveTimer=0;
+function mapHello(slot){
+  clearInterval(mapWaveTimer);
+  if(!slot)return;
+  slot.face(MAP_FACE);slot.wave();
+  mapWaveTimer=setInterval(()=>{if(motionOn&&document.getElementById('screen-phases').classList.contains('active'))slot.wave();},3800);
+}
+function stopMapWalk(){clearInterval(mapWaveTimer);cancelAnimationFrame(mapAnim);const mm=document.getElementById('map-mimi');if(mm&&mm.__m3)mm.__m3.setWalking(false);}
 
 // ═══════════════════════════════════
 //  TIMER
