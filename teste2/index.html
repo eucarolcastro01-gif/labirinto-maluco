@@ -1811,12 +1811,14 @@ const ITEMS=[
 const PHASE_COUNT=5;
 const PHASE_PICKUPS=[
   null,
-  {4:'hat_laco',   7:'out_tenis'},
-  {4:'hat_flor',   7:'out_pintinhas'},
-  {4:'hat_bone',   7:'out_abelha'},
-  {4:'hat_cartola',7:'out_galochas'},
-  {4:'hat_coroa',  7:'out_vaquinha'},
+  {4:'hat_laco'},              // um presente por fruta, intercalando chapéu e roupinha
+  {7:'out_tenis'},
+  {4:'hat_flor'},
+  {7:'out_pintinhas'},
+  {4:'hat_coroa'},             // a coroa é o prêmio da última fruta
 ];
+// só aparecem no armário os presentes que dá para ganhar (e os que a criança já ganhou antes)
+const GIFT_IDS=new Set(PHASE_PICKUPS.flatMap(p=>p?Object.values(p):[]));
 
 // ═══════════════════════════════════
 //  WALL COLORS (paleta original, em tons pastel)
@@ -2078,7 +2080,7 @@ function hintLabelText(){return curPhase===0||penHint?'Como sair!':'Como sair! (
 let collected=new Set();
 // brinde que a criança já tem não aparece mais na fase (e não tira pontos)
 function giftOwned(v){const id=(PHASE_PICKUPS[curPhase]||{})[v];return !!id&&unlockedItems.has(id);}
-function giftPending(v){return !collected.has(v)&&!giftOwned(v);}
+function giftPending(v){return !!(PHASE_PICKUPS[curPhase]||{})[v]&&!collected.has(v)&&!giftOwned(v);}
 let penMud=0,penRock=0,penWall=0;
 let equippedHat=null,equippedOutfit=null;
 let unlockedItems=new Set();
@@ -3298,14 +3300,14 @@ function phaseComplete(steps,blocks=steps){
   const best=phaseScores[curPhase];
   saveState();
   updateGardenBg();
-  // acabou a última fruta pela primeira vez: a Mimi vira borboleta e o jogo vai direto para o resultado
-  if(!wasAllDone&&phaseScores.slice(1).every(v=>v!==null)){showMetamorphosis();return;}
+  // acabou a última fruta pela primeira vez: antes de virar borboleta, a criança veste a Mimi
+  const firstAllDone=!wasAllDone&&phaseScores.slice(1).every(v=>v!==null);
   dressHomeBack();
 
   document.getElementById('congrats-title').innerHTML=`Parabéns! ${ico('sparkle',34)}`;
   document.getElementById('congrats-stars').innerHTML=starsHTML(starsFor(score),44);
   const target=nextTarget();
-  document.getElementById('congrats-sub').textContent=`Você passou a fase ${curPhase}!`;
+  document.getElementById('congrats-sub').textContent=firstAllDone?'Você passou por todas as frutas! Vista a Mimi antes de ela virar borboleta.':`Você passou a fase ${curPhase}!`;
   document.querySelector('.dressup-card').style.display='';
 
   let bd='';
@@ -3334,7 +3336,10 @@ function phaseComplete(steps,blocks=steps){
   showMimi(document.getElementById('congrats-mimi'),120,'happy');
   buildDressup();confetti();
   const btn=document.getElementById('btn-next');
-  if(target){
+  if(firstAllDone){
+    btn.innerHTML=`${ico('butterfly',20)} Virar borboleta!`;
+    btn.onclick=()=>showMetamorphosis();
+  } else if(target){
     btn.innerHTML=`${ico('play',18)} Próxima fruta`;
     btn.onclick=()=>showPhases();      // no mapa a Mimi anda até a fruta que acabou de abrir
   } else {
@@ -3343,7 +3348,7 @@ function phaseComplete(steps,blocks=steps){
   }
   document.getElementById('btn-replay').style.display='inline-flex';
   showScreen('screen-congrats');
-  speak(target?`Parabéns! Você passou a fase ${curPhase}!`:'Parabéns! Você completou todas as fases!',{bubble:false});
+  speak(firstAllDone?'Eba! Comi todas as frutas! Me veste antes de eu virar borboleta?':target?`Parabéns! Você passou a fase ${curPhase}!`:'Parabéns! Você completou todas as fases!',{bubble:false});
 }
 // As fases abrem em sequência: depois da fase N vem a N+1 (0 = acabaram as fases)
 function nextTarget(){return curPhase<PHASE_COUNT?curPhase+1:0;}
@@ -3450,7 +3455,7 @@ function renderItemsGrid(){
   grid.innerHTML='';
   updateColorTab();
   if(activeCat==='color'){renderColorGrid(grid);return;}
-  const filtered=ITEMS.filter(x=>x.type===activeCat);
+  const filtered=ITEMS.filter(x=>x.type===activeCat&&(GIFT_IDS.has(x.id)||unlockedItems.has(x.id)));
 
   filtered.forEach(item=>{
     const unlocked=unlockedItems.has(item.id);
