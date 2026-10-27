@@ -2188,6 +2188,105 @@ function sfxPickup() { [523,659,784].forEach((f,i)=>playTone(f,'sine',.18,.15,i*
 function sfxWin()    { [523,659,784,1047].forEach((f,i)=>playTone(f,'sine',.3,.2,i*.1)); }
 function sfxHint()   { playTone(350,'sine',.15,.08); }
 
+// ── BARULHINHOS DA MIMI: tudo feito por código (sem arquivos de som) ──
+// uma "vozinha": som suave que desliza de uma nota para outra, com um tremidinho no fim
+function chirp(f0,f1,dur,vol=.1,delay=0,type='sine'){
+  if(!soundOn)return;
+  try{
+    const ctx=getAudio(),t=ctx.currentTime+delay;
+    const o=ctx.createOscillator(),g=ctx.createGain(),lfo=ctx.createOscillator(),lg=ctx.createGain();
+    o.type=type;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dur*.75);
+    lfo.frequency.value=22;lg.gain.value=f1*.025;lfo.connect(lg);lg.connect(o.frequency);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.012);g.gain.exponentialRampToValueAtTime(.0008,t+dur);
+    o.connect(g);g.connect(sfxBus());
+    o.start(t);lfo.start(t);o.stop(t+dur+.02);lfo.stop(t+dur+.02);
+  }catch(e){}
+}
+// ruído curtinho (mordida, lama)
+function noiseBurst(dur,vol,delay=0,freq=1800,q=1.2){
+  if(!soundOn)return;
+  try{
+    const ctx=getAudio(),t=ctx.currentTime+delay;
+    const src=ctx.createBufferSource();src.buffer=noiseBuf(ctx);
+    const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=freq;f.Q.value=q;
+    const g=ctx.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0008,t+dur);
+    src.connect(f);f.connect(g);g.connect(sfxBus());src.start(t);src.stop(t+dur+.02);
+  }catch(e){}
+}
+let __noise=null;
+function noiseBuf(ctx){
+  if(__noise)return __noise;
+  __noise=ctx.createBuffer(1,ctx.sampleRate*.5,ctx.sampleRate);
+  const d=__noise.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  return __noise;
+}
+let __sfx=null;
+function sfxBus(){const ctx=getAudio();if(!__sfx){__sfx=ctx.createGain();__sfx.gain.value=1;__sfx.connect(ctx.destination);}return __sfx;}
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function mimiStepSnd(){const f=rnd(700,900);chirp(f,f*1.35,.09,.07);noiseBurst(.04,.05,0,900,2);}           // pip!
+function mimiMudSnd(){chirp(380,160,.35,.09,0,'triangle');noiseBurst(.22,.08,.05,350,3);}                     // blub
+function mimiOuch(){chirp(880,560,.16,.11);chirp(640,380,.24,.1,.17);}                                      // oh-oh
+function mimiYay(){chirp(600,1050,.14,.1);chirp(800,1400,.22,.1,.15);chirp(1000,1600,.12,.07,.4);}          // iiê!
+function mimiGiggle(){for(let i=0;i<4;i++){const f=rnd(950,1150)-i*40;chirp(f,f*1.25,.08,.08,i*.1);}}    // hihihi
+function mimiHmm(){chirp(500,760,.22,.07,0,'triangle');}                                                   // hm?
+function mimiHello(){chirp(650,980,.12,.09);chirp(820,1250,.16,.09,.14);}                                   // oi!
+function mimiMunch(delay=0){for(let i=0;i<3;i++)noiseBurst(.07,.16,delay+i*.18,2400,.9);chirp(500,700,.15,.06,delay+.6);}  // nhac nhac nhac
+function mimiSparkle(){[1320,1568,1760,2093,2637].forEach((f,i)=>chirp(f,f*1.02,.25,.05,i*.09));}
+
+// ── MUSIQUINHA DE FUNDO: animada e baixinha, tocada em laço (Dó maior, 116 batidas por minuto) ──
+const MUSIC={on:false,timer:null,next:0,step:0,bus:null,vol:.055};
+const NOTE=n=>440*Math.pow(2,(n-69)/12);
+// 4 compassos de acordes (I–V–vi–IV), cada um com 8 colcheias
+const CHORDS=[[60,64,67],[55,59,62],[57,60,64],[53,57,60]];
+const BASS=[48,43,45,41];
+// melodia: duas frases (A e B), uma nota por colcheia (0 = pausa)
+const MEL_A=[72,0,76,79, 76,0,74,72, 74,0,71,74, 79,0,0,0, 72,0,76,72, 69,0,72,76, 77,0,76,74, 72,0,0,0];
+const MEL_B=[79,0,79,81, 79,0,76,0, 74,0,74,76, 74,0,71,0, 72,0,72,74, 76,0,79,0, 77,76,74,72, 74,0,72,0];
+function musicNote(f,t,dur,vol,type){
+  const ctx=audioCtx,o=ctx.createOscillator(),g=ctx.createGain();
+  o.type=type;o.frequency.setValueAtTime(f,t);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.015);g.gain.exponentialRampToValueAtTime(.0005,t+dur);
+  o.connect(g);g.connect(MUSIC.bus);o.start(t);o.stop(t+dur+.03);
+}
+function musicTick(){
+  const ctx=audioCtx;if(!ctx||!MUSIC.on)return;
+  const e=60/116/2;                                  // uma colcheia
+  while(MUSIC.next<ctx.currentTime+.2){
+    const t=MUSIC.next,st=MUSIC.step,bar=Math.floor(st/8)%4,b8=st%8,phrase=Math.floor(st/32)%2;
+    const mel=(phrase?MEL_B:MEL_A)[st%32];
+    if(mel)musicNote(NOTE(mel),t,e*1.6,.5,'triangle');
+    if(b8===0||b8===4)musicNote(NOTE(BASS[bar]),t,e*1.8,.55,'sine');
+    if(b8===2||b8===6)musicNote(NOTE(BASS[bar]+12),t,e*1.2,.3,'sine');
+    if(b8%2===1)CHORDS[bar].forEach(n=>musicNote(NOTE(n),t,e*.7,.09,'square'));   // acordes "pinicados"
+    // percussão bem leve: chocalho em toda colcheia
+    try{const src=ctx.createBufferSource();src.buffer=noiseBuf(ctx);const f=ctx.createBiquadFilter();f.type='highpass';f.frequency.value=6000;
+      const g=ctx.createGain();g.gain.setValueAtTime(b8%2?.07:.12,t);g.gain.exponentialRampToValueAtTime(.0005,t+.05);
+      src.connect(f);f.connect(g);g.connect(MUSIC.bus);src.start(t);src.stop(t+.06);}catch(err){}
+    MUSIC.next+=e;MUSIC.step++;
+  }
+}
+function musicStart(){
+  if(!soundOn||MUSIC.on)return;
+  try{
+    const ctx=getAudio();
+    if(!MUSIC.bus){MUSIC.bus=ctx.createGain();MUSIC.bus.connect(ctx.destination);}
+    MUSIC.bus.gain.cancelScheduledValues(ctx.currentTime);
+    MUSIC.bus.gain.setValueAtTime(.0001,ctx.currentTime);MUSIC.bus.gain.exponentialRampToValueAtTime(MUSIC.vol,ctx.currentTime+1.2);
+    MUSIC.on=true;MUSIC.next=ctx.currentTime+.1;
+    MUSIC.timer=setInterval(musicTick,50);musicTick();
+  }catch(e){}
+}
+function musicStop(){
+  MUSIC.on=false;clearInterval(MUSIC.timer);
+  if(MUSIC.bus&&audioCtx){const t=audioCtx.currentTime;MUSIC.bus.gain.cancelScheduledValues(t);MUSIC.bus.gain.setTargetAtTime(.0001,t,.08);}
+}
+// a música fica mais baixinha enquanto a narração fala
+function musicDuck(on){
+  if(!MUSIC.bus||!audioCtx||!MUSIC.on)return;
+  const t=audioCtx.currentTime;MUSIC.bus.gain.cancelScheduledValues(t);MUSIC.bus.gain.setTargetAtTime(on?MUSIC.vol*.35:MUSIC.vol,t,.15);
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)musicStop();else if(soundOn&&audioCtx)musicStart();});
+
 // Narração: usa uma voz em português do aparelho; se não houver, fica em silêncio.
 // No Chrome a lista de vozes chega atrasada (evento voiceschanged), então a fala espera a voz ficar pronta.
 let ptVoice=null,pendingSpeech=null;
@@ -2207,7 +2306,7 @@ if('speechSynthesis' in window){
 document.addEventListener('pointerdown',function unlockAudio(){
   document.removeEventListener('pointerdown',unlockAudio);
   try{
-    if(soundOn)getAudio();
+    if(soundOn){getAudio();musicStart();}
     if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);}
   }catch(e){}
 });
@@ -2221,6 +2320,7 @@ function speak(text){
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
     u.voice=ptVoice;u.lang=ptVoice.lang;u.rate=.9;u.pitch=1.15;
+    u.onstart=()=>musicDuck(true);u.onend=u.onerror=()=>musicDuck(false);
     speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -2249,7 +2349,7 @@ function toggleSound(){
   soundOn=!soundOn;
   if(!soundOn&&'speechSynthesis' in window)try{speechSynthesis.cancel();}catch(e){}
   updateSoundBtn();saveState();
-  if(soundOn)sfxAdd();
+  if(soundOn){sfxAdd();musicStart();}else musicStop();
 }
 
 // ═══════════════════════════════════
@@ -2302,7 +2402,7 @@ function pokeMimi(){
   else if(w){w.classList.remove('poke');void w.offsetWidth;w.classList.add('poke');}
   const txt=MIMI_HELLO[helloIdx++%MIMI_HELLO.length];
   const b=document.getElementById('mimi-bubble');if(b)b.textContent=txt;
-  sfxAdd();speak(txt);
+  mimiGiggle();speak(txt);
 }   // primeiro mostra a tela, para o mapa saber o seu tamanho
 
 // ═══════════════════════════════════
@@ -2426,7 +2526,7 @@ function buildPhaseGrid(){
   let seg=from,hop=0,t0=null;
   const path=()=>document.getElementById('seg-'+seg);
   function step(now){
-    if(t0===null){t0=now;if(slot)slot.step();}
+    if(t0===null){t0=now;if(slot)slot.step();mimiStepSnd();}
     const q=Math.min(1,(now-t0)/HOP_MS),qe=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
     const e=Math.min(1,(hop+qe)/HOPS);
     let pt,ahead;
@@ -2459,7 +2559,7 @@ let mapWaveTimer=0;
 function mapHello(slot){
   clearInterval(mapWaveTimer);
   if(!slot)return;
-  slot.face(MAP_FACE);slot.wave();
+  slot.face(MAP_FACE);slot.wave();mimiHello();
   mapWaveTimer=setInterval(()=>{if(motionOn&&document.getElementById('screen-phases').classList.contains('active'))slot.wave();},3800);
 }
 function stopMapWalk(){clearInterval(mapWaveTimer);cancelAnimationFrame(mapAnim);const mm=document.getElementById('map-mimi');if(mm&&mm.__m3)mm.__m3.setWalking(false);}
@@ -2886,7 +2986,7 @@ async function executeQueue(stepOnly=false){
   // antes de sair, a Mimi olha para a estrela
   if(mimiSlot&&Mimi3D.ok){
     const st=findCells(lvl,3)[0];
-    if(st){mimiSlot.face(Math.atan2(-(st[0]-playerR),st[1]-playerC));await sleep(450);if(myRun!==runId)return;}
+    if(st){mimiSlot.face(Math.atan2(-(st[0]-playerR),st[1]-playerC));mimiHmm();await sleep(450);if(myRun!==runId)return;}
   }
   const end=stepOnly?doneCount+1:cmdQueue.length;
   for(let i=doneCount;i<end;i++){
@@ -2901,7 +3001,7 @@ async function executeQueue(stepOnly=false){
 
       // ERRO 1: bateu na parede (a Mimi não sai do lugar)
       if(!ok){if(mimiSlot&&Mimi3D.ok)mimiSlot.face(cmd.d);await handleError('wall',i,k,prevR,prevC,myRun);return;}
-      sfxStep();
+      mimiStepSnd();
 
       // ERRO 2: pisou na pedra
       if(v===6){
@@ -2912,7 +3012,7 @@ async function executeQueue(stepOnly=false){
 
       // Lama = lenta
       const delay=v===5?1100:600;
-      if(v===5){penMud+=10;sfxMud();showToast('toast-mud');setTimeout(()=>hideToast('toast-mud'),700);}
+      if(v===5){penMud+=10;sfxMud();mimiMudSnd();showToast('toast-mud');setTimeout(()=>hideToast('toast-mud'),700);}
       await sleep(delay);
       if(myRun!==runId)return;
 
@@ -2935,7 +3035,7 @@ async function executeQueue(stepOnly=false){
       if(v===3){
         lastPath={phase:curPhase,cmds:cmdQueue.slice(0,i+1).map(c=>({...c}))};
         renderQueue(i+1);
-        if(mimiSlot&&Mimi3D.ok){mimiSlot.face('down');mimiSlot.celebrate(FRUITS[curPhase].skin[1]);sfxPickup();await sleep(3000);
+        if(mimiSlot&&Mimi3D.ok){mimiSlot.face('down');mimiSlot.celebrate(FRUITS[curPhase].skin[1]);sfxPickup();mimiYay();mimiMunch(1.7);await sleep(3000);
           for(let w=0;w<25&&mimiSlot.busy();w++)await sleep(100);}   // espera a mordidinha terminar (no máximo +2,5 s)
         else{mimiFeel('happy',1300);await sleep(400);}
         if(myRun!==runId)return;
@@ -2956,8 +3056,9 @@ async function handleError(kind,i,k,prevR,prevC,myRun){
   errorCount++;
   const second=!training&&errorCount>=2;
   if(kind==='rock')sfxRock();else{sfxWall();flashError();}
+  mimiOuch();
   mimiFeel('sad',450);
-  if(mimiSlot&&Mimi3D.ok){const ms=mimiSlot;setTimeout(()=>{if(executing)ms.comfort();},800);}   // depois do susto, um carinho
+  if(mimiSlot&&Mimi3D.ok){const ms=mimiSlot;setTimeout(()=>{if(executing){ms.comfort();chirp(700,900,.18,.07);chirp(900,700,.2,.06,.2);}},800);}   // depois do susto, um carinho
   try{if(navigator.vibrate)navigator.vibrate(kind==='rock'?[80,60,80]:120);}catch(e){}
   const what=kind==='rock'?'pedra':'parede';
 
@@ -3367,7 +3468,7 @@ function showMetamorphosis(){
   else stage.innerHTML=makeMimi(Math.round(size*.7),equippedHat,equippedOutfit,'happy');
   const later=(ms,f)=>setTimeout(()=>{if(run===metaRun)f();},ms);
   later(1800,()=>{say('Ela está fazendo um casulo...');if(slot)slot.metamorph();});
-  later(4600,()=>{say('Puf! A Mimi virou uma borboleta!');sfxWin();confetti();if(slot)slot.face(-.75);else stage.innerHTML=ico('butterfly',Math.round(size*.6));});
+  later(4600,()=>{say('Puf! A Mimi virou uma borboleta!');sfxWin();mimiSparkle();confetti();if(slot)slot.face(-.75);else stage.innerHTML=ico('butterfly',Math.round(size*.6));});
   later(5600,()=>{go.hidden=false;go.focus();});
   later(9000,()=>{if(document.getElementById('screen-meta').classList.contains('active'))showFinal();});
 }
