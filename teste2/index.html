@@ -809,6 +809,17 @@ button:focus-visible{outline:4px solid #ffd700}
   box-shadow:0 3px 0 rgba(160,138,230,.3);animation:bubbleIn .5s .4s cubic-bezier(.34,1.56,.64,1) both}
 .mimi-bubble::after{content:'';position:absolute;left:50%;bottom:-9px;width:14px;height:14px;background:#fff;
   border-right:2px solid var(--lilac);border-bottom:2px solid var(--lilac);transform:translateX(-50%) rotate(45deg)}
+/* balão de fala da Mimi em qualquer tela */
+.say-bubble{position:absolute;z-index:950;display:none;max-width:min(300px,calc(100vw - 16px));background:#fff;border:2px solid var(--lilac);border-radius:18px;
+  padding:8px 14px;font-family:'Nunito','Segoe UI',Arial,sans-serif;font-weight:900;font-size:1rem;line-height:1.25;color:var(--ink);text-align:center;
+  box-shadow:0 4px 0 rgba(160,138,230,.35),0 8px 18px rgba(0,0,0,.18);opacity:0;transform:scale(.6);transform-origin:var(--tail,50%) 100%;cursor:pointer}
+.say-bubble.show{animation:sayIn .35s cubic-bezier(.34,1.56,.64,1) forwards}
+.say-bubble::after{content:'';position:absolute;left:var(--tail,50%);bottom:-9px;width:14px;height:14px;background:#fff;
+  border-right:2px solid var(--lilac);border-bottom:2px solid var(--lilac);transform:translateX(-50%) rotate(45deg)}
+.say-bubble.below{transform-origin:var(--tail,50%) 0}
+.say-bubble.below::after{bottom:auto;top:-9px;transform:translateX(-50%) rotate(225deg)}
+@keyframes sayIn{to{opacity:1;transform:none}}
+body.calm .say-bubble.show{animation:none;opacity:1;transform:none}
 @keyframes bubbleIn{from{opacity:0;transform:scale(.6) translateY(8px)}to{opacity:1;transform:none}}
 
 /* pergunta antes da dica */
@@ -1025,6 +1036,7 @@ body.calm .confetti{display:none!important}
 </head>
 <body>
 
+<div id="say-bubble" class="say-bubble" role="status" aria-live="polite" onclick="hideSay()"></div>
 <button id="btn-sound" class="btn-sound" onclick="toggleSound()" aria-label="Ligar ou desligar o som"></button>
 <button id="btn-motion" class="btn-sound btn-motion" onclick="toggleMotion()"></button>
 
@@ -2287,51 +2299,44 @@ function musicDuck(on){
 }
 document.addEventListener('visibilitychange',()=>{if(document.hidden)musicStop();else if(soundOn&&audioCtx)musicStart();});
 
-// Narração: usa uma voz em português do aparelho; se não houver, fica em silêncio.
-// No Chrome a lista de vozes chega atrasada (evento voiceschanged), então a fala espera a voz ficar pronta.
-let ptVoice=null,pendingSpeech=null;
-function pickVoice(){
-  if(!('speechSynthesis' in window))return;
-  try{
-    const voices=speechSynthesis.getVoices();
-    // a voz da Mimi: prefere as vozes femininas mais naturais em português do Brasil
-    const pt=voices.filter(v=>/^pt/i.test(v.lang));
-    const score=v=>(/^pt[-_]BR/i.test(v.lang)?50:0)
-      +(/natural|online|neural|premium|enhanced|aprimorad|melhorad/i.test(v.name)?30:0)
-      +(/luciana|francisca|thalita|fernanda|vit[oó]ria|let[ií]cia|maria|joana|catarina|raquel|camila|google/i.test(v.name)?20:0)
-      -(/felipe|daniel|ant[oô]nio|ricardo|duarte|male|masculin/i.test(v.name)?40:0)
-      +(v.localService?2:0);
-    ptVoice=pt.sort((a,b)=>score(b)-score(a))[0]||null;
-  }catch(e){}
-  if(ptVoice&&pendingSpeech){const t=pendingSpeech;pendingSpeech=null;speak(t);}
-}
-if('speechSynthesis' in window){
-  pickVoice();
-  try{speechSynthesis.addEventListener('voiceschanged',pickVoice);}catch(e){speechSynthesis.onvoiceschanged=pickVoice;}
-}
-// iPhone/iPad só deixam falar e tocar som depois de um toque: o primeiro toque "destrava" os dois
+// iPhone/iPad só deixam tocar som depois de um toque: o primeiro toque "destrava" o som e começa a música
 document.addEventListener('pointerdown',function unlockAudio(){
   document.removeEventListener('pointerdown',unlockAudio);
-  try{
-    if(soundOn){getAudio();musicStart();}
-    if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);}
-  }catch(e){}
+  try{if(soundOn){getAudio();musicStart();}}catch(e){}
 });
-function speak(text){
-  if(!soundOn||!('speechSynthesis' in window))return;
-  if(!ptVoice){
-    pickVoice();
-    if(!ptVoice){pendingSpeech=text;setTimeout(()=>{if(pendingSpeech===text)pendingSpeech=null;},3000);return;}
+// A MIMI FALA POR BALÕES: o texto aparece num balãozinho perto dela, com uma "vozinha" de barulhinhos (sem narração)
+// opts.bubble=false: o texto já está na tela (aviso, título), então só tocam os barulhinhos
+let sayTimer=0;
+function speak(text,opts={}){
+  if(opts.sound!==false)mimiBabble(text);
+  if(opts.bubble===false)return;
+  const active=document.querySelector('.screen.active');
+  if(active&&active.id==='screen-start'){const b=document.getElementById('mimi-bubble');if(b){b.textContent=text;return;}}
+  const el=document.getElementById('say-bubble');if(!el)return;
+  const anchor=['#mimi-token','#map-mimi','#congrats-mimi'].map(q=>document.querySelector(q))
+    .find(e=>e&&e.closest('.screen.active')&&e.getBoundingClientRect().width>0);
+  el.textContent=text;el.classList.remove('show','below');void el.offsetWidth;
+  el.style.left='0px';el.style.top='0px';el.style.display='block';
+  const bw=el.offsetWidth,bh=el.offsetHeight,vw=window.innerWidth;
+  let cx=vw/2,top=70,tail=bw/2,below=false;
+  if(anchor){
+    const a=anchor.getBoundingClientRect();
+    cx=a.left+a.width/2;top=a.top-bh-10;
+    if(top<8){top=a.bottom+10;below=true;}
   }
-  try{
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(text);
-    // quem fala é a Mimi: vozinha aguda e animada, num ritmo gostoso (nem lento, nem corrido)
-    u.voice=ptVoice;u.lang=ptVoice.lang;u.rate=1.12;u.pitch=1.75;
-    u.onstart=()=>{musicDuck(true);if(window.Mimi3D)Mimi3D.talking=true;};
-    u.onend=u.onerror=()=>{musicDuck(false);if(window.Mimi3D)Mimi3D.talking=false;};
-    speechSynthesis.speak(u);
-  }catch(e){}
+  const left=Math.max(8,Math.min(vw-bw-8,cx-bw/2));
+  tail=Math.max(18,Math.min(bw-18,cx-left));
+  el.style.left=left+'px';el.style.top=(top+window.scrollY)+'px';el.style.setProperty('--tail',tail+'px');
+  el.classList.toggle('below',below);el.classList.add('show');
+  clearTimeout(sayTimer);
+  sayTimer=setTimeout(hideSay,Math.max(2600,text.length*75));   // fica o tempo de uma criança ler
+}
+function hideSay(){clearTimeout(sayTimer);const el=document.getElementById('say-bubble');if(el){el.classList.remove('show');el.style.display='none';}}
+// "vozinha" da Mimi: um barulhinho por sílaba (no máximo 10), e a boquinha mexe junto
+function mimiBabble(text){
+  const syl=Math.min(10,Math.max(2,Math.round(((text.match(/[aeiouáéíóúâêôãõ]+/gi)||[]).length)*.45)));
+  for(let i=0;i<syl;i++){const f=rnd(760,1080)*(i===syl-1&&/\?$/.test(text)?1.25:1);chirp(f,f*rnd(.85,1.2),.09,.06,i*.12);}
+  if(window.Mimi3D){Mimi3D.talking=true;clearTimeout(mimiBabble.t);mimiBabble.t=setTimeout(()=>{Mimi3D.talking=false;},syl*120+120);}
 }
 function updateSoundBtn(){
   const b=document.getElementById('btn-sound');
@@ -2356,7 +2361,6 @@ function toggleMotion(){motionOn=!motionOn;updateMotionBtn();saveState();}
 
 function toggleSound(){
   soundOn=!soundOn;
-  if(!soundOn&&'speechSynthesis' in window)try{speechSynthesis.cancel();}catch(e){}
   updateSoundBtn();saveState();
   if(soundOn){sfxAdd();musicStart();}else musicStop();
 }
@@ -2379,6 +2383,7 @@ function showScreen(id){
   if(id!=='screen-phases'&&typeof stopMapWalk==='function'){stopMapWalk();if(window.Map3D)Map3D.dispose();}
   document.getElementById('scenery').classList.toggle('show',id==='screen-game');
   document.body.classList.toggle('in-game',id==='screen-game');
+  hideSay();
   document.getElementById('garden-bg').classList.toggle('show',id==='screen-garden'||id==='screen-meta');
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
   const el=document.getElementById(id);el.style.display='flex';
@@ -2411,7 +2416,7 @@ function pokeMimi(){
   else if(w){w.classList.remove('poke');void w.offsetWidth;w.classList.add('poke');}
   const txt=MIMI_HELLO[helloIdx++%MIMI_HELLO.length];
   const b=document.getElementById('mimi-bubble');if(b)b.textContent=txt;
-  mimiGiggle();speak(txt);
+  mimiGiggle();speak(txt,{sound:false});
 }   // primeiro mostra a tela, para o mapa saber o seu tamanho
 
 // ═══════════════════════════════════
@@ -2424,7 +2429,9 @@ let MAP_W=360,MAP_H=620,MAP_PTS=[];
 const MAP_FR_WIDE=[[.08,.74],[.25,.32],[.42,.7],[.58,.3],[.75,.68],[.92,.3]];
 const MAP_FR_TALL=[[.27,.88],[.73,.75],[.28,.61],[.72,.47],[.28,.33],[.69,.17]];
 let mapWide=false;
-let mapMimiAt=null;      // onde a Mimi estava da última vez que o mapa apareceu
+let mapMimiAt=null;      // a fruta onde a Mimi está parada no mapa
+let mapSeenCur=null;     // a próxima fruta da última vez que o mapa apareceu (para saber o que acabou de abrir)
+let mapGo=null;          // mapa atual: manda a Mimi andar até uma fruta
 let mapAnim=0;
 function isUnlocked(i){return i===0||phaseScores[i-1]!==null;}
 function currentNode(){for(let i=0;i<=PHASE_COUNT;i++)if(phaseScores[i]===null)return i;return PHASE_COUNT;}
@@ -2477,8 +2484,11 @@ function buildPhaseGrid(){
   layoutMap(map);
   let nodePx=Math.round(Math.max(64,Math.min(150,Math.min(MAP_W,MAP_H)*(mapWide?.19:.21))));
   const cur=currentNode();
-  const from=(mapMimiAt!==null&&mapMimiAt<cur)?mapMimiAt:cur;   // a Mimi anda da fruta antiga até a nova
+  // onde a Mimi está e o que acabou de abrir (ela anda até a fruta nova abrindo as florzinhas)
+  const start=(mapMimiAt!==null&&mapMimiAt<=cur&&isUnlocked(mapMimiAt))?mapMimiAt:cur;
+  const from=(mapSeenCur!==null&&mapSeenCur<cur)?mapSeenCur:cur;
   const HOPS=6,HOP_MS=560,REST_MS=240,walkMs=HOPS*(HOP_MS+REST_MS);
+  const TRIP_HOP=380,TRIP_REST=110;          // quando a criança escolhe outra fruta: passinhos um pouco mais rápidos
   const use3D=Map3D.ok;
   map.classList.toggle('map3d-on',use3D);
   let html=use3D?'':mapSceneSVG();
@@ -2486,7 +2496,7 @@ function buildPhaseGrid(){
     const [x,y]=MAP_PTS[i];
     const open=isUnlocked(i),sc=phaseScores[i],justOpened=open&&i>from&&i<=cur;
     const cls=['map-node',sc!==null?'done':open?'open':'locked',i===cur&&sc===null?'current':'',justOpened?'just-opened':''].join(' ');
-    const delay=justOpened?(i-from)*walkMs:0;
+    const delay=justOpened?(i-start)*walkMs:0;
     html+=`<button class="${cls}" style="left:${x/MAP_W*100}%;top:${y/MAP_H*100}%;--d:${delay}ms" data-i="${i}" aria-label="${i===0?'Treino':'Fase '+i}: ${FRUITS[i].name}${open?'':' (fechada)'}">
       <span class="mn-fruit">${fruitSVG(i,null)}</span>
       <span class="mn-num">${i===0?'Treino':i}</span>
@@ -2511,7 +2521,8 @@ function buildPhaseGrid(){
   map.querySelectorAll('.map-node').forEach(b=>{
     const i=+b.dataset.i;
     b.onclick=()=>{
-      if(isUnlocked(i)){stopMapWalk();startPhase(i);return;}
+      // fruta aberta: a Mimi anda pelo caminho até ela (para frente ou para trás) e a fase começa
+      if(isUnlocked(i)){if(mapGo)mapGo(i);else{stopMapWalk();startPhase(i);}return;}
       b.classList.remove('nope');void b.offsetWidth;b.classList.add('nope');
       sfxWall();
       speak(i===1?'Termine o treino para abrir esta fruta!':`Passe a fase ${i-1} para abrir esta fruta!`);
@@ -2527,40 +2538,69 @@ function buildPhaseGrid(){
   else{mm.innerHTML=makeMimi(Math.round(nodePx*1.1),equippedHat,equippedOutfit);mm.style.filter=colorFilter();}
   // move com transform (fica liso, sem pular de pixel em pixel)
   const put=(x,y)=>{mm.style.left='0';mm.style.top='0';mm.style.transform=`translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-96%)`;};
-  put(...(use3D?Map3D.standScreen(from):MAP_PTS[from]));
-  mapMimiAt=cur;
-  if(from===cur){mapHello(slot);return;}
-  // anda pelo caminho, fase por fase
-  // um passinho de cada vez: anda até a próxima florzinha, para, e dá o próximo passo
-  let seg=from,hop=0,t0=null;
-  const path=()=>document.getElementById('seg-'+seg);
+  const standAt=i=>use3D?Map3D.standScreen(i):MAP_PTS[i];
+  put(...standAt(start));
+  mapMimiAt=start;mapSeenCur=cur;
+  // ── a Mimi anda de florzinha em florzinha; a posição conta em passinhos (cada caminho entre frutas = HOPS passinhos)
+  const last=PHASE_COUNT*HOPS;
+  const at=x=>{                                  // ponto da tela para uma posição (pode ser no meio de um passinho)
+    if(x<=0)return pathAt(0,0);
+    const seg=Math.min(PHASE_COUNT-1,Math.floor(x/HOPS)),u=(x-seg*HOPS)/HOPS;
+    return pathAt(seg,u);
+  };
+  function pathAt(seg,u){
+    if(use3D)return Map3D.pathScreen(seg,Math.max(0,Math.min(1,u)));
+    const P=document.getElementById('seg-'+seg);if(!P)return MAP_PTS[seg];
+    const L=P.getTotalLength(),q=P.getPointAtLength(L*Math.max(0,Math.min(1,u)));return [q.x,q.y];
+  }
+  let P=start*HOPS,target=start,unlock=false,t0=null,arrive=null,hopMs=HOP_MS,restMs=REST_MS,walking=false;
   function step(now){
+    if(!map.isConnected){walking=false;return;}
+    const dir=Math.sign(target*HOPS-P);
     if(t0===null){t0=now;if(slot)slot.step();mimiStepSnd();}
-    const q=Math.min(1,(now-t0)/HOP_MS),qe=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
-    const e=Math.min(1,(hop+qe)/HOPS);
-    let pt,ahead;
-    if(use3D){const a=Map3D.pathScreen(seg,e),b=Map3D.pathScreen(seg,Math.min(1,e+.02));pt={x:a[0],y:a[1]};ahead={x:b[0],y:b[1]};}
-    else{const P=path();if(!P)return;const L=P.getTotalLength();pt=P.getPointAtLength(L*e);ahead=P.getPointAtLength(Math.min(L,L*e+4));}
-    put(pt.x,pt.y);
-    if(slot){const dx=ahead.x-pt.x,dy=ahead.y-pt.y;if(Math.abs(dx)+Math.abs(dy)>.5)slot.face(Math.atan2(-dy*.6,dx));}
-    if(now-t0<HOP_MS+REST_MS){mapAnim=requestAnimationFrame(step);return;}
-    t0=null;hop++;
-    if(use3D&&hop<HOPS)Map3D.bloom(seg,hop);
-    if(hop>=HOPS){
-      seg++;hop=0;
-      const node=map.querySelector(`.map-node[data-i="${seg}"]`);
-      if(node)node.classList.add('opened-now');
-      if(use3D)Map3D.open(seg);
-      if(seg>=cur){
-        if(slot){slot.face(MAP_FACE);slot.happy();setTimeout(()=>mapHello(slot),1300);}
-        sfxPickup();
-        speak(`Oba! ${FRUITS[cur].name} liberada!`);
-        return;
+    const q=Math.min(1,(now-t0)/hopMs),qe=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
+    const x=P+dir*qe;
+    const a=at(x),b=at(Math.max(0,Math.min(last,x+dir*.15)));
+    put(a[0],a[1]);
+    if(slot){const dx=b[0]-a[0],dy=b[1]-a[1];if(Math.abs(dx)+Math.abs(dy)>.5)slot.face(Math.atan2(-dy*.6,dx));}
+    if(now-t0<hopMs+restMs){mapAnim=requestAnimationFrame(step);return;}
+    t0=null;P+=dir;
+    const k=((P%HOPS)+HOPS)%HOPS,seg=Math.floor(P/HOPS);
+    if(unlock&&dir>0&&k&&use3D)Map3D.bloom(seg,k);
+    if(!k){                                      // chegou numa fruta
+      const node=P/HOPS;mapMimiAt=node;
+      if(unlock&&dir>0&&node>from&&node<=cur){
+        const nb=map.querySelector(`.map-node[data-i="${node}"]`);if(nb)nb.classList.add('opened-now');
+        if(use3D)Map3D.open(node);
       }
+      if(node===target){walking=false;put(...standAt(node));if(arrive)arrive(node);return;}
     }
     mapAnim=requestAnimationFrame(step);
   }
-  mapAnim=requestAnimationFrame(step);
+  function walk(to,isUnlock,onArrive){
+    clearInterval(mapWaveTimer);
+    target=to;unlock=isUnlock;arrive=onArrive;
+    hopMs=isUnlock?HOP_MS:TRIP_HOP;restMs=isUnlock?REST_MS:TRIP_REST;
+    if(!walking){walking=true;t0=null;mapAnim=requestAnimationFrame(step);}
+  }
+  // a criança tocou numa fruta aberta
+  mapGo=i=>{
+    if(!walking&&P===i*HOPS){stopMapWalk();startPhase(i);return;}   // já está nela: joga
+    if(walking&&unlock)return;                                      // espera terminar de abrir a fruta nova
+    sfxAdd();
+    walk(i,false,node=>{
+      if(slot){slot.face(MAP_FACE);slot.happy();}
+      speak(node===0?'Vamos treinar!':`Vamos jogar: ${FRUITS[node].name}!`);
+      setTimeout(()=>{if(map.isConnected&&!walking&&P===node*HOPS){stopMapWalk();startPhase(node);}},1300);
+    });
+  };
+  if(from>=cur){mapHello(slot);return;}
+  // fruta nova aberta: anda até ela abrindo as florzinhas
+  walk(cur,true,()=>{
+    if(slot){slot.face(MAP_FACE);slot.happy();setTimeout(()=>mapHello(slot),1300);}
+    sfxPickup();
+    speak(`Oba! ${FRUITS[cur].name} liberada!`);
+  });
 }
 // no mapa a Mimi fica de frente para a criança, sorrindo, e acena de tempos em tempos
 const MAP_FACE=-1.15;
@@ -2571,7 +2611,7 @@ function mapHello(slot){
   slot.face(MAP_FACE);slot.wave();mimiHello();
   mapWaveTimer=setInterval(()=>{if(motionOn&&document.getElementById('screen-phases').classList.contains('active'))slot.wave();},3800);
 }
-function stopMapWalk(){clearInterval(mapWaveTimer);cancelAnimationFrame(mapAnim);const mm=document.getElementById('map-mimi');if(mm&&mm.__m3)mm.__m3.setWalking(false);}
+function stopMapWalk(){clearInterval(mapWaveTimer);cancelAnimationFrame(mapAnim);mapGo=null;const mm=document.getElementById('map-mimi');if(mm&&mm.__m3)mm.__m3.setWalking(false);}
 
 // ═══════════════════════════════════
 //  TIMER
@@ -2592,6 +2632,7 @@ function startPhase(idx){
   if(!isUnlocked(idx)){showPhases();return;}   // fase ainda fechada: volta para o mapa
   runId++;hideAllToasts();            // cancela qualquer execução que ainda estivesse rodando
   curPhase=idx;cmdQueue=[];executing=false;doneCount=0;errorCount=0;
+  mapMimiAt=idx;                      // no mapa, a Mimi vai estar nesta fruta
   hintOn=false;hintPath=[];penHint=false;collected=new Set();
   penMud=0;penRock=0;penWall=0;
   trail=new Set();replayLog=[];
@@ -3044,6 +3085,7 @@ async function executeQueue(stepOnly=false){
       if(v===3){
         lastPath={phase:curPhase,cmds:cmdQueue.slice(0,i+1).map(c=>({...c}))};
         renderQueue(i+1);
+        if(curPhase===0)speak('Treino completo! Agora você sabe jogar!');   // no treino, o balão aparece assim que ela chega
         if(mimiSlot&&Mimi3D.ok){mimiSlot.face('down');mimiSlot.celebrate(FRUITS[curPhase].skin[1]);sfxPickup();mimiYay();mimiMunch(1.7);await sleep(3000);
           for(let w=0;w<25&&mimiSlot.busy();w++)await sleep(100);}   // espera a mordidinha terminar (no máximo +2,5 s)
         else{mimiFeel('happy',1300);await sleep(400);}
@@ -3129,7 +3171,7 @@ function reviewPath(){
   renderQueue();
   const msg='Este foi o seu caminho. Mude o que quiser e toque em Executar.';
   document.getElementById('queue-msg').textContent=msg;
-  speak(msg);
+  speak(msg,{bubble:false});
 }
 
 // ═══════════════════════════════════
@@ -3147,14 +3189,14 @@ function showErrorToast(icon,msg,sub){
   document.getElementById('error-msg').textContent=msg;
   document.getElementById('error-sub').textContent=sub;
   showToast('toast-error');
-  speak(`${msg} ${sub}`);
+  speak(`${msg} ${sub}`,{bubble:false});
 }
 function showPickupToast(itemId,isNew){
   const item=ITEMS.find(x=>x.id===itemId);if(!item)return;
   document.getElementById('pickup-icon').innerHTML=ico(item.icon,60);
   document.getElementById('pickup-msg').textContent=isNew?`Novo acessório: ${item.label}!`:`Você pegou: ${item.label}!`;
   showToast('toast-pickup');setTimeout(()=>hideToast('toast-pickup'),1800);
-  speak(isNew?`Novo acessório! ${item.label}!`:`Você pegou: ${item.label}!`);
+  speak(isNew?`Novo acessório! ${item.label}!`:`Você pegou: ${item.label}!`,{bubble:false});
 }
 
 // ═══════════════════════════════════
@@ -3178,7 +3220,7 @@ function openHintConfirm(){
   document.getElementById('hint-confirm-sub').textContent=`A dica mostra o caminho, mas tira ${HINT_COST} pontos desta fase.`;
   m.hidden=false;
   document.getElementById('hint-confirm-no').focus();
-  speak(`Tem certeza que quer ver a dica? Ela tira ${HINT_COST} pontos.`);
+  speak(`Tem certeza que quer ver a dica? Ela tira ${HINT_COST} pontos.`,{bubble:false});
 }
 function closeHintConfirm(){document.getElementById('hint-confirm').hidden=true;}
 function confirmHint(yes){
@@ -3295,7 +3337,7 @@ function phaseComplete(steps,blocks=steps){
   }
   document.getElementById('btn-replay').style.display='inline-flex';
   showScreen('screen-congrats');
-  speak(target?`Parabéns! Você passou a fase ${curPhase}!`:'Parabéns! Você completou todas as fases!');
+  speak(target?`Parabéns! Você passou a fase ${curPhase}!`:'Parabéns! Você completou todas as fases!',{bubble:false});
 }
 // As fases abrem em sequência: depois da fase N vem a N+1 (0 = acabaram as fases)
 function nextTarget(){return curPhase<PHASE_COUNT?curPhase+1:0;}
@@ -3324,7 +3366,6 @@ function trainingComplete(){
   document.getElementById('btn-replay').style.display='none';
   confetti();
   showScreen('screen-congrats');
-  speak('Treino completo! Agora você sabe jogar!');
 }
 function nextPhase(){const t=nextTarget();if(t)startPhase(t);else showFinal();}
 
@@ -3458,7 +3499,7 @@ function showFinal(){
   const gf=document.getElementById('garden-fly');gf.dataset.fly='1';
   showMimi(gf,110,'happy');
   spawnGardenParticles();confetti();
-  speak('Eu virei uma borboleta! Você foi um programador incrível!');
+  speak('Eu virei uma borboleta! Você foi um programador incrível!',{bubble:false});
 }
 
 // TRANSFORMAÇÃO: lagarta → casulo → borboleta, e depois o resultado final
@@ -3468,7 +3509,7 @@ function showMetamorphosis(){
   showScreen('screen-meta');
   const stage=document.getElementById('meta-stage'),title=document.getElementById('meta-title'),go=document.getElementById('meta-go');
   go.hidden=true;
-  const say=(t,mine)=>{title.textContent=t;speak(mine||t);};   // na tela aparece a história; a Mimi fala em primeira pessoa
+  const say=(t,mine)=>{title.textContent=t;speak(mine||t,{bubble:false});};   // na tela aparece a história; a Mimi fala em primeira pessoa
   say('A Mimi comeu todas as frutas!','Eu comi todas as frutas!');
   delete stage.dataset.fly;
   const size=Math.min(340,window.innerWidth*.76);
