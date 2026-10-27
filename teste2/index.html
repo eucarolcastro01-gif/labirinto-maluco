@@ -1002,6 +1002,32 @@ body.calm .star,body.calm .gift-bob,body.calm .map-node,body.calm .congrats-mimi
 body.calm .item-new-badge,body.calm .garden-badge,body.calm .goal-star,body.calm #mimi-final-wrap,body.calm .cell.in-mud,body.calm #mimi-token .mimi-inner{animation:none!important}
 body.calm .confetti{display:none!important}
 
+/* ══ ÁREA DOS COMANDOS MAIS LIMPA: Executar é o botão principal; Passo e Limpar ficam menores; a dica é discreta ══ */
+.action-row{display:grid!important;grid-template-columns:1fr 1fr;gap:10px;width:min(340px,calc(100vw - 24px))}
+.action-row .btn-exec{grid-column:1/-1;font-size:1.55rem!important;padding:15px 20px!important;border-radius:22px;letter-spacing:1px;
+  background:linear-gradient(170deg,#ffe24a,#ffbf1f 55%,#f59c00)!important;color:#3b2000;
+  box-shadow:0 6px 0 #b86a00,0 10px 24px rgba(255,170,0,.45),inset 0 2px 0 rgba(255,255,255,.6)}
+.action-row .btn-exec svg *{fill:#3b2000}
+.action-row .btn-exec::after{border-radius:22px 22px 50% 50%}
+.action-row .btn-exec:active{box-shadow:0 2px 0 #b86a00}
+@media (hover:hover){.action-row .btn-exec:hover{box-shadow:0 8px 0 #b86a00,0 14px 28px rgba(255,170,0,.55)}}
+/* com comandos na fila, o Executar "chama" a criança */
+.action-row .btn-exec.ready{animation:execCall 1.2s ease-in-out infinite}
+@keyframes execCall{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+body.calm .action-row .btn-exec.ready{animation:none}
+.action-row .btn-step,.action-row .btn-clear{font-size:1rem!important;padding:8px 10px!important;border-radius:16px;box-shadow:0 3px 0 rgba(0,0,0,.3)}
+.action-row .btn-step{background:#1d5fa8!important}
+.action-row .btn-clear{background:#a8262a!important}
+.action-row .btn-step::after,.action-row .btn-clear::after{display:none}
+.hint-bar{width:auto!important;padding:6px 18px!important;border-radius:999px;background:rgba(6,40,34,.55)!important;
+  border:2px dashed rgba(255,230,109,.7);box-shadow:none!important}
+.hint-bar::after{display:none}
+.hint-label{font-size:.95rem!important;letter-spacing:1px;background:none!important;-webkit-text-fill-color:#ffe66d!important;color:#ffe66d;filter:none!important}
+/* fila vazia: só uma frase no meio, sem caixa grande vazia */
+.queue-card.empty .q-row{display:none}
+.queue-card.empty .q-msg{min-height:0;padding:10px 4px;font-size:.95rem}
+@media (min-width:980px) and (min-height:560px){.game-side .q-row{height:112px!important}}
+
 /* ══ CELULAR EM PÉ: labirinto grande, tudo cabe na tela (e acima da barra do navegador) ══ */
 @media (max-width:520px){
   body.in-game{padding:8px 8px calc(84px + env(safe-area-inset-bottom,0px))}
@@ -1027,9 +1053,10 @@ body.calm .confetti{display:none!important}
   body.in-game .ctrl-btn{width:56px;height:56px}
   body.in-game .ctrl-tool{width:56px}
   body.in-game .ctrl-btn.tool{width:46px;height:46px}
-  body.in-game .action-row{grid-area:act;flex-direction:column;flex-wrap:nowrap;gap:9px;max-width:none;width:100%}
-  body.in-game .action-row button{width:100%;padding:9px 10px!important;font-size:1.05rem!important}
-  body.in-game .hint-bar{grid-area:hint;width:100%;padding-top:7px;padding-bottom:7px}
+  body.in-game .action-row{grid-area:act;width:100%;gap:8px}
+  body.in-game .action-row .btn-exec{padding:16px 6px!important;font-size:1.35rem!important}
+  body.in-game .action-row .btn-step,body.in-game .action-row .btn-clear{padding:8px 4px!important;font-size:.9rem!important}
+  body.in-game .hint-bar{grid-area:hint;justify-self:center}
 }
 
 </style>
@@ -3016,6 +3043,8 @@ function renderQueue(activeIdx=-1){
     else if(!executing&&full)msg='A fila encheu! Use Repetir para gastar menos comandos';
   }
   msgEl.textContent=msg;
+  const qc=msgEl.closest('.queue-card');if(qc)qc.classList.toggle('empty',!cmdQueue.length);
+  const ex=document.querySelector('.btn-exec');if(ex)ex.classList.toggle('ready',!executing&&cmdQueue.length>doneCount);
   // mantém à vista o comando que está rodando (ou o último que entrou)
   const target=activeIdx>=0?w.children[activeIdx+1]:w.lastElementChild;
   if(target){
