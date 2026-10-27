@@ -13,11 +13,11 @@
   --purple:#8a28f0;
   --purple-dark:#3a0888;
   --purple-light:#c070ff;
-  --yellow:#ffd700;
+  --yellow:#ffd166;
   --yellow-dark:#e07000;
   --pink:#f080c8;
-  --red:#e02020;
-  --wall-teal:#5ecfca;
+  --red:#ff8a8a;
+  --wall-teal:#9fe3d8;
   --wall-green:#68cc58;
   --wall-pink:#f080a8;
   --wall-purple:#a060d8;
@@ -42,9 +42,9 @@ body{
 /* ── FLOATING STARS ── */
 .star{
   position:fixed;pointer-events:none;z-index:0;
-  background:#ffd700;
+  background:#ffd166;
   clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
-  filter:drop-shadow(0 0 5px #ffd700) drop-shadow(0 0 10px rgba(255,215,0,.6));
+  filter:drop-shadow(0 0 5px #ffd166) drop-shadow(0 0 10px rgba(255,215,0,.6));
   animation:twinkle var(--dur,2s) var(--delay,0s) infinite alternate ease-in-out;
 }
 @keyframes twinkle{0%{opacity:.4;transform:scale(.85) rotate(var(--rot,0deg))}100%{opacity:1;transform:scale(1.25) rotate(var(--rot,0deg))}}
@@ -121,7 +121,7 @@ body{
   padding:22px 26px 18px;max-width:480px;width:100%;border-radius:24px;
 }
 .how-title{
-  font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:1.9rem;color:#ffd700;
+  font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:1.9rem;color:#ffd166;
   text-shadow:0 3px 0 rgba(0,0,0,.18),0 0 28px rgba(255,215,0,.35);
   -webkit-text-stroke:1.5px rgba(0,0,0,.15);
 }
@@ -134,7 +134,7 @@ body{
 }
 .how-num{
   min-width:26px;height:26px;border-radius:50%;
-  background:linear-gradient(135deg,#ffd700,#ff8c00);
+  background:linear-gradient(135deg,#ffd166,#ffb870);
   color:#fff;font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:.85rem;
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 3px 8px rgba(0,0,0,.22);flex-shrink:0;margin-top:1px;
@@ -142,7 +142,7 @@ body{
 .how-content{display:flex;align-items:flex-start;gap:10px;}
 .how-emoji{font-size:1.5rem;line-height:1;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));}
 .how-head{
-  font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:.95rem;color:#ffd700;
+  font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:.95rem;color:#ffd166;
   text-shadow:0 1px 4px rgba(0,0,0,.2);margin-bottom:2px;
 }
 .how-desc{
@@ -166,8 +166,8 @@ body{
   transition:transform .2s;
 }
 @media (hover:hover){.game-title span:hover{transform:translateY(-4px) scale(1.15)}}
-.l0{color:#ff3d3d}.l1{color:#ff9f00}.l2{color:#ffe000}.l3{color:#3dff6e}
-.l4{color:#3db5ff}.l5{color:#d43dff}.l6{color:#ff3dde}.l7{color:#fff}.l8{color:#ff8c00}
+.l0{color:#ff3d3d}.l1{color:#ff9f00}.l2{color:#ffe38a}.l3{color:#3dff6e}
+.l4{color:#3db5ff}.l5{color:#d43dff}.l6{color:#ff3dde}.l7{color:#fff}.l8{color:#ffb870}
 
 /* Big CTA button */
 .btn-cta{
@@ -187,7 +187,7 @@ body{
 
 /* ══ TELA DE FASES ══ */
 .phases-header{
-  font-size:2.5rem;color:#ffd700;letter-spacing:6px;
+  font-size:2.5rem;color:#ffd166;letter-spacing:6px;
   text-shadow:0 3px 0 rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.15),0 0 40px rgba(255,215,0,.35);
   -webkit-text-stroke:2px rgba(0,0,0,.18);
 }
@@ -214,7 +214,7 @@ body{
   display:flex;align-items:center;justify-content:space-between;
 }
 .lbl-phase{font-size:1.15rem;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.25)}
-.lbl-timer{font-size:1.1rem;color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,.6)}
+.lbl-timer{font-size:1.1rem;color:#ffd166;text-shadow:0 0 12px rgba(255,215,0,.6)}
 
 /* MAZE */
 .maze-card{padding:10px}
@@ -301,7 +301,7 @@ body{
 .btn-clear{
   font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:1.05rem;
   padding:10px 28px;border:none;border-radius:28px;cursor:pointer;
-  background:linear-gradient(170deg,#ff7070,#e02020,#900000);
+  background:linear-gradient(170deg,#ff7070,#ff8a8a,#900000);
   color:#fff;
   box-shadow:0 5px 0 #500000,0 8px 20px rgba(180,20,20,.4),inset 0 1.5px 0 rgba(255,255,255,.35);
   transition:transform .1s,box-shadow .1s;position:relative;overflow:hidden;
@@ -331,7 +331,7 @@ body{
 /* ══ CONGRATS + DRESS-UP ══ */
 .congrats-card{padding:18px 28px;text-align:center}
 .congrats-title{
-  font-size:2.8rem;color:#ffd700;
+  font-size:2.8rem;color:#ffd166;
   text-shadow:0 3px 0 rgba(0,0,0,.18),0 0 40px rgba(255,215,0,.45);
   -webkit-text-stroke:2px rgba(0,0,0,.15);
 }
@@ -345,7 +345,7 @@ body{
   display:flex;flex-direction:column;align-items:center;gap:12px;
 }
 .dressup-title{
-  font-size:1.2rem;color:#ffd700;letter-spacing:1px;
+  font-size:1.2rem;color:#ffd166;letter-spacing:1px;
   text-shadow:0 0 14px rgba(255,215,0,.45);
   display:flex;align-items:center;gap:8px;
 }
@@ -398,7 +398,7 @@ body{
   border:1.5px solid rgba(255,255,255,.15);
 }
 .cat-tab.active{
-  background:linear-gradient(135deg,#ffd700,#ff8c00);
+  background:linear-gradient(135deg,#ffd166,#ffb870);
   color:#fff;border-color:transparent;
   box-shadow:0 3px 10px rgba(255,140,0,.4);
 }
@@ -435,8 +435,8 @@ body{
   cursor:not-allowed;
 }
 .item-slot.selected{
-  border-color:#ffd700;
-  box-shadow:0 0 0 2px #ffd700,0 0 20px rgba(255,215,0,.5),0 4px 12px rgba(0,0,0,.15);
+  border-color:#ffd166;
+  box-shadow:0 0 0 2px #ffd166,0 0 20px rgba(255,215,0,.5),0 4px 12px rgba(0,0,0,.15);
   background:rgba(255,215,0,.2);
 }
 @media (hover:hover){.item-slot:hover:not(.locked):not(.selected){
@@ -462,7 +462,7 @@ body{
 }
 .item-new-badge{
   position:absolute;top:4px;right:4px;
-  background:#ff3366;color:#fff;
+  background:#ff8fab;color:#fff;
   font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:.8rem;
   padding:1px 5px;border-radius:6px;z-index:3;
   box-shadow:0 2px 6px rgba(0,0,0,.3);
@@ -502,7 +502,7 @@ body{
 }
 @keyframes gardenCardIn{from{opacity:0;transform:translateY(30px) scale(.9)}to{opacity:1;transform:none}}
 .garden-badge{
-  background:linear-gradient(135deg,#ffd700,#ff8c00);
+  background:linear-gradient(135deg,#ffd166,#ffb870);
   color:#fff;font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:1rem;
   padding:4px 18px;border-radius:20px;
   box-shadow:0 4px 14px rgba(255,140,0,.4);
@@ -544,7 +544,7 @@ body{
   color:#1a5c20;opacity:.7;margin-top:2px;
 }
 .final-title{
-  font-size:2.8rem;color:#ffd700;
+  font-size:2.8rem;color:#ffd166;
   text-shadow:0 3px 0 rgba(0,0,0,.18),0 0 36px rgba(255,215,0,.4);
   -webkit-text-stroke:2px rgba(0,0,0,.15);
 }
@@ -669,7 +669,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 .q-counter{flex-shrink:0;min-width:46px;padding:4px 8px;border-radius:12px;background:rgba(0,0,0,.22);color:#ffe66d;font-family:'Fredoka One','Segoe UI',sans-serif;font-size:.95rem;text-align:center}
 .q-counter.full{color:#ff9a9a}
 .q-chip{border:none;padding:0}
-.q-chip .q-rep{position:absolute;right:1px;bottom:1px;z-index:2;background:#ffd700;color:#5a3000;border-radius:8px;padding:0 4px;font-family:'Fredoka One','Segoe UI',sans-serif;font-size:.75rem;line-height:1.3}
+.q-chip .q-rep{position:absolute;right:1px;bottom:1px;z-index:2;background:#ffd166;color:#5a3000;border-radius:8px;padding:0 4px;font-family:'Fredoka One','Segoe UI',sans-serif;font-size:.75rem;line-height:1.3}
 .q-chip.removing{transform:scale(.2);opacity:0;transition:transform .15s,opacity .15s}
 
 /* ══ BOTÕES DE AÇÃO ══ */
@@ -770,11 +770,160 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
   .ctrl-pad{gap:10px}.ctrl-row{gap:12px}
   .btn-exec,.btn-clear,.btn-step{font-size:1.1rem;padding:12px 22px}
 }
+
+/* ══ PALETA PASTEL (uma família de cores só, texto escuro e macio em fundo claro) ══ */
+:root{
+  --ink:#4a3f6b;--ink-soft:#7d7399;
+  --lilac:#cdbdff;--lilac-d:#a08ae6;
+  --mint:#b2ead3;--mint-d:#76c9a6;
+  --peach:#ffd2a8;--peach-d:#eda777;
+  --butter:#ffe9a3;--butter-d:#e5c158;
+  --sky:#bcdfff;--sky-d:#80b8ec;
+  --coral:#ffc0c4;--coral-d:#e8949b;
+  --pinkp:#ffcfe3;--pinkp-d:#ec9fc2;
+  --cream:#fffaf2;
+  --gold:#ffd166;--gold-d:#e0a63c;
+}
+body{color:var(--ink);background:
+    radial-gradient(ellipse at 15% 25%,rgba(168,232,214,.7) 0%,transparent 45%),
+    radial-gradient(ellipse at 85% 70%,rgba(176,214,240,.7) 0%,transparent 45%),
+    radial-gradient(ellipse at 50% 50%,rgba(184,234,196,.5) 0%,transparent 60%),
+    linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a8d4ef 100%)}
+.glass{
+  background:rgba(255,255,255,.6);
+  border:2px solid rgba(255,255,255,.95);
+  box-shadow:0 14px 40px rgba(110,90,170,.16),inset 0 1px 0 #fff;
+}
+.star{background:var(--gold);filter:drop-shadow(0 1px 2px rgba(224,166,60,.35));opacity:.85}
+
+/* textos */
+.start-sub,.how-desc,.congrats-sub,.score-breakdown,.final-lbl,.q-msg,.q-empty,.toast-sub,.garden-subtitle,.garden-msg,.garden-score-lbl{color:var(--ink-soft);text-shadow:none}
+.how-desc strong,.garden-msg strong{color:var(--ink)}
+.how-title,.how-head,.phases-header,.lbl-phase,.congrats-title,.dressup-title,.final-title,.final-num,.toast-msg,.garden-title,.garden-score-num,.phases-note{color:var(--ink);text-shadow:none;-webkit-text-stroke:0}
+.phases-header,.congrats-title,.final-title,.how-title{text-shadow:0 3px 0 rgba(255,255,255,.9)}
+.lbl-timer{color:var(--ink-soft);text-shadow:none}
+.how-step-row{background:rgba(255,255,255,.65);border-color:rgba(205,189,255,.55)}
+.how-num{background:var(--butter);color:var(--ink);box-shadow:0 3px 0 var(--butter-d)}
+.how-emoji{color:var(--lilac-d)}
+.ctrl-cap{color:var(--ink);text-shadow:none}
+.mimi-equipped-label{color:var(--ink-soft);background:rgba(205,189,255,.25)}
+
+/* título: letras-adesivo com contorno branco */
+.game-title span{-webkit-text-stroke:0;
+  text-shadow:2px 0 #fff,-2px 0 #fff,0 2px #fff,0 -2px #fff,2px 2px #fff,-2px -2px #fff,2px -2px #fff,-2px 2px #fff,0 5px 0 rgba(74,63,107,.18)}
+.l0{color:#ff8fab}.l1{color:#ffad6b}.l2{color:#f2c043}.l3{color:#6fcf97}
+.l4{color:#6cb8f0}.l5{color:#a98bf0}.l6{color:#f08fcf}.l7{color:#ff8fab}.l8{color:#ffad6b}
+
+/* botões: pastel com "degrau" mais escuro embaixo e texto escuro */
+.btn-cta,.phase-btn,.ctrl-btn,.q-chip,.btn-exec,.btn-clear,.btn-step,.hint-bar,.cat-tab.active,.garden-badge{color:var(--ink);-webkit-text-stroke:0;text-shadow:none}
+.btn-cta{background:linear-gradient(180deg,#ffe6b8,var(--peach));box-shadow:0 6px 0 var(--peach-d),0 10px 22px rgba(237,167,119,.3)}
+@media (hover:hover){.btn-cta:hover{box-shadow:0 9px 0 var(--peach-d),0 14px 26px rgba(237,167,119,.35)}}
+.btn-cta:active{box-shadow:0 2px 0 var(--peach-d)}
+.phase-btn{background:linear-gradient(180deg,#ddd1ff,var(--lilac));box-shadow:0 6px 0 var(--lilac-d),0 10px 22px rgba(160,138,230,.3)}
+@media (hover:hover){.phase-btn:hover{box-shadow:0 10px 0 var(--lilac-d),0 14px 26px rgba(160,138,230,.35)}}
+.phase-btn:active{box-shadow:0 2px 0 var(--lilac-d)}
+.phase-btn.training{background:linear-gradient(180deg,#d4ebff,var(--sky));box-shadow:0 6px 0 var(--sky-d),0 10px 22px rgba(128,184,236,.3)}
+.phase-btn.done,.phase-btn.training.done{background:linear-gradient(180deg,#cdf3e2,var(--mint));box-shadow:0 6px 0 var(--mint-d),0 10px 22px rgba(118,201,166,.3)}
+.ph-stars{color:var(--ink-soft)}
+.ctrl-btn,.q-chip{background:linear-gradient(180deg,#ddd1ff,var(--lilac));box-shadow:0 6px 0 var(--lilac-d),0 8px 18px rgba(160,138,230,.28)}
+.q-chip{box-shadow:0 3px 0 var(--lilac-d)}
+@media (hover:hover){.ctrl-btn:hover{box-shadow:0 9px 0 var(--lilac-d),0 12px 22px rgba(160,138,230,.32)}}
+.ctrl-btn:active{box-shadow:0 2px 0 var(--lilac-d)}
+.q-chip.playing{background:linear-gradient(180deg,#fff2c4,var(--butter));box-shadow:0 3px 0 var(--butter-d),0 0 0 4px rgba(255,233,163,.6);animation:none}
+.ctrl-btn.rep{background:linear-gradient(180deg,#fff2c4,var(--butter));box-shadow:0 5px 0 var(--butter-d)}
+.ctrl-btn.undo{background:#fff;border:2px solid var(--lilac);color:var(--ink-soft);box-shadow:0 4px 0 rgba(160,138,230,.35)}
+.btn-exec{background:linear-gradient(180deg,#cdf3e2,var(--mint));box-shadow:0 5px 0 var(--mint-d),0 8px 18px rgba(118,201,166,.3)}
+@media (hover:hover){.btn-exec:hover{box-shadow:0 7px 0 var(--mint-d)}}
+.btn-exec:active{box-shadow:0 2px 0 var(--mint-d)}
+.btn-step{background:linear-gradient(180deg,#d9edff,var(--sky));box-shadow:0 5px 0 var(--sky-d),0 8px 18px rgba(128,184,236,.3)}
+.btn-clear{background:linear-gradient(180deg,#ffd9dc,var(--coral));box-shadow:0 5px 0 var(--coral-d),0 8px 18px rgba(232,148,155,.3)}
+@media (hover:hover){.btn-clear:hover{box-shadow:0 7px 0 var(--coral-d)}}
+.btn-clear:active{box-shadow:0 2px 0 var(--coral-d)}
+.hint-bar{background:linear-gradient(180deg,#cdf3e2,var(--mint));box-shadow:0 5px 0 var(--mint-d),0 8px 20px rgba(118,201,166,.28)}
+@media (hover:hover){.hint-bar:hover{box-shadow:0 7px 0 var(--mint-d)}}
+.hint-bar:active{box-shadow:0 2px 0 var(--mint-d)}
+.hint-label{background:none;-webkit-text-fill-color:currentColor;color:var(--ink);filter:none}
+.btn-cta::after,.phase-btn::after,.ctrl-btn::after,.q-chip::after,.btn-exec::after,.btn-clear::after,.hint-bar::after{opacity:.6}
+.btn-ghost,.btn-how{background:rgba(255,255,255,.75);border:2px solid var(--lilac);color:var(--ink);box-shadow:0 3px 0 rgba(160,138,230,.35)}
+@media (hover:hover){.btn-ghost:hover,.btn-how:hover{background:#fff}}
+.btn-sound{background:rgba(255,255,255,.85);border:2px solid var(--lilac);color:var(--ink)}
+.btn-sound.off{background:var(--coral)}
+button:focus-visible{outline:4px solid var(--lilac-d)}
+
+/* fila de comandos */
+.q-counter{background:rgba(205,189,255,.35);color:var(--ink)}
+.q-counter.full{background:var(--coral);color:var(--ink)}
+.q-chip .q-rep{background:var(--butter);color:var(--ink);box-shadow:0 1px 0 var(--butter-d)}
+
+/* labirinto: caminho clarinho, paredes pastel da fase */
+.maze-card{background:rgba(255,255,255,.7)}
+.cell.wall{box-shadow:inset 0 2.5px 0 rgba(255,255,255,.6),inset 0 -3px 0 rgba(110,90,170,.12)}
+.cell.path{background:linear-gradient(145deg,#7084b8,#7d92c4);box-shadow:inset 0 3px 8px rgba(40,50,90,.25)}
+.cell.hint-path{background:linear-gradient(145deg,#79b893,#86c49f);box-shadow:inset 0 3px 8px rgba(30,70,40,.22);outline:2.5px solid rgba(230,255,180,.9);outline-offset:-2px}
+.cell.mud{background:linear-gradient(145deg,#b08a66,#bf9a74);box-shadow:inset 0 2px 6px rgba(154,106,58,.18),inset 0 0 0 2px rgba(201,154,107,.45)}
+.cell.rock{background:linear-gradient(145deg,#8a92aa,#9aa2b8);box-shadow:inset 0 2px 6px rgba(90,100,130,.18),inset 0 0 0 2px rgba(141,150,170,.4)}
+.cell.in-mud{box-shadow:inset 0 0 12px rgba(201,154,107,.6),inset 0 0 0 2px rgba(201,154,107,.6)}
+#mimi-token .mimi-inner{filter:drop-shadow(0 2px 3px rgba(110,90,170,.35))}
+.gift-bob{animation:giftBob 1.4s ease-in-out infinite alternate}
+@keyframes giftBob{from{transform:translateY(1px) rotate(-4deg)}to{transform:translateY(-3px) rotate(4deg)}}
+@keyframes shakeRed{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+
+/* cenário no pé da tela: suave, atrás de tudo, e inteiro em telas estreitas */
+#scenery{height:min(32vh,260px,20vw)}
+#scenery.show{opacity:.55}
+
+/* acessórios */
+.items-panel .cat-tab{background:rgba(255,255,255,.7);color:var(--ink-soft);border-color:rgba(205,189,255,.6)}
+.items-panel .cat-tab.active{background:var(--butter);color:var(--ink);border-color:var(--butter-d);box-shadow:0 3px 0 var(--butter-d)}
+.mimi-preview-box{background:linear-gradient(180deg,#fff,#f3edff);border-color:var(--lilac);box-shadow:0 6px 18px rgba(110,90,170,.15)}
+.mimi-preview-box svg{filter:drop-shadow(0 4px 6px rgba(110,90,170,.2))}
+.item-slot{background:rgba(255,255,255,.8);border-color:rgba(205,189,255,.6);box-shadow:0 3px 0 rgba(160,138,230,.25)}
+.item-slot .item-name{color:var(--ink)}
+.item-slot.locked{background:rgba(205,189,255,.18);border-color:rgba(205,189,255,.4)}
+.item-slot.locked .item-name{color:var(--ink-soft)}
+.item-slot.selected{background:#fff6d6;border-color:var(--gold-d);box-shadow:0 0 0 3px rgba(255,209,102,.6),0 3px 0 var(--gold-d)}
+.item-new-badge{background:var(--pinkp-d);color:#fff;animation:none}
+
+/* avisos: cartão branco com texto escuro */
+.toast{background:rgba(255,255,255,.96);border:2px solid var(--lilac);box-shadow:0 16px 40px rgba(110,90,170,.25)}
+
+/* jardim secreto */
+.garden-bg{display:none;background:linear-gradient(160deg,#dff2ff 0%,#e4f7ea 55%,#fff1f6 100%)}
+.garden-bg.show{display:block}
+.garden-badge{background:var(--butter);color:var(--ink);box-shadow:0 4px 0 var(--butter-d);animation:none}
+.garden-score-row{flex-wrap:wrap}
+.garden-score-box{min-width:110px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* Como jogar no celular: ícone em cima do texto (o texto fica com a largura toda) */
+@media (max-width:520px){
+  .how-content{flex-direction:column;gap:4px}
+}
+
+/* balãozinho da Mimi na tela inicial */
+.mimi-hello{display:flex;flex-direction:column;align-items:center;gap:2px}
+.mimi-bubble{position:relative;background:#fff;border:2px solid var(--lilac);border-radius:18px;padding:7px 14px;
+  font-family:'Nunito','Segoe UI',Arial,sans-serif;font-weight:900;font-size:.9rem;color:var(--ink);
+  box-shadow:0 3px 0 rgba(160,138,230,.3);animation:bubbleIn .5s .4s cubic-bezier(.34,1.56,.64,1) both}
+.mimi-bubble::after{content:'';position:absolute;left:50%;bottom:-9px;width:14px;height:14px;background:#fff;
+  border-right:2px solid var(--lilac);border-bottom:2px solid var(--lilac);transform:translateX(-50%) rotate(45deg)}
+@keyframes bubbleIn{from{opacity:0;transform:scale(.6) translateY(8px)}to{opacity:1;transform:none}}
+
+/* pergunta antes da dica */
+.modal-back{position:fixed;inset:0;z-index:950;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(74,63,107,.35)}
+.modal-back[hidden]{display:none}
+.modal-card{max-width:420px;width:100%;padding:22px 22px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:rgba(255,255,255,.97);animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both}
+.modal-msg{font-family:'Fredoka One','Segoe UI',sans-serif;font-size:1.35rem;color:var(--ink)}
+.modal-sub{font-family:'Nunito','Segoe UI',Arial,sans-serif;font-weight:800;font-size:1rem;color:var(--ink-soft)}
+.modal-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:8px}
 </style>
 </head>
 <body>
 
 <button id="btn-sound" class="btn-sound" onclick="toggleSound()" aria-label="Ligar ou desligar o som"></button>
+
+<!-- fundo do Jardim Secreto (fica fora da tela animada para cobrir a janela inteira, sem recorte) -->
+<div class="garden-bg" id="garden-bg" aria-hidden="true"></div>
 
 <!-- cenário da fase (desenhado em SVG por setScenery) -->
 <div id="scenery" aria-hidden="true"></div>
@@ -796,13 +945,16 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
     <!-- subtítulo -->
     <div class="start-sub">Jogo educativo de lógica e algoritmos</div>
 
-    <!-- Mimi animada -->
-    <div id="mimi-start-wrap" style="animation:bounce 1.1s infinite alternate ease-in-out;display:inline-block"></div>
+    <!-- Mimi animada, com balãozinho -->
+    <div class="mimi-hello">
+      <div class="mimi-bubble">Oi! Me ajuda a chegar na estrela?</div>
+      <div id="mimi-start-wrap" style="animation:bounce 1.1s infinite alternate ease-in-out;display:inline-block"></div>
+    </div>
 
     <!-- botões centralizados -->
     <div class="start-btn-col">
       <button class="btn-cta" onclick="showPhases()">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="white"><polygon points="2,1 15,8 2,15"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><polygon points="2,1 15,8 2,15"/></svg>
         JOGAR
       </button>
       <button class="btn-how" onclick="showScreen('screen-how')"><span data-ico="help" data-size="22"></span> Como jogar</button>
@@ -824,7 +976,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
           <div class="how-emoji"><span id="how-mimi"></span></div>
           <div>
             <div class="how-head">Guie a Mimi!</div>
-            <div class="how-desc">Leve a Mimi até a <strong>estrela <span data-ico="star" data-size="20"></span></strong>. Blocos coloridos são paredes — ela só anda pelos caminhos escuros.</div>
+            <div class="how-desc">Leve a Mimi até a <strong>estrela <span data-ico="star" data-size="20"></span></strong>. Os blocos coloridos são paredes. Ela só anda pelos caminhos azuis.</div>
           </div>
         </div>
       </div>
@@ -846,7 +998,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
           <div class="how-emoji"><span data-ico="mud" data-size="30"></span> <span data-ico="rock" data-size="30"></span></div>
           <div>
             <div class="how-head">Desvie dos Obstáculos</div>
-            <div class="how-desc"><strong>Lama</strong> deixa a Mimi lenta (menos 10 pontos). <strong>Pedra</strong> e <strong>parede</strong> são erros. No primeiro erro você continua de onde parou, sem perder pontos. No segundo erro a fase recomeça e perde pontos (pedra: menos 25, parede: menos 5). Sempre há um caminho livre!</div>
+            <div class="how-desc"><strong>Lama</strong> deixa a Mimi lenta (menos 10 pontos). <strong>Pedra</strong> e <strong>parede</strong> são erros: no primeiro, tudo bem, você continua de onde parou. No segundo, a fase recomeça (pedra: menos 25, parede: menos 5). Sempre há um caminho livre!</div>
           </div>
         </div>
       </div>
@@ -877,7 +1029,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 
     <div class="how-btns">
       <button class="btn-cta" onclick="showPhases()" style="font-size:1.1rem;padding:12px 32px">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="white"><polygon points="2,1 15,8 2,15"/></svg>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><polygon points="2,1 15,8 2,15"/></svg>
         VAMOS JOGAR!
       </button>
       <button class="btn-ghost" onclick="showScreen('screen-start')"><span data-ico="back" data-size="18"></span> Voltar</button>
@@ -974,7 +1126,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
   </div>
   <div class="nav-row">
     <button class="btn-cta" id="btn-next" onclick="nextPhase()" style="font-size:1.1rem;padding:11px 26px">Próxima fase</button>
-    <button class="btn-ghost" id="btn-replay" onclick="showScreen('screen-game');setTimeout(replayPath,300)" style="display:none"><span data-ico="replay" data-size="16"></span> Rever caminho</button>
+    <button class="btn-ghost" id="btn-replay" onclick="reviewPath()" style="display:none"><span data-ico="replay" data-size="16"></span> Rever caminho</button>
     <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="16"></span> Fases</button>
   </div>
 </div>
@@ -992,9 +1144,6 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 
 <!-- ══ SCREEN: JARDIM SECRETO (3 estrelas em todas as fases) ══ -->
 <div id="screen-garden" class="screen">
-  <!-- animated garden background elements -->
-  <div class="garden-bg" id="garden-bg"></div>
-
   <div class="garden-card glass">
     <div class="garden-badge"><span data-ico="star" data-size="24"></span> Perfeito! <span data-ico="star" data-size="24"></span></div>
     <div class="garden-title">Novo Jardim<br>Desbloqueado!</div>
@@ -1007,23 +1156,23 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
         <!-- sky gradient -->
         <defs>
           <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#87CEEB"/>
-            <stop offset="100%" stop-color="#c8f0c0"/>
+            <stop offset="0%" stop-color="#cdeaff"/>
+            <stop offset="100%" stop-color="#e6f8e4"/>
           </linearGradient>
           <linearGradient id="grassG" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#4dc97e"/>
-            <stop offset="100%" stop-color="#2a8050"/>
+            <stop offset="0%" stop-color="#a8e6b8"/>
+            <stop offset="100%" stop-color="#86d39e"/>
           </linearGradient>
           <radialGradient id="sunG" cx="50%" cy="50%">
-            <stop offset="0%" stop-color="#fff9c0"/>
-            <stop offset="100%" stop-color="#ffd700"/>
+            <stop offset="0%" stop-color="#fff8d6"/>
+            <stop offset="100%" stop-color="#ffd166"/>
           </radialGradient>
         </defs>
         <!-- sky -->
         <rect width="500" height="180" fill="url(#skyG)"/>
         <!-- sun -->
         <circle cx="440" cy="35" r="28" fill="url(#sunG)" opacity=".9"/>
-        <g stroke="#ffd700" stroke-width="2.5" opacity=".6">
+        <g stroke="#ffd166" stroke-width="2.5" opacity=".6">
           <line x1="440" y1="0" x2="440" y2="10"/>
           <line x1="440" y1="60" x2="440" y2="70"/>
           <line x1="405" y1="35" x2="415" y2="35"/>
@@ -1044,16 +1193,16 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
         </g>
         <!-- far trees -->
         <g opacity=".6">
-          <rect x="18" y="75" width="8" height="35" fill="#5a3010"/>
-          <circle cx="22" cy="68" r="20" fill="#2a8050"/>
-          <rect x="355" y="70" width="8" height="40" fill="#5a3010"/>
-          <circle cx="359" cy="62" r="22" fill="#1e6e40"/>
+          <rect x="18" y="75" width="8" height="35" fill="#c49a78"/>
+          <circle cx="22" cy="68" r="20" fill="#86d39e"/>
+          <rect x="355" y="70" width="8" height="40" fill="#c49a78"/>
+          <circle cx="359" cy="62" r="22" fill="#7fc796"/>
         </g>
         <!-- grass -->
         <ellipse cx="250" cy="155" rx="260" ry="35" fill="url(#grassG)"/>
-        <rect x="0" y="148" width="500" height="32" fill="#4dc97e"/>
+        <rect x="0" y="148" width="500" height="32" fill="#a8e6b8"/>
         <!-- grass blades -->
-        <g fill="#3ab060" opacity=".7">
+        <g fill="#8fd694" opacity=".7">
           <path d="M30,148 Q28,130 32,120 Q36,130 34,148Z"/>
           <path d="M80,148 Q78,133 82,125 Q86,133 84,148Z"/>
           <path d="M150,148 Q148,136 151,128 Q155,136 153,148Z"/>
@@ -1064,68 +1213,44 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
         </g>
         <!-- colorful flowers -->
         <!-- flower 1 -->
-        <circle cx="50" cy="138" r="5" fill="#ff5888"/><circle cx="50" cy="138" r="2" fill="#ffe000"/>
-        <circle cx="43" cy="135" r="4" fill="#ff80c0"/><circle cx="57" cy="135" r="4" fill="#ff80c0"/>
-        <circle cx="50" cy="130" r="4" fill="#ff5888"/><circle cx="50" cy="144" r="4" fill="#ff80c0"/>
-        <rect x="49" y="140" width="2" height="10" fill="#3ab060"/>
+        <circle cx="50" cy="138" r="5" fill="#ff9ec0"/><circle cx="50" cy="138" r="2" fill="#ffe38a"/>
+        <circle cx="43" cy="135" r="4" fill="#ffb3d4"/><circle cx="57" cy="135" r="4" fill="#ffb3d4"/>
+        <circle cx="50" cy="130" r="4" fill="#ff9ec0"/><circle cx="50" cy="144" r="4" fill="#ffb3d4"/>
+        <rect x="49" y="140" width="2" height="10" fill="#8fd694"/>
         <!-- flower 2 -->
-        <circle cx="120" cy="136" r="5" fill="#ffd700"/><circle cx="120" cy="136" r="2" fill="#ff8c00"/>
-        <circle cx="113" cy="133" r="4" fill="#ffe060"/><circle cx="127" cy="133" r="4" fill="#ffe060"/>
-        <circle cx="120" cy="128" r="4" fill="#ffd700"/><circle cx="120" cy="142" r="4" fill="#ffe060"/>
-        <rect x="119" y="138" width="2" height="10" fill="#3ab060"/>
+        <circle cx="120" cy="136" r="5" fill="#ffd166"/><circle cx="120" cy="136" r="2" fill="#ffb870"/>
+        <circle cx="113" cy="133" r="4" fill="#ffeaa0"/><circle cx="127" cy="133" r="4" fill="#ffeaa0"/>
+        <circle cx="120" cy="128" r="4" fill="#ffd166"/><circle cx="120" cy="142" r="4" fill="#ffeaa0"/>
+        <rect x="119" y="138" width="2" height="10" fill="#8fd694"/>
         <!-- flower 3 -->
-        <circle cx="200" cy="137" r="5" fill="#a855f7"/><circle cx="200" cy="137" r="2" fill="#ffd700"/>
-        <circle cx="193" cy="134" r="4" fill="#c084fc"/><circle cx="207" cy="134" r="4" fill="#c084fc"/>
-        <circle cx="200" cy="129" r="4" fill="#a855f7"/><circle cx="200" cy="143" r="4" fill="#c084fc"/>
-        <rect x="199" y="139" width="2" height="9" fill="#3ab060"/>
+        <circle cx="200" cy="137" r="5" fill="#c3a6f5"/><circle cx="200" cy="137" r="2" fill="#ffd166"/>
+        <circle cx="193" cy="134" r="4" fill="#d6bdfc"/><circle cx="207" cy="134" r="4" fill="#d6bdfc"/>
+        <circle cx="200" cy="129" r="4" fill="#c3a6f5"/><circle cx="200" cy="143" r="4" fill="#d6bdfc"/>
+        <rect x="199" y="139" width="2" height="9" fill="#8fd694"/>
         <!-- flower 4 -->
-        <circle cx="300" cy="136" r="5" fill="#ff6b35"/><circle cx="300" cy="136" r="2" fill="#ffe000"/>
-        <circle cx="293" cy="133" r="4" fill="#ff9a6c"/><circle cx="307" cy="133" r="4" fill="#ff9a6c"/>
-        <circle cx="300" cy="128" r="4" fill="#ff6b35"/><circle cx="300" cy="142" r="4" fill="#ff9a6c"/>
-        <rect x="299" y="138" width="2" height="10" fill="#3ab060"/>
+        <circle cx="300" cy="136" r="5" fill="#ffad8a"/><circle cx="300" cy="136" r="2" fill="#ffe38a"/>
+        <circle cx="293" cy="133" r="4" fill="#ffc6a8"/><circle cx="307" cy="133" r="4" fill="#ffc6a8"/>
+        <circle cx="300" cy="128" r="4" fill="#ffad8a"/><circle cx="300" cy="142" r="4" fill="#ffc6a8"/>
+        <rect x="299" y="138" width="2" height="10" fill="#8fd694"/>
         <!-- flower 5 -->
-        <circle cx="420" cy="135" r="5" fill="#38bdf8"/><circle cx="420" cy="135" r="2" fill="#ffd700"/>
-        <circle cx="413" cy="132" r="4" fill="#7dd3fc"/><circle cx="427" cy="132" r="4" fill="#7dd3fc"/>
-        <circle cx="420" cy="127" r="4" fill="#38bdf8"/><circle cx="420" cy="141" r="4" fill="#7dd3fc"/>
-        <rect x="419" y="137" width="2" height="11" fill="#3ab060"/>
+        <circle cx="420" cy="135" r="5" fill="#8fd0f7"/><circle cx="420" cy="135" r="2" fill="#ffd166"/>
+        <circle cx="413" cy="132" r="4" fill="#b8e4fc"/><circle cx="427" cy="132" r="4" fill="#b8e4fc"/>
+        <circle cx="420" cy="127" r="4" fill="#8fd0f7"/><circle cx="420" cy="141" r="4" fill="#b8e4fc"/>
+        <rect x="419" y="137" width="2" height="11" fill="#8fd694"/>
         <!-- butterflies -->
         <g opacity=".85">
-          <ellipse cx="165" cy="90" rx="12" ry="7" fill="#ff80c0" transform="rotate(-20,165,90)"/>
-          <ellipse cx="178" cy="90" rx="12" ry="7" fill="#ff80c0" transform="rotate(20,178,90)"/>
+          <ellipse cx="165" cy="90" rx="12" ry="7" fill="#ffb3d4" transform="rotate(-20,165,90)"/>
+          <ellipse cx="178" cy="90" rx="12" ry="7" fill="#ffb3d4" transform="rotate(20,178,90)"/>
           <ellipse cx="165" cy="97" rx="9" ry="5" fill="#ffb0d8" transform="rotate(10,165,97)"/>
           <ellipse cx="178" cy="97" rx="9" ry="5" fill="#ffb0d8" transform="rotate(-10,178,97)"/>
-          <line x1="171" y1="88" x2="171" y2="100" stroke="#333" stroke-width="1.2"/>
-          <path d="M171,88 Q168,82 166,80" stroke="#333" stroke-width="1" fill="none"/>
-          <path d="M171,88 Q174,82 176,80" stroke="#333" stroke-width="1" fill="none"/>
+          <line x1="171" y1="88" x2="171" y2="100" stroke="#7d7399" stroke-width="1.2"/>
+          <path d="M171,88 Q168,82 166,80" stroke="#7d7399" stroke-width="1" fill="none"/>
+          <path d="M171,88 Q174,82 176,80" stroke="#7d7399" stroke-width="1" fill="none"/>
         </g>
-        <!-- Mimi in the garden -->
-        <g transform="translate(248,92) scale(0.55)">
-          <ellipse cx="28" cy="76" rx="24" ry="20" fill="#ffb0e0" stroke="#c050a0" stroke-width="2.2"/>
-          <ellipse cx="28" cy="70" rx="16" ry="9" fill="rgba(255,255,255,.2)"/>
-          <ellipse cx="54" cy="72" rx="22" ry="19" fill="#ffb0e0" stroke="#c050a0" stroke-width="2.2"/>
-          <ellipse cx="54" cy="66" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
-          <ellipse cx="78" cy="69" rx="22" ry="19" fill="#ffb0e0" stroke="#c050a0" stroke-width="2.2"/>
-          <ellipse cx="78" cy="63" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
-          <ellipse cx="118" cy="64" rx="26" ry="26" fill="#ffc8ec" stroke="#c050a0" stroke-width="2.5"/>
-          <ellipse cx="107" cy="52" rx="9" ry="6" fill="rgba(255,255,255,.35)" transform="rotate(-25,107,52)"/>
-          <ellipse cx="109" cy="60" rx="9" ry="10" fill="white" stroke="#ccc" stroke-width="1"/>
-          <ellipse cx="128" cy="60" rx="9" ry="10" fill="white" stroke="#ccc" stroke-width="1"/>
-          <ellipse cx="110" cy="61" rx="6" ry="7" fill="#1a1a3a"/>
-          <ellipse cx="129" cy="61" rx="6" ry="7" fill="#1a1a3a"/>
-          <ellipse cx="111" cy="60" rx="4" ry="5" fill="#4444cc"/>
-          <ellipse cx="130" cy="60" rx="4" ry="5" fill="#4444cc"/>
-          <circle cx="112" cy="58" r="2.5" fill="white"/>
-          <circle cx="131" cy="58" r="2.5" fill="white"/>
-          <path d="M110 75 Q118 84 127 75" stroke="#c050a0" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-          <ellipse cx="103" cy="73" rx="7" ry="5" fill="#ffaacc" opacity=".65"/>
-          <ellipse cx="134" cy="73" rx="7" ry="5" fill="#ffaacc" opacity=".65"/>
-          <path d="M108 40 Q100 22 94 14" stroke="#c050a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M124 38 Q130 20 138 13" stroke="#c050a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <circle cx="94" cy="13" r="5.5" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
-          <circle cx="138" cy="12" r="5.5" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
-        </g>
+        <!-- Mimi no jardim (desenhada por makeMimi em showFinal, com os acessórios escolhidos) -->
+        <g id="garden-mimi-scene" transform="translate(236,84)"></g>
         <!-- sparkles around Mimi -->
-        <g fill="#ffd700" opacity=".9">
+        <g fill="#ffd166" opacity=".9">
           <polygon points="232,75 234,81 240,81 235,85 237,91 232,87 227,91 229,85 224,81 230,81" transform="scale(.6) translate(162,50)"/>
           <polygon points="232,75 234,81 240,81 235,85 237,91 232,87 227,91 229,85 224,81 230,81" transform="scale(.5) translate(540,110)"/>
           <polygon points="232,75 234,81 240,81 235,85 237,91 232,87 227,91 229,85 224,81 230,81" transform="scale(.45) translate(460,30)"/>
@@ -1160,6 +1285,19 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
   </div>
 </div>
 
+<!-- PERGUNTA ANTES DA DICA -->
+<div class="modal-back" id="hint-confirm" hidden>
+  <div class="modal-card glass" role="dialog" aria-modal="true" aria-labelledby="hint-confirm-msg" aria-describedby="hint-confirm-sub">
+    <div class="modal-icon"><span data-ico="bulb" data-size="56"></span></div>
+    <div class="modal-msg" id="hint-confirm-msg">Tem certeza que quer ver a dica?</div>
+    <div class="modal-sub" id="hint-confirm-sub"></div>
+    <div class="modal-btns">
+      <button class="btn-exec" onclick="confirmHint(true)">Sim, quero a dica</button>
+      <button class="btn-ghost" id="hint-confirm-no" onclick="confirmHint(false)">Não, vou tentar</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOASTS -->
 <div class="toast" id="toast-error" role="alert">
   <div class="toast-icon" id="error-icon"></div>
@@ -1181,7 +1319,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 //  KAWAII MIMI SVG
 // ═══════════════════════════════════
 function makeMimi(w=100, hat=null, outfit=null, mood='normal'){
-  const vw=180, vh=120;
+  const vw=192, vh=128;   // margem em volta: asas, capa e chapéus não ficam cortados
   const h=Math.round(vh*(w/vw));
   const uid=Math.random().toString(36).slice(2,8);
 
@@ -1191,49 +1329,49 @@ function makeMimi(w=100, hat=null, outfit=null, mood='normal'){
   let outfitTopSVG='';
   if(outfit==='out_capa'){
     outfitBehindSVG=`<g>
-      <path d="M90,50 C72,26 34,26 8,36 C0,46 8,54 3,62 C10,70 2,80 8,88 C14,98 4,102 8,106 C40,112 74,104 90,84Z" fill="#e82020" stroke="#900" stroke-width="1.8" stroke-linejoin="round"/>
-      <path d="M84,56 C68,42 40,42 16,48 M84,70 C64,62 38,64 14,72 M84,82 C66,82 42,86 16,94" stroke="#b01010" stroke-width="2" fill="none" opacity=".6"/>
-      <path d="M88,50 Q93,67 88,84" stroke="#ffd700" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <circle cx="90" cy="67" r="4.5" fill="#ffd700" stroke="#c8a000" stroke-width="1.2"/>
+      <path d="M90,50 C72,26 34,26 8,36 C0,46 8,54 3,62 C10,70 2,80 8,88 C14,98 4,102 8,106 C40,112 74,104 90,84Z" fill="#ff9aa2" stroke="#e0707a" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M84,56 C68,42 40,42 16,48 M84,70 C64,62 38,64 14,72 M84,82 C66,82 42,86 16,94" stroke="#f08088" stroke-width="2" fill="none" opacity=".6"/>
+      <path d="M88,50 Q93,67 88,84" stroke="#ffd166" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <circle cx="90" cy="67" r="4.5" fill="#ffd166" stroke="#e0a63c" stroke-width="1.2"/>
     </g>`;
   } else if(outfit==='out_arcoirs'){
     outfitTopSVG=`<g opacity=".9">
-      <ellipse cx="28" cy="76" rx="22" ry="7" fill="#ff4040"/>
-      <ellipse cx="28" cy="81" rx="22" ry="6" fill="#ff9900"/>
-      <ellipse cx="28" cy="86" rx="21" ry="5" fill="#ffe000"/>
-      <ellipse cx="54" cy="72" rx="20" ry="7" fill="#40cc40"/>
-      <ellipse cx="54" cy="77" rx="20" ry="6" fill="#4488ff"/>
-      <ellipse cx="54" cy="82" rx="19" ry="5" fill="#9940ff"/>
-      <ellipse cx="78" cy="70" rx="20" ry="6" fill="#ff4040"/>
-      <ellipse cx="78" cy="75" rx="20" ry="6" fill="#ff9900"/>
-      <ellipse cx="78" cy="80" rx="19" ry="5" fill="#ffe000"/>
+      <ellipse cx="28" cy="76" rx="22" ry="7" fill="#ff9a9a"/>
+      <ellipse cx="28" cy="81" rx="22" ry="6" fill="#ffc48a"/>
+      <ellipse cx="28" cy="86" rx="21" ry="5" fill="#ffe38a"/>
+      <ellipse cx="54" cy="72" rx="20" ry="7" fill="#9ee0a0"/>
+      <ellipse cx="54" cy="77" rx="20" ry="6" fill="#9cc8ff"/>
+      <ellipse cx="54" cy="82" rx="19" ry="5" fill="#c7a8ff"/>
+      <ellipse cx="78" cy="70" rx="20" ry="6" fill="#ff9a9a"/>
+      <ellipse cx="78" cy="75" rx="20" ry="6" fill="#ffc48a"/>
+      <ellipse cx="78" cy="80" rx="19" ry="5" fill="#ffe38a"/>
     </g>`;
   } else if(outfit==='out_estrela'){
     outfitTopSVG=`<g>
-      <ellipse cx="28" cy="76" rx="22" ry="18" fill="#ffd700" opacity=".35" stroke="#c8a000" stroke-width="1.5"/>
-      <ellipse cx="54" cy="72" rx="20" ry="17" fill="#ffd700" opacity=".35" stroke="#c8a000" stroke-width="1.5"/>
-      <ellipse cx="78" cy="70" rx="20" ry="17" fill="#ffd700" opacity=".35" stroke="#c8a000" stroke-width="1.5"/>
-      <polygon points="28,70 30,77 37,77 31,81 33,88 28,84 23,88 25,81 19,77 26,77" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/>
-      <polygon points="54,66 56,73 63,73 57,77 59,84 54,80 49,84 51,77 45,73 52,73" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/>
-      <polygon points="78,64 80,71 87,71 81,75 83,82 78,78 73,82 75,75 69,71 76,71" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/>
+      <ellipse cx="28" cy="76" rx="22" ry="18" fill="#ffd166" opacity=".35" stroke="#e0a63c" stroke-width="1.5"/>
+      <ellipse cx="54" cy="72" rx="20" ry="17" fill="#ffd166" opacity=".35" stroke="#e0a63c" stroke-width="1.5"/>
+      <ellipse cx="78" cy="70" rx="20" ry="17" fill="#ffd166" opacity=".35" stroke="#e0a63c" stroke-width="1.5"/>
+      <polygon points="28,70 30,77 37,77 31,81 33,88 28,84 23,88 25,81 19,77 26,77" fill="#ffd166" stroke="#e0a63c" stroke-width=".8"/>
+      <polygon points="54,66 56,73 63,73 57,77 59,84 54,80 49,84 51,77 45,73 52,73" fill="#ffd166" stroke="#e0a63c" stroke-width=".8"/>
+      <polygon points="78,64 80,71 87,71 81,75 83,82 78,78 73,82 75,75 69,71 76,71" fill="#ffd166" stroke="#e0a63c" stroke-width=".8"/>
     </g>`;
   } else if(outfit==='out_coracao'){
     outfitTopSVG=`<g>
-      <ellipse cx="28" cy="76" rx="22" ry="18" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1.5"/>
-      <ellipse cx="54" cy="72" rx="20" ry="17" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1.5"/>
-      <ellipse cx="78" cy="70" rx="20" ry="17" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1.5"/>
-      <path d="M28,70 C28,67 24,65 24,69 C24,73 28,76 28,76 C28,76 32,73 32,69 C32,65 28,67 28,70Z" fill="#ff2080"/>
-      <path d="M54,66 C54,63 50,61 50,65 C50,69 54,72 54,72 C54,72 58,69 58,65 C58,61 54,63 54,66Z" fill="#ff2080"/>
-      <path d="M78,64 C78,61 74,59 74,63 C74,67 78,70 78,70 C78,70 82,67 82,63 C82,59 78,61 78,64Z" fill="#ff2080"/>
+      <ellipse cx="28" cy="76" rx="22" ry="18" fill="#ffb3d4" opacity=".3" stroke="#f5a3c7" stroke-width="1.5"/>
+      <ellipse cx="54" cy="72" rx="20" ry="17" fill="#ffb3d4" opacity=".3" stroke="#f5a3c7" stroke-width="1.5"/>
+      <ellipse cx="78" cy="70" rx="20" ry="17" fill="#ffb3d4" opacity=".3" stroke="#f5a3c7" stroke-width="1.5"/>
+      <path d="M28,70 C28,67 24,65 24,69 C24,73 28,76 28,76 C28,76 32,73 32,69 C32,65 28,67 28,70Z" fill="#ff7fae"/>
+      <path d="M54,66 C54,63 50,61 50,65 C50,69 54,72 54,72 C54,72 58,69 58,65 C58,61 54,63 54,66Z" fill="#ff7fae"/>
+      <path d="M78,64 C78,61 74,59 74,63 C74,67 78,70 78,70 C78,70 82,67 82,63 C82,59 78,61 78,64Z" fill="#ff7fae"/>
     </g>`;
   } else if(outfit==='out_borboleta'){
-    outfitBehindSVG=`<g stroke="#8a40c8" stroke-width="1.8" stroke-linejoin="round">
-      <path d="M44,56 C20,46 4,24 16,10 C30,-2 54,24 62,54Z" fill="#b57aff"/>
-      <path d="M56,56 C48,30 60,2 80,6 C100,12 84,44 74,56Z" fill="#a060f0"/>
-      <path d="M50,58 C34,52 22,40 26,28 C36,24 52,40 58,54Z" fill="#f48ae6" stroke="none"/>
-      <path d="M64,56 C60,40 68,22 78,22 C86,24 80,44 72,56Z" fill="#f48ae6" stroke="none"/>
-      <circle cx="19" cy="18" r="3.5" fill="#ffd700" stroke="none"/>
-      <circle cx="78" cy="12" r="3.5" fill="#ffd700" stroke="none"/>
+    outfitBehindSVG=`<g stroke="#a98be0" stroke-width="1.8" stroke-linejoin="round">
+      <path d="M44,56 C20,46 4,24 16,10 C30,-2 54,24 62,54Z" fill="#cdb5ff"/>
+      <path d="M56,56 C48,30 60,2 80,6 C100,12 84,44 74,56Z" fill="#bfa2f7"/>
+      <path d="M50,58 C34,52 22,40 26,28 C36,24 52,40 58,54Z" fill="#f8bdf0" stroke="none"/>
+      <path d="M64,56 C60,40 68,22 78,22 C86,24 80,44 72,56Z" fill="#f8bdf0" stroke="none"/>
+      <circle cx="19" cy="18" r="3.5" fill="#ffd166" stroke="none"/>
+      <circle cx="78" cy="12" r="3.5" fill="#ffd166" stroke="none"/>
     </g>`;
   }
 
@@ -1241,239 +1379,211 @@ function makeMimi(w=100, hat=null, outfit=null, mood='normal'){
   let hatSVG='';
   if(hat==='hat_coroa'){
     hatSVG=`<g transform="translate(95,15)">
-      <rect x="0" y="16" width="46" height="12" rx="4" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
-      <polygon points="0,16 7,2 14,16" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
-      <polygon points="16,16 23,0 30,16" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
-      <polygon points="32,16 39,2 46,16" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
-      <circle cx="7"  cy="22" r="3.5" fill="#ff3366"/>
-      <circle cx="23" cy="22" r="3.5" fill="#3366ff"/>
-      <circle cx="39" cy="22" r="3.5" fill="#33cc66"/>
+      <rect x="0" y="16" width="46" height="12" rx="4" fill="#ffd166" stroke="#e0a63c" stroke-width="1.5"/>
+      <polygon points="0,16 7,2 14,16" fill="#ffd166" stroke="#e0a63c" stroke-width="1"/>
+      <polygon points="16,16 23,0 30,16" fill="#ffd166" stroke="#e0a63c" stroke-width="1"/>
+      <polygon points="32,16 39,2 46,16" fill="#ffd166" stroke="#e0a63c" stroke-width="1"/>
+      <circle cx="7"  cy="22" r="3.5" fill="#ff8fab"/>
+      <circle cx="23" cy="22" r="3.5" fill="#7cc4f2"/>
+      <circle cx="39" cy="22" r="3.5" fill="#7fd8a6"/>
       <!-- shine -->
       <ellipse cx="10" cy="8" rx="2" ry="4" fill="rgba(255,255,255,.4)" transform="rotate(-15,10,8)"/>
     </g>`;
   } else if(hat==='hat_cartola'){
     hatSVG=`<g transform="translate(95,15)">
-      <ellipse cx="23" cy="26" rx="28" ry="6" fill="#1a1a2e" stroke="#111" stroke-width="1"/>
-      <rect x="7" y="4" width="32" height="23" rx="4" fill="#2a2a3e" stroke="#111" stroke-width="1"/>
-      <rect x="7" y="20" width="32" height="5" rx="1.5" fill="#e040a0"/>
+      <ellipse cx="23" cy="26" rx="28" ry="6" fill="#5d527f" stroke="#4a3f6b" stroke-width="1"/>
+      <rect x="7" y="4" width="32" height="23" rx="4" fill="#6b5f8f" stroke="#4a3f6b" stroke-width="1"/>
+      <rect x="7" y="20" width="32" height="5" rx="1.5" fill="#f5a3c7"/>
       <ellipse cx="15" cy="11" rx="4" ry="7" fill="rgba(255,255,255,.1)" transform="rotate(-10,15,11)"/>
     </g>`;
   } else if(hat==='hat_flor'){
     hatSVG=`<g transform="translate(99,21)">
-      <path d="M4,20 Q20,10 40,20" stroke="#50c030" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <circle cx="4"  cy="20" r="7" fill="#ff5888"/><circle cx="4"  cy="20" r="3" fill="#ffe000"/>
-      <circle cx="14" cy="13" r="7" fill="#ff80c0"/><circle cx="14" cy="13" r="3" fill="#ffe000"/>
-      <circle cx="24" cy="10" r="7" fill="#ff4488"/><circle cx="24" cy="10" r="3" fill="#ffe000"/>
-      <circle cx="34" cy="13" r="7" fill="#ff70b0"/><circle cx="34" cy="13" r="3" fill="#ffe000"/>
-      <ellipse cx="9"  cy="18" rx="5" ry="2.5" fill="#40b020" transform="rotate(-30,9,18)"/>
-      <ellipse cx="30" cy="12" rx="5" ry="2.5" fill="#40b020" transform="rotate(25,30,12)"/>
+      <path d="M4,20 Q20,10 40,20" stroke="#8fd694" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="4"  cy="20" r="7" fill="#ff9ec0"/><circle cx="4"  cy="20" r="3" fill="#ffe38a"/>
+      <circle cx="14" cy="13" r="7" fill="#ffb3d4"/><circle cx="14" cy="13" r="3" fill="#ffe38a"/>
+      <circle cx="24" cy="10" r="7" fill="#ff9ec0"/><circle cx="24" cy="10" r="3" fill="#ffe38a"/>
+      <circle cx="34" cy="13" r="7" fill="#ffa8cc"/><circle cx="34" cy="13" r="3" fill="#ffe38a"/>
+      <ellipse cx="9"  cy="18" rx="5" ry="2.5" fill="#8fd694" transform="rotate(-30,9,18)"/>
+      <ellipse cx="30" cy="12" rx="5" ry="2.5" fill="#8fd694" transform="rotate(25,30,12)"/>
     </g>`;
   } else if(hat==='hat_laco'){
     hatSVG=`<g transform="translate(98,28)">
-      <ellipse cx="9"  cy="9" rx="12" ry="8" fill="#ff40a0" stroke="#cc1070" stroke-width="1.5" transform="rotate(-22,9,9)"/>
-      <ellipse cx="31" cy="9" rx="12" ry="8" fill="#ff40a0" stroke="#cc1070" stroke-width="1.5" transform="rotate(22,31,9)"/>
-      <ellipse cx="20" cy="10" rx="6" ry="6" fill="#ff70c0" stroke="#cc1070" stroke-width="1"/>
-      <path d="M15,15 Q9,21 6,24" stroke="#ff40a0" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <path d="M25,15 Q31,21 34,24" stroke="#ff40a0" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="9"  cy="9" rx="12" ry="8" fill="#ff9ec7" stroke="#e57aa8" stroke-width="1.5" transform="rotate(-22,9,9)"/>
+      <ellipse cx="31" cy="9" rx="12" ry="8" fill="#ff9ec7" stroke="#e57aa8" stroke-width="1.5" transform="rotate(22,31,9)"/>
+      <ellipse cx="20" cy="10" rx="6" ry="6" fill="#ffb8d8" stroke="#e57aa8" stroke-width="1"/>
+      <path d="M15,15 Q9,21 6,24" stroke="#ff9ec7" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M25,15 Q31,21 34,24" stroke="#ff9ec7" stroke-width="3.5" fill="none" stroke-linecap="round"/>
     </g>`;
   } else if(hat==='hat_bone'){
     hatSVG=`<g transform="translate(92,19)">
-      <path d="M2,24 Q2,4 26,4 Q50,4 50,24 Z" fill="#3ea0e8" stroke="#2070b0" stroke-width="1.5"/>
-      <path d="M2,24 Q26,32 50,24 L50,20 Q26,28 2,20Z" fill="#2070b0"/>
-      <ellipse cx="50" cy="21" rx="16" ry="6" fill="#3ea0e8" stroke="#2070b0" stroke-width="1.5"/>
-      <circle cx="26" cy="8" r="2.5" fill="#ffd700"/>
+      <path d="M2,24 Q2,4 26,4 Q50,4 50,24 Z" fill="#8ecbf5" stroke="#5fa6dc" stroke-width="1.5"/>
+      <path d="M2,24 Q26,32 50,24 L50,20 Q26,28 2,20Z" fill="#5fa6dc"/>
+      <ellipse cx="50" cy="21" rx="16" ry="6" fill="#8ecbf5" stroke="#5fa6dc" stroke-width="1.5"/>
+      <circle cx="26" cy="8" r="2.5" fill="#ffd166"/>
     </g>`;
   }
 
-  // ROSTO: muda com o humor da Mimi
+  // ROSTO: muda com o humor da Mimi (traços suaves: olhinhos simples, boca pequena, sem contornos fortes)
   let faceSVG;
   if(mood==='happy'){
     faceSVG=`
-  <!-- OLHOS FECHADOS DE ALEGRIA -->
-  <path d="M101 61 Q109 51 117 61" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M120 61 Q128 51 136 61" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <!-- BOCA ABERTA SORRINDO -->
-  <path d="M108 72 Q118 72 128 72 Q127 85 118 86 Q109 85 108 72Z" fill="#8a1a5a" stroke="#c050a0" stroke-width="2" stroke-linejoin="round"/>
-  <path d="M112 80 Q118 76 124 80 Q122 85 118 85 Q114 85 112 80Z" fill="#ff7aa8"/>
+  <!-- OLHINHOS FECHADOS DE ALEGRIA -->
+  <path d="M103 62 Q109 55.5 115 62" stroke="#5d527f" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <path d="M122 62 Q128 55.5 134 62" stroke="#5d527f" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <!-- SORRISO ABERTO PEQUENO -->
+  <path d="M111.5 71 Q118 72.5 124.5 71 Q123 79 118 79 Q113 79 111.5 71Z" fill="#f29cc0" stroke="#d987b4" stroke-width="1.6" stroke-linejoin="round"/>
   <!-- BRILHOS -->
-  <path d="M146 40 L148 46 L154 48 L148 50 L146 56 L144 50 L138 48 L144 46Z" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/>
-  <path d="M90 34 L91.4 38 L95.4 39.4 L91.4 40.8 L90 44.8 L88.6 40.8 L84.6 39.4 L88.6 38Z" fill="#fff3a0" stroke="#e0b800" stroke-width=".7"/>`;
+  <path d="M148 40 L149.6 45 L154.6 46.6 L149.6 48.2 L148 53.2 L146.4 48.2 L141.4 46.6 L146.4 45Z" fill="#fff1b8" stroke="#f0c75e" stroke-width=".8"/>
+  <path d="M88 36 L89.2 39.4 L92.6 40.6 L89.2 41.8 L88 45.2 L86.8 41.8 L83.4 40.6 L86.8 39.4Z" fill="#fff1b8" stroke="#f0c75e" stroke-width=".7"/>`;
   } else if(mood==='sad'){
     faceSVG=`
-  <!-- SOBRANCELHAS PREOCUPADAS -->
-  <path d="M101 48 Q107 44 114 49" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round" transform="rotate(12,107,47)"/>
-  <path d="M122 49 Q129 44 136 48" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round" transform="rotate(-12,129,47)"/>
-  <!-- OLHOS OLHANDO PARA BAIXO -->
-  <ellipse cx="109" cy="61" rx="8.5" ry="9" fill="url(#eg1_${uid})" stroke="#333" stroke-width="1.2"/>
-  <ellipse cx="109" cy="64" rx="5.5" ry="6" fill="#1a1a3a"/>
-  <ellipse cx="109" cy="64" rx="4" ry="4.5" fill="#4444cc"/>
-  <circle  cx="110.5" cy="62" r="2" fill="white"/>
-  <ellipse cx="128" cy="61" rx="8.5" ry="9" fill="url(#eg1_${uid})" stroke="#333" stroke-width="1.2"/>
-  <ellipse cx="128" cy="64" rx="5.5" ry="6" fill="#1a1a3a"/>
-  <ellipse cx="128" cy="64" rx="4" ry="4.5" fill="#4444cc"/>
-  <circle  cx="129.5" cy="62" r="2" fill="white"/>
-  <!-- LÁGRIMA -->
-  <path d="M137 66 Q140 72 140 75 A3.2 3.2 0 0 1 133.6 75 Q133.6 72 137 66Z" fill="#7cc8ff" stroke="#3a90d0" stroke-width="1"/>
-  <ellipse cx="118" cy="70" rx="2.5" ry="1.8" fill="#d050a0" opacity=".6"/>
-  <!-- BOCA TRISTE -->
-  <path d="M111 81 Q118 74 125 81" stroke="#c050a0" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+  <!-- SOBRANCELHAS DE "OPS" (levantadinhas no meio) -->
+  <path d="M103 51 Q108 48.5 113 48" stroke="#8a7fae" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M123 48 Q128 48.5 133 51" stroke="#8a7fae" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- OLHINHOS -->
+  <ellipse cx="109" cy="61" rx="4.6" ry="5.6" fill="#5d527f"/>
+  <circle  cx="110.6" cy="59" r="1.8" fill="white"/>
+  <ellipse cx="128" cy="61" rx="4.6" ry="5.6" fill="#5d527f"/>
+  <circle  cx="129.6" cy="59" r="1.8" fill="white"/>
+  <!-- GOTINHA DE SUOR -->
+  <path d="M141 48 Q143.5 53 143.5 55 A2.5 2.5 0 0 1 138.5 55 Q138.5 53 141 48Z" fill="#cfe9ff" stroke="#9cc8ef" stroke-width=".8"/>
+  <!-- BOQUINHA DE "OH" -->
+  <ellipse cx="118" cy="75" rx="3.2" ry="2.6" fill="#f29cc0" stroke="#d987b4" stroke-width="1.2"/>`;
   } else {
     faceSVG=`
-  <!-- LEFT EYE -->
-  <ellipse cx="109" cy="60" rx="9" ry="10" fill="url(#eg1_${uid})" stroke="#333" stroke-width="1.2"/>
-  <ellipse cx="110" cy="61" rx="6" ry="7" fill="#1a1a3a"/>
-  <ellipse cx="111" cy="60" rx="4.5" ry="5.5" fill="#4444cc"/>
-  <circle  cx="112" cy="58" r="2.5" fill="white"/>
-  <circle  cx="108" cy="63" r="1.2" fill="rgba(255,255,255,.55)"/>
-  <line x1="103" y1="52" x2="101" y2="48" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="108" y1="50" x2="107" y2="46" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="113" y1="51" x2="113" y2="47" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- OLHINHOS -->
+  <ellipse cx="109" cy="61" rx="5" ry="6.2" fill="#5d527f"/>
+  <circle  cx="110.8" cy="58.6" r="2" fill="white"/>
+  <circle  cx="107.6" cy="63.4" r=".9" fill="rgba(255,255,255,.7)"/>
+  <ellipse cx="128" cy="61" rx="5" ry="6.2" fill="#5d527f"/>
+  <circle  cx="129.8" cy="58.6" r="2" fill="white"/>
+  <circle  cx="126.6" cy="63.4" r=".9" fill="rgba(255,255,255,.7)"/>
 
-  <!-- RIGHT EYE -->
-  <ellipse cx="128" cy="60" rx="9" ry="10" fill="url(#eg1_${uid})" stroke="#333" stroke-width="1.2"/>
-  <ellipse cx="129" cy="61" rx="6" ry="7" fill="#1a1a3a"/>
-  <ellipse cx="130" cy="60" rx="4.5" ry="5.5" fill="#4444cc"/>
-  <circle  cx="131" cy="58" r="2.5" fill="white"/>
-  <circle  cx="127" cy="63" r="1.2" fill="rgba(255,255,255,.55)"/>
-  <line x1="122" y1="52" x2="120" y2="48" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="127" y1="50" x2="126" y2="46" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="133" y1="51" x2="134" y2="47" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
-
-  <!-- NOSE -->
-  <ellipse cx="118" cy="70" rx="2.5" ry="1.8" fill="#d050a0" opacity=".6"/>
-
-  <!-- SMILE -->
-  <path d="M110 75 Q118 84 127 75" stroke="#c050a0" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-
+  <!-- SORRISO -->
+  <path d="M112 72 Q118 77.5 124 72" stroke="#d27aa8" stroke-width="2.4" fill="none" stroke-linecap="round"/>
 `;
   }
 
-  return `<svg width="${w}" height="${h}" viewBox="0 0 ${vw} ${vh}" xmlns="http://www.w3.org/2000/svg">
+  return `<svg width="${w}" height="${h}" viewBox="-6 -8 ${vw} ${vh}" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="mg1_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffb0e0"/><stop offset="100%" stop-color="#e060b8"/></radialGradient>
-    <radialGradient id="mg2_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffc8ec"/><stop offset="100%" stop-color="#e878c8"/></radialGradient>
-    <radialGradient id="eg1_${uid}" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ddeeff"/></radialGradient>
+    <radialGradient id="mg1_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffe0ef"/><stop offset="100%" stop-color="#f6a9cf"/></radialGradient>
+    <radialGradient id="mg2_${uid}" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffeaf4"/><stop offset="100%" stop-color="#f8b6d6"/></radialGradient>
   </defs>
 
   ${outfitBehindSVG}
 
   <!-- BODY SEGMENTS -->
-  <ellipse cx="28" cy="76" rx="24" ry="20" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
+  <ellipse cx="28" cy="76" rx="24" ry="20" fill="url(#mg1_${uid})" stroke="#d987b4" stroke-width="2.2"/>
   <ellipse cx="28" cy="72" rx="16" ry="9" fill="rgba(255,255,255,.2)"/>
 
-  <ellipse cx="54" cy="72" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
+  <ellipse cx="54" cy="72" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#d987b4" stroke-width="2.2"/>
   <ellipse cx="54" cy="68" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
 
-  <ellipse cx="78" cy="69" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#c050a0" stroke-width="2.2"/>
+  <ellipse cx="78" cy="69" rx="22" ry="19" fill="url(#mg1_${uid})" stroke="#d987b4" stroke-width="2.2"/>
   <ellipse cx="78" cy="65" rx="15" ry="8" fill="rgba(255,255,255,.2)"/>
 
   ${outfitTopSVG}
 
   <!-- HEAD -->
-  <ellipse cx="118" cy="64" rx="26" ry="26" fill="url(#mg2_${uid})" stroke="#c050a0" stroke-width="2.5"/>
+  <ellipse cx="118" cy="64" rx="26" ry="26" fill="url(#mg2_${uid})" stroke="#d987b4" stroke-width="2.5"/>
   <ellipse cx="107" cy="52" rx="9" ry="6" fill="rgba(255,255,255,.35)" transform="rotate(-25,107,52)"/>
 
   ${faceSVG}
 
   <!-- CHEEKS -->
-  <ellipse cx="103" cy="73" rx="7" ry="5" fill="#ffaacc" opacity=".65"/>
-  <ellipse cx="134" cy="73" rx="7" ry="5" fill="#ffaacc" opacity=".65"/>
+  <ellipse cx="103" cy="73" rx="7" ry="5" fill="#ffb8d2" opacity=".7"/>
+  <ellipse cx="134" cy="73" rx="7" ry="5" fill="#ffb8d2" opacity=".7"/>
 
   <!-- ANTENNAE -->
-  <path d="M108 40 Q100 22 94 14"  stroke="#c050a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <path d="M124 38 Q130 20 138 13" stroke="#c050a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <circle cx="94"  cy="13" r="5.5" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
-  <circle cx="138" cy="12" r="5.5" fill="#ffd700" stroke="#c8a000" stroke-width="1.5"/>
+  <path d="M108 40 Q100 22 94 14"  stroke="#d987b4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M124 38 Q130 20 138 13" stroke="#d987b4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="94"  cy="13" r="5.5" fill="#ffd166" stroke="#e0a63c" stroke-width="1.5"/>
+  <circle cx="138" cy="12" r="5.5" fill="#ffd166" stroke="#e0a63c" stroke-width="1.5"/>
   <circle cx="96"  cy="11" r="2"   fill="rgba(255,255,255,.6)"/>
   <circle cx="140" cy="10" r="2"   fill="rgba(255,255,255,.6)"/>
 
   <!-- LEGS (3 pares por segmento, como uma lagarta) -->
-  <path d="M10 90 Q6 98 4 104"    stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M28 95 Q28 103 28 109" stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M44 91 Q47 99 48 105"  stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <ellipse cx="4"  cy="106" rx="4" ry="2.5" fill="#e060b0"/>
-  <ellipse cx="28" cy="111" rx="4" ry="2.5" fill="#e060b0"/>
-  <ellipse cx="48" cy="107" rx="4" ry="2.5" fill="#e060b0"/>
+  <path d="M10 90 Q6 98 4 104"    stroke="#d987b4" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M28 95 Q28 103 28 109" stroke="#d987b4" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M44 91 Q47 99 48 105"  stroke="#d987b4" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="4"  cy="106" rx="4" ry="2.5" fill="#f2a6cb"/>
+  <ellipse cx="28" cy="111" rx="4" ry="2.5" fill="#f2a6cb"/>
+  <ellipse cx="48" cy="107" rx="4" ry="2.5" fill="#f2a6cb"/>
 
-  <path d="M38 87 Q35 95 34 101"  stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M54 91 Q54 99 54 105"  stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M70 87 Q73 95 74 101"  stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <ellipse cx="34" cy="103" rx="4" ry="2.5" fill="#e060b0"/>
-  <ellipse cx="54" cy="107" rx="4" ry="2.5" fill="#e060b0"/>
-  <ellipse cx="74" cy="103" rx="4" ry="2.5" fill="#e060b0"/>
+  <path d="M38 87 Q35 95 34 101"  stroke="#d987b4" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M54 91 Q54 99 54 105"  stroke="#d987b4" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M70 87 Q73 95 74 101"  stroke="#d987b4" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="34" cy="103" rx="4" ry="2.5" fill="#f2a6cb"/>
+  <ellipse cx="54" cy="107" rx="4" ry="2.5" fill="#f2a6cb"/>
+  <ellipse cx="74" cy="103" rx="4" ry="2.5" fill="#f2a6cb"/>
 
-  <path d="M64 84 Q61 92 60 98"   stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M78 88 Q78 96 78 102"  stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M92 84 Q95 92 96 98"   stroke="#c050a0" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <ellipse cx="60" cy="100" rx="4" ry="2.5" fill="#e060b0"/>
-  <ellipse cx="78" cy="104" rx="4" ry="2.5" fill="#e060b0"/>
-  <ellipse cx="96" cy="100" rx="4" ry="2.5" fill="#e060b0"/>
+  <path d="M64 84 Q61 92 60 98"   stroke="#d987b4" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M78 88 Q78 96 78 102"  stroke="#d987b4" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M92 84 Q95 92 96 98"   stroke="#d987b4" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="60" cy="100" rx="4" ry="2.5" fill="#f2a6cb"/>
+  <ellipse cx="78" cy="104" rx="4" ry="2.5" fill="#f2a6cb"/>
+  <ellipse cx="96" cy="100" rx="4" ry="2.5" fill="#f2a6cb"/>
 
   ${hatSVG}
   </svg>`;
 }
 
 function makeMimiTiny(){
-  const tw=Math.round((window.__cs||50)*0.98), th=Math.round(tw*72/88);
+  const tw=Math.round((window.__cs||50)*0.98), th=Math.round(tw*76/92);
   // Simplified SVG optimized for small size — flat colors, no gradients
   const hat = equippedHat;
   const outfit = equippedOutfit;
 
   let hatSVG = '';
-  if(hat==='hat_coroa') hatSVG=`<g transform="translate(54,7)"><rect x="0" y="9" width="24" height="7" rx="2" fill="#ffd700" stroke="#c8a000" stroke-width=".8"/><polygon points="0,9 4,1 8,9" fill="#ffd700" stroke="#c8a000" stroke-width=".6"/><polygon points="8,9 12,0 16,9" fill="#ffd700" stroke="#c8a000" stroke-width=".6"/><polygon points="16,9 20,1 24,9" fill="#ffd700" stroke="#c8a000" stroke-width=".6"/><circle cx="4" cy="13" r="2" fill="#ff3366"/><circle cx="12" cy="13" r="2" fill="#3366ff"/><circle cx="20" cy="13" r="2" fill="#33cc66"/></g>`;
-  else if(hat==='hat_cartola') hatSVG=`<g transform="translate(54,7)"><ellipse cx="13" cy="15" rx="16" ry="4" fill="#222"/><rect x="4" y="2" width="18" height="14" rx="2" fill="#333"/><rect x="4" y="12" width="18" height="3" rx="1" fill="#e040a0"/></g>`;
-  else if(hat==='hat_flor') hatSVG=`<g transform="translate(50,10)"><path d="M2,12 Q14,5 28,12" stroke="#40b020" stroke-width="2" fill="none"/><circle cx="2" cy="12" r="4" fill="#ff5888"/><circle cx="2" cy="12" r="1.5" fill="#ffe000"/><circle cx="10" cy="7" r="4" fill="#ff80c0"/><circle cx="10" cy="7" r="1.5" fill="#ffe000"/><circle cx="18" cy="5" r="4" fill="#ff4488"/><circle cx="18" cy="5" r="1.5" fill="#ffe000"/><circle cx="26" cy="7" r="4" fill="#ff70b0"/><circle cx="26" cy="7" r="1.5" fill="#ffe000"/></g>`;
-  else if(hat==='hat_laco') hatSVG=`<g transform="translate(56,14)"><ellipse cx="6" cy="6" rx="7" ry="5" fill="#ff40a0" stroke="#cc1070" stroke-width="1" transform="rotate(-20,6,6)"/><ellipse cx="20" cy="6" rx="7" ry="5" fill="#ff40a0" stroke="#cc1070" stroke-width="1" transform="rotate(20,20,6)"/><ellipse cx="13" cy="7" rx="4" ry="4" fill="#ff70c0" stroke="#cc1070" stroke-width=".8"/></g>`;
-  else if(hat==='hat_bone') hatSVG=`<g transform="translate(52,8)"><path d="M1,14 Q1,2 15,2 Q29,2 29,14Z" fill="#3ea0e8" stroke="#2070b0" stroke-width="1"/><ellipse cx="29" cy="12" rx="10" ry="3.5" fill="#3ea0e8" stroke="#2070b0" stroke-width="1"/></g>`;
+  if(hat==='hat_coroa') hatSVG=`<g transform="translate(54,7)"><rect x="0" y="9" width="24" height="7" rx="2" fill="#ffd166" stroke="#e0a63c" stroke-width=".8"/><polygon points="0,9 4,1 8,9" fill="#ffd166" stroke="#e0a63c" stroke-width=".6"/><polygon points="8,9 12,0 16,9" fill="#ffd166" stroke="#e0a63c" stroke-width=".6"/><polygon points="16,9 20,1 24,9" fill="#ffd166" stroke="#e0a63c" stroke-width=".6"/><circle cx="4" cy="13" r="2" fill="#ff8fab"/><circle cx="12" cy="13" r="2" fill="#7cc4f2"/><circle cx="20" cy="13" r="2" fill="#7fd8a6"/></g>`;
+  else if(hat==='hat_cartola') hatSVG=`<g transform="translate(54,7)"><ellipse cx="13" cy="15" rx="16" ry="4" fill="#222"/><rect x="4" y="2" width="18" height="14" rx="2" fill="#333"/><rect x="4" y="12" width="18" height="3" rx="1" fill="#f5a3c7"/></g>`;
+  else if(hat==='hat_flor') hatSVG=`<g transform="translate(50,10)"><path d="M2,12 Q14,5 28,12" stroke="#8fd694" stroke-width="2" fill="none"/><circle cx="2" cy="12" r="4" fill="#ff9ec0"/><circle cx="2" cy="12" r="1.5" fill="#ffe38a"/><circle cx="10" cy="7" r="4" fill="#ffb3d4"/><circle cx="10" cy="7" r="1.5" fill="#ffe38a"/><circle cx="18" cy="5" r="4" fill="#ff9ec0"/><circle cx="18" cy="5" r="1.5" fill="#ffe38a"/><circle cx="26" cy="7" r="4" fill="#ffa8cc"/><circle cx="26" cy="7" r="1.5" fill="#ffe38a"/></g>`;
+  else if(hat==='hat_laco') hatSVG=`<g transform="translate(56,14)"><ellipse cx="6" cy="6" rx="7" ry="5" fill="#ff9ec7" stroke="#e57aa8" stroke-width="1" transform="rotate(-20,6,6)"/><ellipse cx="20" cy="6" rx="7" ry="5" fill="#ff9ec7" stroke="#e57aa8" stroke-width="1" transform="rotate(20,20,6)"/><ellipse cx="13" cy="7" rx="4" ry="4" fill="#ffb8d8" stroke="#e57aa8" stroke-width=".8"/></g>`;
+  else if(hat==='hat_bone') hatSVG=`<g transform="translate(52,8)"><path d="M1,14 Q1,2 15,2 Q29,2 29,14Z" fill="#8ecbf5" stroke="#5fa6dc" stroke-width="1"/><ellipse cx="29" cy="12" rx="10" ry="3.5" fill="#8ecbf5" stroke="#5fa6dc" stroke-width="1"/></g>`;
 
   let outfitBehindSVG = '';
   let outfitTopSVG = '';
-  if(outfit==='out_capa') outfitBehindSVG=`<path d="M54,30 C40,16 14,16 4,22 C0,30 5,34 2,40 C6,46 1,52 4,58 C20,64 42,58 54,48Z" fill="#e82020" stroke="#900" stroke-width="1.4" stroke-linejoin="round"/><path d="M53,31 Q57,40 53,49" stroke="#ffd700" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-  else if(outfit==='out_arcoirs') outfitTopSVG=`<g opacity=".85"><ellipse cx="16" cy="46" rx="13" ry="4" fill="#ff4040"/><ellipse cx="16" cy="50" rx="13" ry="4" fill="#ff9900"/><ellipse cx="30" cy="44" rx="12" ry="4" fill="#40cc40"/><ellipse cx="30" cy="48" rx="12" ry="4" fill="#4488ff"/><ellipse cx="44" cy="42" rx="12" ry="4" fill="#ff4040"/><ellipse cx="44" cy="46" rx="12" ry="4" fill="#ff9900"/></g>`;
-  else if(outfit==='out_estrela') outfitTopSVG=`<g><ellipse cx="16" cy="46" rx="13" ry="11" fill="#ffd700" opacity=".3" stroke="#c8a000" stroke-width="1"/><ellipse cx="30" cy="43" rx="12" ry="10" fill="#ffd700" opacity=".3" stroke="#c8a000" stroke-width="1"/><ellipse cx="44" cy="41" rx="12" ry="10" fill="#ffd700" opacity=".3" stroke="#c8a000" stroke-width="1"/><polygon points="16,41 17,46 22,46 18,49 20,54 16,51 12,54 14,49 10,46 15,46" fill="#ffd700"/><polygon points="30,38 31,43 36,43 32,46 34,51 30,48 26,51 28,46 24,43 29,43" fill="#ffd700"/></g>`;
-  else if(outfit==='out_coracao') outfitTopSVG=`<g><ellipse cx="16" cy="46" rx="13" ry="11" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1"/><ellipse cx="30" cy="43" rx="12" ry="10" fill="#ff80c0" opacity=".3" stroke="#e040a0" stroke-width="1"/><path d="M16,41 C16,39 13,38 13,41 C13,44 16,46 16,46 C16,46 19,44 19,41 C19,38 16,39 16,41Z" fill="#ff2080"/><path d="M30,38 C30,36 27,35 27,38 C27,41 30,43 30,43 C30,43 33,41 33,38 C33,35 30,36 30,38Z" fill="#ff2080"/></g>`;
-  else if(outfit==='out_borboleta') outfitBehindSVG=`<g stroke="#8a40c8" stroke-width="1.2" stroke-linejoin="round"><path d="M30,34 C14,28 4,12 12,5 C20,-1 32,14 36,32Z" fill="#b57aff"/><path d="M36,34 C32,18 38,4 48,6 C58,10 48,26 42,34Z" fill="#a060f0"/><circle cx="13" cy="10" r="2.2" fill="#ffd700" stroke="none"/></g>`;
+  if(outfit==='out_capa') outfitBehindSVG=`<path d="M54,30 C40,16 14,16 4,22 C0,30 5,34 2,40 C6,46 1,52 4,58 C20,64 42,58 54,48Z" fill="#ff9aa2" stroke="#e0707a" stroke-width="1.4" stroke-linejoin="round"/><path d="M53,31 Q57,40 53,49" stroke="#ffd166" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  else if(outfit==='out_arcoirs') outfitTopSVG=`<g opacity=".85"><ellipse cx="16" cy="46" rx="13" ry="4" fill="#ff9a9a"/><ellipse cx="16" cy="50" rx="13" ry="4" fill="#ffc48a"/><ellipse cx="30" cy="44" rx="12" ry="4" fill="#9ee0a0"/><ellipse cx="30" cy="48" rx="12" ry="4" fill="#9cc8ff"/><ellipse cx="44" cy="42" rx="12" ry="4" fill="#ff9a9a"/><ellipse cx="44" cy="46" rx="12" ry="4" fill="#ffc48a"/></g>`;
+  else if(outfit==='out_estrela') outfitTopSVG=`<g><ellipse cx="16" cy="46" rx="13" ry="11" fill="#ffd166" opacity=".3" stroke="#e0a63c" stroke-width="1"/><ellipse cx="30" cy="43" rx="12" ry="10" fill="#ffd166" opacity=".3" stroke="#e0a63c" stroke-width="1"/><ellipse cx="44" cy="41" rx="12" ry="10" fill="#ffd166" opacity=".3" stroke="#e0a63c" stroke-width="1"/><polygon points="16,41 17,46 22,46 18,49 20,54 16,51 12,54 14,49 10,46 15,46" fill="#ffd166"/><polygon points="30,38 31,43 36,43 32,46 34,51 30,48 26,51 28,46 24,43 29,43" fill="#ffd166"/></g>`;
+  else if(outfit==='out_coracao') outfitTopSVG=`<g><ellipse cx="16" cy="46" rx="13" ry="11" fill="#ffb3d4" opacity=".3" stroke="#f5a3c7" stroke-width="1"/><ellipse cx="30" cy="43" rx="12" ry="10" fill="#ffb3d4" opacity=".3" stroke="#f5a3c7" stroke-width="1"/><path d="M16,41 C16,39 13,38 13,41 C13,44 16,46 16,46 C16,46 19,44 19,41 C19,38 16,39 16,41Z" fill="#ff7fae"/><path d="M30,38 C30,36 27,35 27,38 C27,41 30,43 30,43 C30,43 33,41 33,38 C33,35 30,36 30,38Z" fill="#ff7fae"/></g>`;
+  else if(outfit==='out_borboleta') outfitBehindSVG=`<g stroke="#a98be0" stroke-width="1.2" stroke-linejoin="round"><path d="M30,34 C14,28 4,12 12,5 C20,-1 32,14 36,32Z" fill="#cdb5ff"/><path d="M36,34 C32,18 38,4 48,6 C58,10 48,26 42,34Z" fill="#bfa2f7"/><circle cx="13" cy="10" r="2.2" fill="#ffd166" stroke="none"/></g>`;
 
-  return `<svg width="${tw}" height="${th}" viewBox="0 0 88 72" xmlns="http://www.w3.org/2000/svg">
+  return `<svg width="${tw}" height="${th}" viewBox="-2 -4 92 76" xmlns="http://www.w3.org/2000/svg">
   ${outfitBehindSVG}
-  <!-- segments - flat pink, clearly visible -->
-  <ellipse cx="16" cy="48" rx="14" ry="12" fill="#f070c0" stroke="#c040a0" stroke-width="1.5"/>
-  <ellipse cx="16" cy="48" rx="8" ry="6" fill="rgba(255,255,255,.22)"/>
-  <ellipse cx="30" cy="45" rx="13" ry="11" fill="#f070c0" stroke="#c040a0" stroke-width="1.5"/>
-  <ellipse cx="30" cy="45" rx="7" ry="5.5" fill="rgba(255,255,255,.22)"/>
-  <ellipse cx="44" cy="42" rx="13" ry="11" fill="#f070c0" stroke="#c040a0" stroke-width="1.5"/>
-  <ellipse cx="44" cy="42" rx="7" ry="5.5" fill="rgba(255,255,255,.22)"/>
+  <!-- segmentos: rosa pastel com contorno suave -->
+  <ellipse cx="16" cy="48" rx="14" ry="12" fill="#f9b3d4" stroke="#d97fb0" stroke-width="1.5"/>
+  <ellipse cx="16" cy="45" rx="8" ry="5" fill="rgba(255,255,255,.35)"/>
+  <ellipse cx="30" cy="45" rx="13" ry="11" fill="#f9b3d4" stroke="#d97fb0" stroke-width="1.5"/>
+  <ellipse cx="30" cy="42" rx="7" ry="4.5" fill="rgba(255,255,255,.35)"/>
+  <ellipse cx="44" cy="42" rx="13" ry="11" fill="#f9b3d4" stroke="#d97fb0" stroke-width="1.5"/>
+  <ellipse cx="44" cy="39" rx="7" ry="4.5" fill="rgba(255,255,255,.35)"/>
   ${outfitTopSVG}
-  <!-- head -->
-  <ellipse cx="68" cy="38" rx="17" ry="17" fill="#f878cc" stroke="#c040a0" stroke-width="1.8"/>
-  <ellipse cx="62" cy="30" rx="6" ry="4" fill="rgba(255,255,255,.3)" transform="rotate(-20,62,30)"/>
-  <!-- eyes white -->
-  <ellipse cx="63" cy="35" rx="6" ry="7" fill="white" stroke="#ccc" stroke-width=".5"/>
-  <ellipse cx="74" cy="35" rx="6" ry="7" fill="white" stroke="#ccc" stroke-width=".5"/>
-  <!-- pupils -->
-  <ellipse cx="64" cy="36" rx="4" ry="5" fill="#1a1a3a"/>
-  <ellipse cx="75" cy="36" rx="4" ry="5" fill="#1a1a3a"/>
-  <ellipse cx="64" cy="35" rx="3" ry="3.5" fill="#4444cc"/>
-  <ellipse cx="75" cy="35" rx="3" ry="3.5" fill="#4444cc"/>
-  <circle cx="65.5" cy="33.5" r="1.8" fill="white"/>
-  <circle cx="76.5" cy="33.5" r="1.8" fill="white"/>
-  <!-- smile -->
-  <path d="M61 42 Q68 49 76 42" stroke="#c040a0" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <!-- cheeks -->
-  <ellipse cx="58" cy="41" rx="5" ry="3.5" fill="#ffaacc" opacity=".7"/>
-  <ellipse cx="78" cy="41" rx="5" ry="3.5" fill="#ffaacc" opacity=".7"/>
-  <!-- antennae -->
-  <line x1="63" y1="23" x2="58" y2="13" stroke="#c040a0" stroke-width="1.8" stroke-linecap="round"/>
-  <line x1="73" y1="22" x2="79" y2="12" stroke="#c040a0" stroke-width="1.8" stroke-linecap="round"/>
-  <circle cx="58" cy="12" r="3.5" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
-  <circle cx="79" cy="11" r="3.5" fill="#ffd700" stroke="#c8a000" stroke-width="1"/>
-  <!-- legs -->
-  <line x1="8"  y1="58" x2="5"  y2="66" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
-  <line x1="20" y1="59" x2="20" y2="67" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
-  <line x1="28" y1="55" x2="25" y2="63" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
-  <line x1="40" y1="52" x2="40" y2="60" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
-  <line x1="42" y1="51" x2="39" y2="59" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
-  <line x1="52" y1="52" x2="52" y2="60" stroke="#c040a0" stroke-width="2" stroke-linecap="round"/>
+  <!-- cabeça -->
+  <ellipse cx="68" cy="38" rx="17" ry="17" fill="#fcc4de" stroke="#d97fb0" stroke-width="1.8"/>
+  <ellipse cx="62" cy="30" rx="6" ry="4" fill="rgba(255,255,255,.45)" transform="rotate(-20,62,30)"/>
+  <!-- olhinhos -->
+  <ellipse cx="63" cy="37" rx="3.3" ry="4.2" fill="#5d527f"/>
+  <ellipse cx="74" cy="37" rx="3.3" ry="4.2" fill="#5d527f"/>
+  <circle cx="64.3" cy="35.3" r="1.4" fill="white"/>
+  <circle cx="75.3" cy="35.3" r="1.4" fill="white"/>
+  <!-- sorriso -->
+  <path d="M64.5 43 Q68.5 46.5 72.5 43" stroke="#d27aa8" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+  <!-- bochechas -->
+  <ellipse cx="58.5" cy="42" rx="3.6" ry="2.4" fill="#ff9ec7" opacity=".55"/>
+  <ellipse cx="78.5" cy="42" rx="3.6" ry="2.4" fill="#ff9ec7" opacity=".55"/>
+  <!-- antenas -->
+  <line x1="63" y1="23" x2="58" y2="13" stroke="#d97fb0" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="73" y1="22" x2="79" y2="12" stroke="#d97fb0" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="58" cy="12" r="3.5" fill="#ffd166" stroke="#e0a63c" stroke-width="1"/>
+  <circle cx="79" cy="11" r="3.5" fill="#ffd166" stroke="#e0a63c" stroke-width="1"/>
+  <!-- perninhas -->
+  <line x1="8"  y1="58" x2="5"  y2="66" stroke="#d97fb0" stroke-width="2" stroke-linecap="round"/>
+  <line x1="20" y1="59" x2="20" y2="67" stroke="#d97fb0" stroke-width="2" stroke-linecap="round"/>
+  <line x1="28" y1="55" x2="25" y2="63" stroke="#d97fb0" stroke-width="2" stroke-linecap="round"/>
+  <line x1="40" y1="52" x2="40" y2="60" stroke="#d97fb0" stroke-width="2" stroke-linecap="round"/>
+  <line x1="42" y1="51" x2="39" y2="59" stroke="#d97fb0" stroke-width="2" stroke-linecap="round"/>
+  <line x1="52" y1="52" x2="52" y2="60" stroke="#d97fb0" stroke-width="2" stroke-linecap="round"/>
   ${hatSVG}
   </svg>`;
 }
@@ -1482,27 +1592,27 @@ function makeMimiTiny(){
 //  ÍCONES — SVG embutido (iguais em qualquer versão do Windows, sem depender de emoji)
 // ═══════════════════════════════════
 const ICONS={
-  star:`<polygon points="12,2 14.8,8.6 22,9.3 16.5,14.1 18.2,21.2 12,17.5 5.8,21.2 7.5,14.1 2,9.3 9.2,8.6" fill="#ffd700" stroke="#c8a000" stroke-width="1.2" stroke-linejoin="round"/>`,
-  starEmpty:`<polygon points="12,2 14.8,8.6 22,9.3 16.5,14.1 18.2,21.2 12,17.5 5.8,21.2 7.5,14.1 2,9.3 9.2,8.6" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.5)" stroke-width="1.2" stroke-linejoin="round"/>`,
+  star:`<polygon points="12,2 14.8,8.6 22,9.3 16.5,14.1 18.2,21.2 12,17.5 5.8,21.2 7.5,14.1 2,9.3 9.2,8.6" fill="#ffd166" stroke="#e0a63c" stroke-width="1.2" stroke-linejoin="round"/>`,
+  starEmpty:`<polygon points="12,2 14.8,8.6 22,9.3 16.5,14.1 18.2,21.2 12,17.5 5.8,21.2 7.5,14.1 2,9.3 9.2,8.6" fill="rgba(125,115,153,.12)" stroke="rgba(125,115,153,.45)" stroke-width="1.2" stroke-linejoin="round"/>`,
   sparkle:`<path d="M12 1.5 L14.3 9.7 L22.5 12 L14.3 14.3 L12 22.5 L9.7 14.3 L1.5 12 L9.7 9.7 Z" fill="#fff3a0" stroke="#e0b800" stroke-width="1.2" stroke-linejoin="round"/>`,
-  mud:`<path d="M3 13 C2 8 6 4 11 5 C14 2 20 4 21 9 C24 12 22 19 17 20 C13 23 6 22 4 18 C2 17 2 15 3 13Z" fill="#8a5528" stroke="#e0b070" stroke-width="1.4" stroke-linejoin="round"/><ellipse cx="9" cy="10" rx="3.4" ry="1.8" fill="#b07a40"/><ellipse cx="16" cy="15.5" rx="3.8" ry="2" fill="#b07a40"/><circle cx="15" cy="8" r="1.7" fill="#5a3512" stroke="#e0b070" stroke-width=".6"/><circle cx="7.5" cy="16" r="1.4" fill="#5a3512" stroke="#e0b070" stroke-width=".6"/><circle cx="12" cy="13" r="1" fill="#5a3512"/>`,
+  mud:`<path d="M3 13 C2 8 6 4 11 5 C14 2 20 4 21 9 C24 12 22 19 17 20 C13 23 6 22 4 18 C2 17 2 15 3 13Z" fill="#c99a6b" stroke="#e0b070" stroke-width="1.4" stroke-linejoin="round"/><ellipse cx="9" cy="10" rx="3.4" ry="1.8" fill="#ddb487"/><ellipse cx="16" cy="15.5" rx="3.8" ry="2" fill="#ddb487"/><circle cx="15" cy="8" r="1.7" fill="#9a6a40" stroke="#e0b070" stroke-width=".6"/><circle cx="7.5" cy="16" r="1.4" fill="#9a6a40" stroke="#e0b070" stroke-width=".6"/><circle cx="12" cy="13" r="1" fill="#9a6a40"/>`,
   rock:`<ellipse cx="12" cy="20.5" rx="9.5" ry="2.4" fill="rgba(0,0,0,.4)"/><path d="M3 18 L2.5 11 L7 4.5 L14 3 L20 7 L21.5 14 L19 19 Z" fill="#8d96aa" stroke="#e6ebf5" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 4.5 L10 11 L2.5 11Z" fill="#b4bccd"/><path d="M14 3 L20 7 L10 11 L7 4.5Z" fill="#a3acbf"/><path d="M10 11 L20 7 L21.5 14 L19 19 L12 18Z" fill="#6f788d"/><path d="M3 18 L2.5 11 L10 11 L12 18Z" fill="#7d869a"/>`,
-  brick:`<rect x="2" y="4" width="20" height="16" rx="2" fill="#e8795a" stroke="#a04a30" stroke-width="1.2"/><path d="M2 9.3 H22 M2 14.6 H22 M9 4 V9.3 M15 9.3 V14.6 M9 14.6 V20" stroke="#a04a30" stroke-width="1.2" fill="none"/>`,
+  brick:`<rect x="2" y="4" width="20" height="16" rx="2" fill="#f5a98f" stroke="#d27c62" stroke-width="1.2"/><path d="M2 9.3 H22 M2 14.6 H22 M9 4 V9.3 M15 9.3 V14.6 M9 14.6 V20" stroke="#d27c62" stroke-width="1.2" fill="none"/>`,
   lock:`<path d="M7 11 V8 a5 5 0 0 1 10 0 V11" fill="none" stroke="#c9ccd6" stroke-width="2.4" stroke-linecap="round"/><rect x="4" y="11" width="16" height="11" rx="3" fill="#9aa0b4" stroke="#6a7084" stroke-width="1.2"/><circle cx="12" cy="16" r="1.8" fill="#4a5064"/>`,
-  crown:`<path d="M3 19 L2.5 7 L8 12 L12 4 L16 12 L21.5 7 L21 19 Z" fill="#ffd700" stroke="#c8a000" stroke-width="1.2" stroke-linejoin="round"/><rect x="3" y="18" width="18" height="3" rx="1" fill="#e8b800" stroke="#c8a000" stroke-width="1"/><circle cx="12" cy="14" r="1.6" fill="#e02020"/><circle cx="7.5" cy="15" r="1.2" fill="#3b82f6"/><circle cx="16.5" cy="15" r="1.2" fill="#22c55e"/>`,
-  tophat:`<ellipse cx="12" cy="19" rx="10" ry="3" fill="#2a2a3a" stroke="#14141e" stroke-width="1"/><rect x="6" y="4" width="12" height="15" rx="1.5" fill="#34344a" stroke="#14141e" stroke-width="1"/><rect x="6" y="14" width="12" height="3" fill="#a855f7"/><ellipse cx="12" cy="4" rx="6" ry="1.7" fill="#4a4a64" stroke="#14141e" stroke-width="1"/>`,
-  garland:`<g fill="#ff8ac8" stroke="#d04890" stroke-width=".9"><circle cx="12" cy="5.8" r="3.6"/><circle cx="18.2" cy="10.3" r="3.6"/><circle cx="15.8" cy="17.6" r="3.6"/><circle cx="8.2" cy="17.6" r="3.6"/><circle cx="5.8" cy="10.3" r="3.6"/></g><circle cx="12" cy="12.4" r="3.3" fill="#ffd700" stroke="#c8a000" stroke-width=".9"/>`,
-  bow:`<path d="M12 12 C9 5 2 6 2 12 C2 18 9 19 12 12 Z" fill="#ff40a0" stroke="#cc1070" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 12 C15 5 22 6 22 12 C22 18 15 19 12 12 Z" fill="#ff40a0" stroke="#cc1070" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="#ff70c0" stroke="#cc1070" stroke-width="1"/>`,
-  cap:`<path d="M3 17 Q3 5 12 5 Q20 5 20 17 Z" fill="#3ea0e8" stroke="#2070b0" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 17 Q22 15.5 23 19.5 Q16 21 8 19.5 Z" fill="#2c86c8" stroke="#2070b0" stroke-width="1.2" stroke-linejoin="round"/><circle cx="11.5" cy="5.4" r="1.7" fill="#ffd700"/>`,
-  cape:`<path d="M7 3 Q12 1 17 3 L21 21 Q12 17 3 21 Z" fill="#e82020" stroke="#900" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 3 Q12 6 17 3" fill="none" stroke="#ffd700" stroke-width="2"/><circle cx="12" cy="9" r="2" fill="#ffd700"/>`,
-  rainbow:`<g fill="none" stroke-width="2.3" stroke-linecap="round"><path d="M2.5 20 A9.5 9.5 0 0 1 21.5 20" stroke="#ff4040"/><path d="M5 20 A7 7 0 0 1 19 20" stroke="#ffb000"/><path d="M7.5 20 A4.5 4.5 0 0 1 16.5 20" stroke="#40cc40"/><path d="M10 20 A2 2 0 0 1 14 20" stroke="#4488ff"/></g>`,
-  heart:`<path d="M12 21 C3 14 2 9 5 6 C7.5 3.5 11 5 12 8 C13 5 16.5 3.5 19 6 C22 9 21 14 12 21 Z" fill="#ff4f9a" stroke="#c02070" stroke-width="1.2" stroke-linejoin="round"/>`,
-  butterfly:`<g stroke="#6a30b0" stroke-width="1" stroke-linejoin="round"><path d="M12 12 C9 3.5 2 3 2.5 9 C3 14 8 14 12 12 Z" fill="#a060f0"/><path d="M12 12 C15 3.5 22 3 21.5 9 C21 14 16 14 12 12 Z" fill="#a060f0"/><path d="M12 12.5 C8 14 4 15.5 5.5 19.5 C8 21 11 17.5 12 12.5 Z" fill="#f080e0"/><path d="M12 12.5 C16 14 20 15.5 18.5 19.5 C16 21 13 17.5 12 12.5 Z" fill="#f080e0"/></g><rect x="11.1" y="6" width="1.8" height="13" rx=".9" fill="#4a2070"/><path d="M12 6 Q10 3 8.5 2.5 M12 6 Q14 3 15.5 2.5" fill="none" stroke="#4a2070" stroke-width="1" stroke-linecap="round"/>`,
-  clover:`<g fill="#3fbf5a" stroke="#1f8a3a" stroke-width="1"><circle cx="8" cy="8" r="4.5"/><circle cx="16" cy="8" r="4.5"/><circle cx="8" cy="15" r="4.5"/><circle cx="16" cy="15" r="4.5"/></g><rect x="11.2" y="14" width="1.6" height="8" rx=".8" fill="#1f8a3a"/>`,
-  shirt:`<path d="M8 3 L3 6 L5 10 L7.5 9 V21 H16.5 V9 L19 10 L21 6 L16 3 Q12 6 8 3 Z" fill="#5ecfca" stroke="#2a8f8a" stroke-width="1.2" stroke-linejoin="round"/>`,
-  trophy:`<path d="M7 3 H17 V9 a5 5 0 0 1 -10 0 Z" fill="#ffd700" stroke="#c8a000" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5 H3.5 V7 a4 4 0 0 0 4 4 M17 5 H20.5 V7 a4 4 0 0 1 -4 4" fill="none" stroke="#c8a000" stroke-width="1.6" stroke-linecap="round"/><rect x="10.5" y="13.5" width="3" height="4" fill="#e8b800" stroke="#c8a000" stroke-width="1"/><rect x="7" y="17.5" width="10" height="3.5" rx="1" fill="#ffd700" stroke="#c8a000" stroke-width="1.2"/>`,
+  crown:`<path d="M3 19 L2.5 7 L8 12 L12 4 L16 12 L21.5 7 L21 19 Z" fill="#ffd166" stroke="#e0a63c" stroke-width="1.2" stroke-linejoin="round"/><rect x="3" y="18" width="18" height="3" rx="1" fill="#f5c04f" stroke="#e0a63c" stroke-width="1"/><circle cx="12" cy="14" r="1.6" fill="#ff8a8a"/><circle cx="7.5" cy="15" r="1.2" fill="#7cb8f0"/><circle cx="16.5" cy="15" r="1.2" fill="#7fd8a6"/>`,
+  tophat:`<ellipse cx="12" cy="19" rx="10" ry="3" fill="#5d527f" stroke="#4a3f6b" stroke-width="1"/><rect x="6" y="4" width="12" height="15" rx="1.5" fill="#6b5f8f" stroke="#4a3f6b" stroke-width="1"/><rect x="6" y="14" width="12" height="3" fill="#c3a6f5"/><ellipse cx="12" cy="4" rx="6" ry="1.7" fill="#7d7399" stroke="#4a3f6b" stroke-width="1"/>`,
+  garland:`<g fill="#ff8ac8" stroke="#d04890" stroke-width=".9"><circle cx="12" cy="5.8" r="3.6"/><circle cx="18.2" cy="10.3" r="3.6"/><circle cx="15.8" cy="17.6" r="3.6"/><circle cx="8.2" cy="17.6" r="3.6"/><circle cx="5.8" cy="10.3" r="3.6"/></g><circle cx="12" cy="12.4" r="3.3" fill="#ffd166" stroke="#e0a63c" stroke-width=".9"/>`,
+  bow:`<path d="M12 12 C9 5 2 6 2 12 C2 18 9 19 12 12 Z" fill="#ff9ec7" stroke="#e57aa8" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 12 C15 5 22 6 22 12 C22 18 15 19 12 12 Z" fill="#ff9ec7" stroke="#e57aa8" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="#ffb8d8" stroke="#e57aa8" stroke-width="1"/>`,
+  cap:`<path d="M3 17 Q3 5 12 5 Q20 5 20 17 Z" fill="#8ecbf5" stroke="#5fa6dc" stroke-width="1.2" stroke-linejoin="round"/><path d="M12 17 Q22 15.5 23 19.5 Q16 21 8 19.5 Z" fill="#76b8ea" stroke="#5fa6dc" stroke-width="1.2" stroke-linejoin="round"/><circle cx="11.5" cy="5.4" r="1.7" fill="#ffd166"/>`,
+  cape:`<path d="M7 3 Q12 1 17 3 L21 21 Q12 17 3 21 Z" fill="#ff9aa2" stroke="#e0707a" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 3 Q12 6 17 3" fill="none" stroke="#ffd166" stroke-width="2"/><circle cx="12" cy="9" r="2" fill="#ffd166"/>`,
+  rainbow:`<g fill="none" stroke-width="2.3" stroke-linecap="round"><path d="M2.5 20 A9.5 9.5 0 0 1 21.5 20" stroke="#ff9a9a"/><path d="M5 20 A7 7 0 0 1 19 20" stroke="#ffc98a"/><path d="M7.5 20 A4.5 4.5 0 0 1 16.5 20" stroke="#9ee0a0"/><path d="M10 20 A2 2 0 0 1 14 20" stroke="#9cc8ff"/></g>`,
+  heart:`<path d="M12 21 C3 14 2 9 5 6 C7.5 3.5 11 5 12 8 C13 5 16.5 3.5 19 6 C22 9 21 14 12 21 Z" fill="#ff8fb8" stroke="#e06b9a" stroke-width="1.2" stroke-linejoin="round"/>`,
+  butterfly:`<g stroke="#9a7ad6" stroke-width="1" stroke-linejoin="round"><path d="M12 12 C9 3.5 2 3 2.5 9 C3 14 8 14 12 12 Z" fill="#bfa2f7"/><path d="M12 12 C15 3.5 22 3 21.5 9 C21 14 16 14 12 12 Z" fill="#bfa2f7"/><path d="M12 12.5 C8 14 4 15.5 5.5 19.5 C8 21 11 17.5 12 12.5 Z" fill="#f6b6ec"/><path d="M12 12.5 C16 14 20 15.5 18.5 19.5 C16 21 13 17.5 12 12.5 Z" fill="#f6b6ec"/></g><rect x="11.1" y="6" width="1.8" height="13" rx=".9" fill="#6b5f8f"/><path d="M12 6 Q10 3 8.5 2.5 M12 6 Q14 3 15.5 2.5" fill="none" stroke="#6b5f8f" stroke-width="1" stroke-linecap="round"/>`,
+  clover:`<g fill="#8fd694" stroke="#5fae6a" stroke-width="1"><circle cx="8" cy="8" r="4.5"/><circle cx="16" cy="8" r="4.5"/><circle cx="8" cy="15" r="4.5"/><circle cx="16" cy="15" r="4.5"/></g><rect x="11.2" y="14" width="1.6" height="8" rx=".8" fill="#5fae6a"/>`,
+  shirt:`<path d="M8 3 L3 6 L5 10 L7.5 9 V21 H16.5 V9 L19 10 L21 6 L16 3 Q12 6 8 3 Z" fill="#9fe3d8" stroke="#5fb8ae" stroke-width="1.2" stroke-linejoin="round"/>`,
+  trophy:`<path d="M7 3 H17 V9 a5 5 0 0 1 -10 0 Z" fill="#ffd166" stroke="#e0a63c" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5 H3.5 V7 a4 4 0 0 0 4 4 M17 5 H20.5 V7 a4 4 0 0 1 -4 4" fill="none" stroke="#e0a63c" stroke-width="1.6" stroke-linecap="round"/><rect x="10.5" y="13.5" width="3" height="4" fill="#f5c04f" stroke="#e0a63c" stroke-width="1"/><rect x="7" y="17.5" width="10" height="3.5" rx="1" fill="#ffd166" stroke="#e0a63c" stroke-width="1.2"/>`,
   bulb:`<path d="M12 2 a7 7 0 0 0 -4 12.7 V17 h8 v-2.3 A7 7 0 0 0 12 2 Z" fill="#ffe66d" stroke="#d4a000" stroke-width="1.2" stroke-linejoin="round"/><rect x="8.5" y="18" width="7" height="2.4" rx="1.2" fill="#b0b4c4" stroke="#7a8094" stroke-width=".8"/><rect x="9.5" y="20.6" width="5" height="1.6" rx=".8" fill="#9aa0b4"/>`,
-  help:`<circle cx="12" cy="12" r="10" fill="#ffd700" stroke="#c8a000" stroke-width="1.4"/><path d="M8.8 9.2 a3.3 3.3 0 1 1 5.2 2.7 c-1.3 .9 -2 1.5 -2 3" fill="none" stroke="#7a4a00" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="18.2" r="1.5" fill="#7a4a00"/>`,
+  help:`<circle cx="12" cy="12" r="10" fill="#ffd166" stroke="#e0a63c" stroke-width="1.4"/><path d="M8.8 9.2 a3.3 3.3 0 1 1 5.2 2.7 c-1.3 .9 -2 1.5 -2 3" fill="none" stroke="#7a4a00" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="18.2" r="1.5" fill="#7a4a00"/>`,
   clock:`<circle cx="12" cy="13.5" r="8.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 8.5 V13.5 L15.5 15.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 2.5 H15" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>`,
   play:`<polygon points="5,3 21,12 5,21" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>`,
   x:`<path d="M5 5 L19 19 M19 5 L5 19" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>`,
@@ -1559,13 +1669,13 @@ const PHASE_PICKUPS=[
 ];
 
 // ═══════════════════════════════════
-//  WALL COLORS (Figma palette)
+//  WALL COLORS (paleta original, em tons pastel)
 // ═══════════════════════════════════
 const WCOLS=[
-  ['#5ecfca','#68cc58','#5ecfca','#68cc58','#5ecfca','#68cc58','#5ecfca','#68cc58','#5ecfca','#68cc58','#5ecfca'],
-  ['#5ecfca','#f080a8','#a060d8','#f0c040','#5ecfca','#f080a8','#a060d8','#f0c040','#5ecfca','#f080a8','#5ecfca'],
-  ['#68cc58','#5ecfca','#f080a8','#a060d8','#5ecfca','#68cc58','#5ecfca','#f0c040','#68cc58','#5ecfca','#68cc58'],
-  ['#a060d8','#f0c040','#5ecfca','#68cc58','#f080a8','#5ecfca','#a060d8','#5ecfca','#f0c040','#68cc58','#5ecfca'],
+  ['#a4e3e0','#ade3a3','#a4e3e0','#ade3a3','#a4e3e0','#ade3a3','#a4e3e0','#ade3a3','#a4e3e0','#ade3a3','#a4e3e0'],
+  ['#a4e3e0','#f8bcd2','#cdb0ec','#f7dc93','#a4e3e0','#f8bcd2','#cdb0ec','#f7dc93','#a4e3e0','#f8bcd2','#a4e3e0'],
+  ['#ade3a3','#a4e3e0','#f8bcd2','#cdb0ec','#a4e3e0','#ade3a3','#a4e3e0','#f7dc93','#ade3a3','#a4e3e0','#ade3a3'],
+  ['#cdb0ec','#f7dc93','#a4e3e0','#ade3a3','#f8bcd2','#a4e3e0','#cdb0ec','#a4e3e0','#f7dc93','#ade3a3','#a4e3e0'],
 ];
 function wc(r,c){return WCOLS[r%WCOLS.length][c%WCOLS[0].length];}
 
@@ -1696,6 +1806,7 @@ let equippedHat=null,equippedOutfit=null;
 let unlockedItems=new Set();
 let trail=new Set();
 let replayLog=[];
+let lastPath=null;     // último caminho que chegou na estrela: {phase, cmds} (usado em "Rever caminho")
 const seenItems=new Set();
 let soundOn=true;
 
@@ -1840,17 +1951,18 @@ fillIcons();
 document.querySelectorAll('[data-stars]').forEach(e=>{e.innerHTML=starsHTML(3,36);});
 updateSoundBtn();
 document.getElementById('how-mimi').innerHTML=makeMimi(54,null,null);
-document.getElementById('mimi-start-wrap').innerHTML=makeMimi(120,equippedHat,equippedOutfit);
+document.getElementById('mimi-start-wrap').innerHTML=makeMimi(160,equippedHat,equippedOutfit);
 
 // ═══════════════════════════════════
 //  SCREEN
 // ═══════════════════════════════════
 function showScreen(id){
   document.getElementById('scenery').classList.toggle('show',id==='screen-game');
+  document.getElementById('garden-bg').classList.toggle('show',id==='screen-garden');
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
   const el=document.getElementById(id);el.style.display='flex';
   requestAnimationFrame(()=>el.classList.add('active'));
-  if(id==='screen-start')document.getElementById('mimi-start-wrap').innerHTML=makeMimi(120,equippedHat,equippedOutfit);
+  if(id==='screen-start')document.getElementById('mimi-start-wrap').innerHTML=makeMimi(160,equippedHat,equippedOutfit);
   window.scrollTo(0,0);
 }
 function showPhases(){buildPhaseGrid();showScreen('screen-phases');}
@@ -1872,7 +1984,7 @@ function buildPhaseGrid(){
     const b=document.createElement('button');
     const sc=phaseScores[i];
     b.className='phase-btn'+(sc!==null?' done':'');
-    b.innerHTML=`<span class="ph-num">${i}</span><span class="ph-stars">${sc===null?'···':starsHTML(starsFor(sc),13)}</span>`;
+    b.innerHTML=`<span class="ph-num">${i}</span><span class="ph-stars">${starsHTML(sc===null?0:starsFor(sc),15)}</span>`;
     b.onclick=()=>startPhase(i);
     g.appendChild(b);
   }
@@ -1900,7 +2012,8 @@ function startPhase(idx){
   penMud=0;penRock=0;penWall=0;
   trail=new Set();replayLog=[];
   const rb=document.getElementById('btn-replay');
-  rb.style.display='none';rb.disabled=false;rb.innerHTML=`${ico('replay',16)} Rever caminho`;
+  rb.style.display='none';
+  closeHintConfirm();
   document.getElementById('hint-label').textContent=hintLabelText();
   const lvl=LEVELS[idx];
   for(let r=0;r<lvl.rows;r++)for(let c=0;c<lvl.cols;c++)if(lvl.grid[r][c]===2){playerR=r;playerC=c;startR=r;startC=c;}
@@ -1926,13 +2039,13 @@ const SCENES=[
   {name:'Jardim', svg:()=>`
     <path d="M0 150 Q200 90 420 140 T840 130 T1200 120 V240 H0Z" fill="#7ad67a"/>
     <path d="M0 190 Q300 140 600 185 T1200 175 V240 H0Z" fill="#4fbf62"/>
-    ${[60,180,330,470,610,760,900,1040,1150].map((x,i)=>flower(x,200+(i%3)*8,['#ff6fa8','#ffd23f','#b57aff','#ff8a5c','#5ec8ff'][i%5],1.1)).join('')}`},
+    ${[60,180,330,470,610,760,900,1040,1150].map((x,i)=>flower(x,200+(i%3)*8,['#ff6fa8','#ffd23f','#cdb5ff','#ff8a5c','#5ec8ff'][i%5],1.1)).join('')}`},
   {name:'Campo de flores', svg:()=>`
     <circle cx="1080" cy="70" r="40" fill="#ffe66d" opacity=".9"/>
     <path d="M0 140 Q250 80 520 135 T1000 120 T1200 130 V240 H0Z" fill="#9be38a"/>
     <path d="M0 185 Q260 135 560 180 T1200 170 V240 H0Z" fill="#62c96c"/>
-    ${Array.from({length:22},(_,i)=>flower(30+i*54,190+(i*37%30),['#ff6fa8','#ffd23f','#ff8a5c','#ffffff','#c084fc'][i%5],.8+(i%3)*.15)).join('')}
-    <g fill="#ff80c0" opacity=".9"><ellipse cx="300" cy="105" rx="10" ry="6" transform="rotate(-25,300,105)"/><ellipse cx="312" cy="105" rx="10" ry="6" transform="rotate(25,312,105)"/></g>
+    ${Array.from({length:22},(_,i)=>flower(30+i*54,190+(i*37%30),['#ff6fa8','#ffd23f','#ff8a5c','#ffffff','#d6bdfc'][i%5],.8+(i%3)*.15)).join('')}
+    <g fill="#ffb3d4" opacity=".9"><ellipse cx="300" cy="105" rx="10" ry="6" transform="rotate(-25,300,105)"/><ellipse cx="312" cy="105" rx="10" ry="6" transform="rotate(25,312,105)"/></g>
     <g fill="#ffd23f" opacity=".9"><ellipse cx="860" cy="85" rx="9" ry="5" transform="rotate(-25,860,85)"/><ellipse cx="871" cy="85" rx="9" ry="5" transform="rotate(25,871,85)"/></g>`},
   {name:'Praia', svg:()=>`
     <circle cx="140" cy="70" r="38" fill="#ffd96b"/>
@@ -1959,11 +2072,10 @@ const SCENES=[
     <path d="M0 195 Q300 175 600 195 T1200 190 V240 H0Z" fill="#9aa8bf"/>
     <g fill="#6f788d" stroke="#e6ebf5" stroke-width="2"><path d="M140 222 L150 204 L170 200 L182 214 L176 226Z"/><path d="M880 226 L888 212 L904 208 L914 220 L908 228Z"/></g>`},
   {name:'Céu estrelado', svg:()=>`
-    <rect x="0" y="0" width="1200" height="240" fill="rgba(20,16,60,.55)"/>
-    <circle cx="1040" cy="60" r="34" fill="#fff6c8"/><circle cx="1056" cy="50" r="30" fill="rgba(36,30,90,.95)"/>
-    ${[[80,40],[200,90],[330,30],[460,70],[590,25],[720,85],[850,40],[960,110],[1150,30],[400,120],[640,130],[130,130]].map(([x,y],i)=>starPt(x,y,5+(i%3)*2.5)).join('')}
-    <path d="M0 170 Q300 130 600 170 T1200 160 V240 H0Z" fill="#3b2f7a"/>
-    <path d="M0 205 Q350 175 700 205 T1200 198 V240 H0Z" fill="#2a2160"/>
+    <path d="M1030 28 A34 34 0 1 0 1072 74 A28 28 0 1 1 1030 28Z" fill="#fff3b8"/>
+    ${[[80,40],[200,90],[330,30],[460,70],[590,25],[720,85],[850,40],[960,110],[1150,30],[400,120],[640,130],[130,130]].map(([x,y],i)=>starPt(x,y,5+(i%3)*2.5,'#ffe38a')).join('')}
+    <path d="M0 170 Q300 130 600 170 T1200 160 V240 H0Z" fill="#c3baf0"/>
+    <path d="M0 205 Q350 175 700 205 T1200 198 V240 H0Z" fill="#aea3e6"/>
     <g fill="#ffe66d">${[[260,190],[300,175],[880,185],[930,200]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3"/>`).join('')}</g>`},
 ];
 function setScenery(idx){
@@ -1973,72 +2085,57 @@ function setScenery(idx){
 }
 
 // Limite de comandos por fase (calculado automaticamente em MAX_QUEUE_PER_PHASE)
-function stopGame(){runId++;executing=false;clearInterval(timer);hideAllToasts();}
+function stopGame(){runId++;executing=false;clearInterval(timer);hideAllToasts();closeHintConfirm();}
 
 // ═══════════════════════════════════
 //  GARDEN BACKGROUND — evolui com as fases de 3 estrelas
 // ═══════════════════════════════════
+// fundo verde-azulado em tons pastel: a cada fase com 3 estrelas aparecem mais flores (rosa) e sol (amarelo)
 const GARDEN_STAGES = [
-  // 0 stars — default
-  `radial-gradient(ellipse at 15% 25%,rgba(62,207,170,.6) 0%,transparent 45%),
-   radial-gradient(ellipse at 85% 70%,rgba(90,181,232,.55) 0%,transparent 45%),
-   radial-gradient(ellipse at 50% 50%,rgba(77,201,126,.35) 0%,transparent 60%),
-   linear-gradient(150deg,#27b890 0%,#33c070 50%,#42aad4 100%)`,
-  // 1 — first hint of green
-  `radial-gradient(ellipse at 20% 30%,rgba(80,220,130,.65) 0%,transparent 50%),
-   radial-gradient(ellipse at 80% 65%,rgba(60,190,140,.5) 0%,transparent 50%),
-   linear-gradient(150deg,#22b87a 0%,#3dcc6a 55%,#38b8a0 100%)`,
-  // 2
-  `radial-gradient(ellipse at 25% 35%,rgba(90,210,100,.7) 0%,transparent 50%),
-   radial-gradient(ellipse at 75% 60%,rgba(50,200,110,.55) 0%,transparent 50%),
-   linear-gradient(150deg,#20a060 0%,#40cc58 55%,#28c890 100%)`,
-  // 3
-  `radial-gradient(ellipse at 20% 40%,rgba(100,220,80,.75) 0%,transparent 50%),
-   radial-gradient(ellipse at 80% 55%,rgba(60,180,80,.6) 0%,transparent 50%),
-   radial-gradient(ellipse at 50% 80%,rgba(255,200,50,.2) 0%,transparent 40%),
-   linear-gradient(150deg,#1c9050 0%,#3ec050 55%,#22c870 100%)`,
-  // 4 — flowers starting
-  `radial-gradient(ellipse at 15% 45%,rgba(255,150,180,.3) 0%,transparent 40%),
-   radial-gradient(ellipse at 85% 50%,rgba(100,220,80,.7) 0%,transparent 50%),
-   radial-gradient(ellipse at 50% 75%,rgba(255,215,0,.25) 0%,transparent 40%),
-   linear-gradient(150deg,#189048 0%,#3db845 55%,#18c060 100%)`,
-  // 5 — half garden
-  `radial-gradient(ellipse at 20% 30%,rgba(255,160,200,.35) 0%,transparent 45%),
-   radial-gradient(ellipse at 80% 40%,rgba(150,230,80,.65) 0%,transparent 50%),
-   radial-gradient(ellipse at 50% 70%,rgba(255,220,50,.3) 0%,transparent 40%),
-   linear-gradient(150deg,#158840 0%,#38b040 55%,#12b855 100%)`,
-  // 6 — vibrant
-  `radial-gradient(ellipse at 15% 25%,rgba(255,170,210,.4) 0%,transparent 45%),
-   radial-gradient(ellipse at 85% 35%,rgba(255,215,0,.3) 0%,transparent 40%),
-   radial-gradient(ellipse at 50% 65%,rgba(120,230,80,.65) 0%,transparent 55%),
-   linear-gradient(150deg,#128038 0%,#35a838 55%,#10b050 100%)`,
-  // 7 — blooming
-  `radial-gradient(ellipse at 10% 20%,rgba(255,180,220,.45) 0%,transparent 45%),
-   radial-gradient(ellipse at 90% 30%,rgba(255,220,60,.35) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 60%,rgba(80,210,100,.7) 0%,transparent 55%),
-   radial-gradient(ellipse at 30% 80%,rgba(255,140,180,.2) 0%,transparent 35%),
-   linear-gradient(150deg,#107030 0%,#30a030 55%,#0ea848 100%)`,
-  // 8 — lush
-  `radial-gradient(ellipse at 10% 15%,rgba(255,190,230,.5) 0%,transparent 45%),
-   radial-gradient(ellipse at 88% 25%,rgba(255,230,80,.4) 0%,transparent 42%),
-   radial-gradient(ellipse at 55% 55%,rgba(60,200,90,.72) 0%,transparent 55%),
-   radial-gradient(ellipse at 25% 85%,rgba(255,150,190,.25) 0%,transparent 35%),
-   linear-gradient(150deg,#0a6028 0%,#289828 55%,#0aa040 100%)`,
-  // 9 — paradise
-  `radial-gradient(ellipse at 8% 12%,rgba(255,200,240,.55) 0%,transparent 45%),
-   radial-gradient(ellipse at 92% 20%,rgba(255,235,100,.45) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 50%,rgba(50,195,80,.75) 0%,transparent 55%),
-   radial-gradient(ellipse at 20% 88%,rgba(255,160,200,.3) 0%,transparent 35%),
-   radial-gradient(ellipse at 80% 85%,rgba(100,240,150,.3) 0%,transparent 35%),
-   linear-gradient(150deg,#085020 0%,#259025 55%,#089838 100%)`,
-  // 10 — full secret garden (all perfect)
-  `radial-gradient(ellipse at 5% 10%,rgba(255,210,240,.6) 0%,transparent 45%),
-   radial-gradient(ellipse at 95% 15%,rgba(255,240,120,.5) 0%,transparent 42%),
-   radial-gradient(ellipse at 50% 45%,rgba(40,190,70,.78) 0%,transparent 55%),
-   radial-gradient(ellipse at 15% 90%,rgba(255,170,210,.35) 0%,transparent 35%),
-   radial-gradient(ellipse at 85% 88%,rgba(120,250,160,.35) 0%,transparent 35%),
-   radial-gradient(ellipse at 50% 95%,rgba(255,220,80,.3) 0%,transparent 30%),
-   linear-gradient(150deg,#064818 0%,#208820 55%,#069030 100%)`,
+  `radial-gradient(ellipse at 15% 25%,rgba(168,232,214,.7) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 70%,rgba(176,214,240,.7) 0%,transparent 45%),
+   radial-gradient(ellipse at 50% 50%,rgba(184,234,196,.5) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a8d4ef 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.10) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.10) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.53) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.14) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.14) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.56) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.18) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.18) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.59) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.23) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.23) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.62) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.28) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.28) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.65) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.32) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.32) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.68) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.36) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.36) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.71) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.41) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.41) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.74) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.46) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.46) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.77) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
+  `radial-gradient(ellipse at 15% 20%,rgba(255,205,228,0.50) 0%,transparent 45%),
+   radial-gradient(ellipse at 85% 25%,rgba(255,236,160,0.50) 0%,transparent 42%),
+   radial-gradient(ellipse at 50% 55%,rgba(184,234,196,0.80) 0%,transparent 60%),
+   linear-gradient(150deg,#9fe0cc 0%,#a9e3b8 50%,#a6dcc8 100%)`,
 ];
 
 function updateGardenBg(){
@@ -2102,10 +2199,10 @@ function renderGrid(animate=false,instant=false){
         if(hintSet.has(key))div.classList.add('hint-path');
         else div.classList.add('path');
         if(trail.has(key)&&!(r===playerR&&c===playerC)&&v===0){
-          div.style.boxShadow='inset 0 0 10px rgba(255,150,220,.35)';
-          div.style.background='linear-gradient(145deg,#2a3d6a,#2e4a7a)';
+          div.style.boxShadow='inset 0 0 10px rgba(255,190,225,.55)';
+          div.style.background='linear-gradient(145deg,#8494c6,#8f9fd0)';
         }
-        if(v===3)div.innerHTML=`<span style="display:inline-flex;filter:drop-shadow(0 0 6px #ffd700)">${ico('star',Math.round(cs*.7))}</span>`;
+        if(v===3)div.innerHTML=`<span style="display:inline-flex;filter:drop-shadow(0 2px 3px rgba(224,166,60,.45))">${ico('star',Math.round(cs*.7))}</span>`;
         if(v===5){
           div.classList.add('mud');
           div.innerHTML=ico('mud',Math.round(cs*.92));
@@ -2116,7 +2213,7 @@ function renderGrid(animate=false,instant=false){
         }
         if((v===4||v===7)&&!collected.has(v)){
           const item=ITEMS.find(x=>x.id===(PHASE_PICKUPS[curPhase]||{})[v]);
-          if(item)div.innerHTML=`<span style="display:inline-flex;filter:drop-shadow(0 0 5px rgba(255,215,0,.8))">${ico(item.icon,isz)}</span>`;
+          if(item)div.innerHTML=`<span style="display:inline-flex;filter:drop-shadow(0 2px 3px rgba(120,100,170,.3))" class="gift-bob">${ico(item.icon,isz)}</span>`;
         }
       }
       if(r===playerR&&c===playerC)div.id='cell-player';
@@ -2157,6 +2254,7 @@ window.addEventListener('resize',()=>{
 // Teclado: setas = comandos, Enter = executar, Backspace = apagar o último, Esc = limpar
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('screen-game').classList.contains('active'))return;
+  if(!document.getElementById('hint-confirm').hidden){if(e.key==='Escape')confirmHint(false);return;}   // com a pergunta aberta, o teclado só responde a ela
   const map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
   const onArrowBtn=e.target.matches&&e.target.matches('.ctrl-btn:not(.tool)');
   if(map[e.key]){e.preventDefault();addCmd(map[e.key]);}
@@ -2288,7 +2386,7 @@ async function executeQueue(stepOnly=false){
         if(itemId){
           const isNew=!unlockedItems.has(itemId);
           unlockedItems.add(itemId);sfxPickup();
-          if(isNew)showPickupToast(itemId);
+          showPickupToast(itemId,isNew);
           saveState();
         }
         renderGrid();
@@ -2298,6 +2396,7 @@ async function executeQueue(stepOnly=false){
 
       // Estrela
       if(v===3){
+        lastPath={phase:curPhase,cmds:cmdQueue.slice(0,i+1).map(c=>({...c}))};
         renderQueue(i+1);mimiFeel('happy',1300);await sleep(400);if(myRun!==runId)return;
         phaseComplete(replayLog.length,i+1);return;
       }
@@ -2367,26 +2466,18 @@ function flashError(){
 }
 
 // ═══════════════════════════════════
-//  REPLAY
+//  REVER CAMINHO: abre a fase de novo com os comandos da última vitória na fila (sem executar),
+//  para o jogador conferir e mudar o que quiser
 // ═══════════════════════════════════
-async function replayPath(){
-  if(!replayLog.length||executing)return;
-  executing=true;const myRun=runId;
-  const btn=document.getElementById('btn-replay');
-  btn.disabled=true;btn.innerHTML=`${ico('play',16)} Reproduzindo...`;
-  playerR=startR;playerC=startC;trail=new Set();trail.add(`${playerR},${playerC}`);
-  renderGrid();await sleep(300);
-  for(const step of replayLog){
-    if(myRun!==runId)return;
-    playerR=step.r;playerC=step.c;
-    trail.add(`${playerR},${playerC}`);
-    renderGrid();sfxStep();
-    await sleep(350);
-  }
-  executing=false;
-  btn.disabled=false;btn.innerHTML=`${ico('replay',16)} Rever caminho`;
-  await sleep(900);
-  if(myRun===runId)showScreen('screen-congrats');   // volta para a tela de parabéns
+function reviewPath(){
+  if(!lastPath)return;
+  document.querySelectorAll('.confetti').forEach(el=>el.remove());   // confete da tela de parabéns não cai por cima da fase
+  startPhase(lastPath.phase);
+  cmdQueue=lastPath.cmds.map(c=>({...c}));
+  renderQueue();
+  const msg='Este foi o seu caminho. Mude o que quiser e toque em Executar.';
+  document.getElementById('queue-msg').textContent=msg;
+  speak(msg);
 }
 
 // ═══════════════════════════════════
@@ -2402,12 +2493,12 @@ function showErrorToast(icon,msg,sub){
   showToast('toast-error');
   speak(`${msg} ${sub}`);
 }
-function showPickupToast(itemId){
+function showPickupToast(itemId,isNew){
   const item=ITEMS.find(x=>x.id===itemId);if(!item)return;
   document.getElementById('pickup-icon').innerHTML=ico(item.icon,60);
-  document.getElementById('pickup-msg').textContent=`Novo acessório: ${item.label}!`;
-  showToast('toast-pickup');setTimeout(()=>hideToast('toast-pickup'),1400);
-  speak(`Novo acessório! ${item.label}!`);
+  document.getElementById('pickup-msg').textContent=isNew?`Novo acessório: ${item.label}!`:`Você pegou: ${item.label}!`;
+  showToast('toast-pickup');setTimeout(()=>hideToast('toast-pickup'),1800);
+  speak(isNew?`Novo acessório! ${item.label}!`:`Você pegou: ${item.label}!`);
 }
 
 // ═══════════════════════════════════
@@ -2416,10 +2507,27 @@ function showPickupToast(itemId){
 function refreshHint(){if(hintOn)hintPath=bfspath();}
 function toggleHint(){
   if(executing)return;
-  hintOn=!hintOn;
+  // a dica tira pontos: pergunta antes (no treino, ou se a dica já foi paga nesta fase, não pergunta)
+  if(!hintOn&&curPhase!==0&&!penHint){openHintConfirm();return;}
+  setHint(!hintOn);
+}
+function setHint(on){
+  hintOn=on;
   if(hintOn){hintPath=bfspath();if(curPhase!==0)penHint=true;sfxHint();document.getElementById('hint-label').textContent='Esconder dica';}
   else{hintPath=[];document.getElementById('hint-label').textContent=hintLabelText();}
   renderGrid();
+}
+function openHintConfirm(){
+  const m=document.getElementById('hint-confirm');
+  document.getElementById('hint-confirm-sub').textContent=`A dica mostra o caminho, mas tira ${HINT_COST} pontos desta fase.`;
+  m.hidden=false;
+  document.getElementById('hint-confirm-no').focus();
+  speak(`Tem certeza que quer ver a dica? Ela tira ${HINT_COST} pontos.`);
+}
+function closeHintConfirm(){document.getElementById('hint-confirm').hidden=true;}
+function confirmHint(yes){
+  closeHintConfirm();
+  if(yes&&!executing)setHint(true);
 }
 // Caminho mais curto entre duas casas. Pedra e parede bloqueiam; a lama só entra se não houver outro jeito.
 function shortestPath(lvl,fr,fc,tr,tc){
@@ -2493,29 +2601,29 @@ function phaseComplete(steps,blocks=steps){
   document.querySelector('.dressup-card').style.display='';
 
   let bd='';
-  if(extra>0)    bd+=`<span style="color:#ffb0b0">−${extra*EXTRA_STEP_COST} pontos: passos a mais</span><br>`;
-  if(missing>0)  bd+=`<span style="color:#ffe08a">−${missing*MISSING_COST} pontos: ${missing===1?'brinde não coletado':'brindes não coletados'}</span><br>`;
-  if(penMud>0)   bd+=`<span style="color:#c8a060">−${penMud} pontos: lama</span><br>`;
-  if(penRock>0)  bd+=`<span style="color:#ff6060">−${penRock} pontos: pedra</span><br>`;
-  if(penWall>0)  bd+=`<span style="color:#ff9040">−${penWall} pontos: parede</span><br>`;
-  if(hPen>0)     bd+=`<span style="color:#ff90ff">−${hPen} pontos: dica usada</span><br>`;
+  if(extra>0)    bd+=`<span style="color:#d0607a">−${extra*EXTRA_STEP_COST} pontos: passos a mais</span><br>`;
+  if(missing>0)  bd+=`<span style="color:#b98420">−${missing*MISSING_COST} pontos: ${missing===1?'brinde não coletado':'brindes não coletados'}</span><br>`;
+  if(penMud>0)   bd+=`<span style="color:#9a6a3a">−${penMud} pontos: lama</span><br>`;
+  if(penRock>0)  bd+=`<span style="color:#c84a5e">−${penRock} pontos: pedra</span><br>`;
+  if(penWall>0)  bd+=`<span style="color:#c86a2a">−${penWall} pontos: parede</span><br>`;
+  if(hPen>0)     bd+=`<span style="color:#9c5cb8">−${hPen} pontos: dica usada</span><br>`;
 
   const spAll=minRoute(lvl,[...findCells(lvl,4),...findCells(lvl,7)]);
   const cmdTxt=blocks<steps?` com só ${blocks} comandos`:'';
   const algoMsg=missing>0
-    ? `<span style="color:#ffd0a0;font-size:.95rem">${ico('bulb',18)} Você usou ${steps} passos${cmdTxt}. Pegando ${missing===1?'o brinde que faltou':'os brindes que faltaram'}, o caminho mínimo é ${spAll} passos.</span>`
+    ? `<span style="color:#8a6a3a;font-size:.95rem">${ico('bulb',18)} Você usou ${steps} passos${cmdTxt}. Pegando ${missing===1?'o brinde que faltou':'os brindes que faltaram'}, o caminho mínimo é ${spAll} passos.</span>`
     : steps<=sp
-    ? `<span style="color:#80ff80;font-size:.95rem">${ico('bulb',18)} Algoritmo ótimo! Você usou ${steps} passos${cmdTxt} (mínimo: ${sp})</span>`
-    : `<span style="color:#ffd0a0;font-size:.95rem">${ico('bulb',18)} Você usou ${steps} passos${cmdTxt}. O caminho mínimo era ${sp}.</span>`;
-  const timeMsg=`<br><span style="color:#a0d0ff;font-size:.9rem">${ico('clock',16)} Tempo: ${fmtTime(timerSecs)} (não tira pontos)</span>`;
-  const bestMsg=(!improved)?`<br><span style="color:#fff;font-size:.9rem">${ico('star',16)} Sua melhor nota continua sendo ${best} pontos</span>`:'';
+    ? `<span style="color:#2f8f5f;font-size:.95rem">${ico('bulb',18)} Algoritmo ótimo! Você usou ${steps} passos${cmdTxt} (mínimo: ${sp})</span>`
+    : `<span style="color:#8a6a3a;font-size:.95rem">${ico('bulb',18)} Você usou ${steps} passos${cmdTxt}. O caminho mínimo era ${sp}.</span>`;
+  const timeMsg=`<br><span style="color:#4a7fb8;font-size:.9rem">${ico('clock',16)} Tempo: ${fmtTime(timerSecs)} (não tira pontos)</span>`;
+  const bestMsg=(!improved)?`<br><span style="font-size:.9rem">${ico('star',16)} Sua melhor nota continua sendo ${best} pontos</span>`:'';
 
   document.getElementById('score-breakdown').innerHTML=
-    `<span style="font-size:1.7rem;color:#ffd700;display:block;margin-bottom:4px">${score} pontos</span>`+
-    (bd||'<span style="color:#80ff80">Perfeito! Sem perda de pontos!</span><br>')+
+    `<span style="font-size:1.9rem;color:#4a3f6b;display:block;margin-bottom:4px">${score} pontos</span>`+
+    (bd||'<span style="color:#2f8f5f">Perfeito! Sem perda de pontos!</span><br>')+
     algoMsg+timeMsg+bestMsg;
 
-  document.getElementById('congrats-mimi').innerHTML=makeMimi(96,equippedHat,equippedOutfit,'happy');
+  document.getElementById('congrats-mimi').innerHTML=makeMimi(130,equippedHat,equippedOutfit,'happy');
   buildDressup();confetti();
   const btn=document.getElementById('btn-next');
   if(target){
@@ -2542,9 +2650,9 @@ function trainingComplete(){
   document.getElementById('congrats-stars').innerHTML=starsHTML(3,44);
   document.getElementById('congrats-sub').textContent='Agora você sabe jogar!';
   document.getElementById('score-breakdown').innerHTML=
-    `<span style="color:#80ff80">Você aprendeu a usar as setas e o botão executar. Vamos para a fase 1!</span>`;
+    `<span style="color:#2f8f5f">Você aprendeu a usar as setas e o botão executar. Vamos para a fase 1!</span>`;
   document.querySelector('.dressup-card').style.display='none';
-  document.getElementById('congrats-mimi').innerHTML=makeMimi(96,equippedHat,equippedOutfit,'happy');
+  document.getElementById('congrats-mimi').innerHTML=makeMimi(130,equippedHat,equippedOutfit,'happy');
   const btn=document.getElementById('btn-next');
   btn.innerHTML=`${ico('play',18)} Ir para a fase 1`;
   btn.onclick=()=>startPhase(1);
@@ -2569,11 +2677,11 @@ function switchCat(cat, btn){
 
 // Cores de raridade por acessório
 const RARITY={
-  hat_coroa:'#ffd700', out_capa:'#ffd700',          // dourado — lendário
-  hat_cartola:'#a855f7', out_borboleta:'#a855f7',   // roxo — épico
-  hat_bone:'#3b82f6', out_arcoirs:'#3b82f6',        // azul — raro
-  hat_flor:'#22c55e', out_estrela:'#22c55e',        // verde — comum
-  hat_laco:'#f97316', out_coracao:'#f97316',        // laranja — inicial
+  hat_coroa:'#ffd166', out_capa:'#ffd166',          // dourado — lendário
+  hat_cartola:'#c3a6f5', out_borboleta:'#c3a6f5',   // roxo — épico
+  hat_bone:'#7cb8f0', out_arcoirs:'#7cb8f0',        // azul — raro
+  hat_flor:'#7fd8a6', out_estrela:'#7fd8a6',        // verde — comum
+  hat_laco:'#ffb27a', out_coracao:'#ffb27a',        // laranja — inicial
 };
 
 function buildDressup(){
@@ -2587,7 +2695,7 @@ function updateMimiPreview(){
   const stage=document.getElementById('mimi-stage');
   if(stage) stage.innerHTML=makeMimi(118,equippedHat,equippedOutfit);
   const cm=document.getElementById('congrats-mimi');
-  if(cm&&cm.innerHTML)cm.innerHTML=makeMimi(96,equippedHat,equippedOutfit,'happy');
+  if(cm&&cm.innerHTML)cm.innerHTML=makeMimi(130,equippedHat,equippedOutfit,'happy');
   const lbl=document.getElementById('equipped-label');
   if(lbl){
     const h=ITEMS.find(x=>x.id===equippedHat);
@@ -2648,7 +2756,8 @@ function showFinal(){
 
   if(perfect){
     document.getElementById('garden-score-num').textContent=avg;
-    document.getElementById('garden-mimi-small').innerHTML=makeMimi(64,equippedHat,equippedOutfit,'happy');
+    document.getElementById('garden-mimi-small').innerHTML=makeMimi(90,equippedHat,equippedOutfit,'happy');
+    document.getElementById('garden-mimi-scene').innerHTML=makeMimi(110,equippedHat,equippedOutfit,'happy');
     spawnGardenParticles();
     confetti();
     setTimeout(()=>{confetti();confetti();},600);
@@ -2683,7 +2792,7 @@ function spawnGardenParticles(){
 //  CONFETTI
 // ═══════════════════════════════════
 function confetti(){
-  const cols=['#ffd700','#ff6bcd','#48e090','#5ecfca','#b070d8','#ff8c42','#6ab0e0','#ff4488'];
+  const cols=['#ffd166','#ffb3df','#a8e6cf','#9fe3d8','#cdb5ff','#ffc48a','#a9d4f5','#ff9ec0'];
   for(let i=0;i<80;i++){
     const el=document.createElement('div');el.className='confetti';
     el.style.cssText=`left:${Math.random()*100}vw;background:${cols[i%cols.length]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'3px'};--d:${1.1+Math.random()*.9}s;--dl:${Math.random()*.7}s`;
