@@ -2516,8 +2516,8 @@ function buildPhaseGrid(){
   // onde a Mimi está e o que acabou de abrir (ela anda até a fruta nova abrindo as florzinhas)
   const start=(mapMimiAt!==null&&mapMimiAt<=cur&&isUnlocked(mapMimiAt))?mapMimiAt:cur;
   const from=(mapSeenCur!==null&&mapSeenCur<cur)?mapSeenCur:cur;
-  const HOPS=6,HOP_MS=560,REST_MS=240,walkMs=HOPS*(HOP_MS+REST_MS);
-  const TRIP_HOP=380,TRIP_REST=110;          // quando a criança escolhe outra fruta: passinhos um pouco mais rápidos
+  const HOPS=6,HOP_MS=300,REST_MS=70,walkMs=HOPS*(HOP_MS+REST_MS);
+  const TRIP_HOP=230,TRIP_REST=30;           // quando a criança escolhe outra fruta: passinhos um pouco mais rápidos
   const use3D=Map3D.ok;
   map.classList.toggle('map3d-on',use3D);
   let html=use3D?'':mapSceneSVG();
