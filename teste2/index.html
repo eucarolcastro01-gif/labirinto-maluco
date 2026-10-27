@@ -2320,9 +2320,14 @@ function speak(text,opts={}){
   const bw=el.offsetWidth,bh=el.offsetHeight,vw=window.innerWidth;
   let cx=vw/2,top=70,tail=bw/2,below=false;
   if(anchor){
-    const a=anchor.getBoundingClientRect();
-    cx=a.left+a.width/2;top=a.top-bh-10;
-    if(top<8){top=a.bottom+10;below=true;}
+    // a Mimi 3D é desenhada maior que a casinha: usa o retângulo do desenho todo
+    let a=anchor.getBoundingClientRect();
+    const cv=anchor.querySelector('canvas');
+    if(cv){const c=cv.getBoundingClientRect();a={left:Math.min(a.left,c.left),right:Math.max(a.right,c.right),top:Math.min(a.top,c.top),bottom:Math.max(a.bottom,c.bottom)};}
+    cx=(a.left+a.right)/2;top=a.top-bh-6;
+    const bar=document.querySelector('.screen.active .topbar');
+    const minTop=bar&&bar.getBoundingClientRect().height?bar.getBoundingClientRect().bottom+4:8;
+    if(top<minTop){top=a.bottom+6;below=true;}             // sem espaço em cima: o balão vai para baixo dela, nunca por cima
   }
   const left=Math.max(8,Math.min(vw-bw-8,cx-bw/2));
   tail=Math.max(18,Math.min(bw-18,cx-left));
@@ -2952,6 +2957,7 @@ const ARROW_ICON={up:'arrowUp',down:'arrowDown',left:'arrowLeft',right:'arrowRig
 const ARROW_NAME={up:'para cima',down:'para baixo',left:'para a esquerda',right:'para a direita'};
 const MAX_REPEAT=5;
 function addCmd(d){
+  hideSay();                         // a criança começou a jogar: o balão sai da frente
   const maxQ=MAX_QUEUE_PER_PHASE[curPhase]||16;
   if(executing||cmdQueue.length>=maxQ)return;
   cmdQueue.push({d,n:1});
