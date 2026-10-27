@@ -1014,13 +1014,13 @@ body.calm .confetti{display:none!important}
 .queue-card.empty .q-row,.queue-card.empty .q-tools{display:none}
 .queue-card.empty .q-msg{min-height:0;padding:10px 4px;font-size:.95rem}
 .v2 .q-msg:empty{display:none}
-.v2 .play-row{display:flex;align-items:center;justify-content:center;gap:18px}
+.v2 .play-row{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
 .v2 .dpad{display:grid!important;grid-template-columns:repeat(3,var(--pb,64px));grid-template-rows:repeat(2,var(--pb,64px));gap:8px}
 .v2 .dpad .ctrl-btn{width:var(--pb,64px);height:var(--pb,64px)}
 .v2 .dpad .up{grid-column:2;grid-row:1}.v2 .dpad .left{grid-column:1;grid-row:2}
 .v2 .dpad .down{grid-column:2;grid-row:2}.v2 .dpad .right{grid-column:3;grid-row:2}
-.v2 .action-row{display:flex!important;flex-direction:column;align-items:stretch;gap:8px;width:auto;max-width:none}
-.v2 .btn-exec{flex-direction:column;gap:2px!important;min-width:150px;min-height:calc(var(--pb,64px)*2 + 8px - 44px);font-size:1.45rem!important;padding:10px 18px!important;
+.v2 .action-row{display:flex!important;justify-content:center;width:min(340px,100%);max-width:none}
+.v2 .btn-exec{width:100%;gap:10px!important;font-size:1.55rem!important;padding:14px 18px!important;
   border-radius:24px;letter-spacing:1px;background:linear-gradient(170deg,#ffe24a,#ffbf1f 55%,#f59c00)!important;color:#3b2000;
   box-shadow:0 6px 0 #b86a00,0 10px 24px rgba(255,170,0,.45),inset 0 2px 0 rgba(255,255,255,.6)}
 .v2 .btn-exec svg *{fill:#3b2000}
@@ -1056,9 +1056,8 @@ body.calm .v2 .btn-exec.ready{animation:none}
   body.in-game .q-msg{min-height:1.2em;font-size:.76rem;line-height:1.15}
   body.in-game .game-side.v2{width:calc(100vw - 16px);gap:8px}
   body.in-game .v2 .dpad{--pb:56px;gap:6px}
-  body.in-game .v2 .play-row{gap:12px;width:100%;justify-content:space-between}
-  body.in-game .v2 .action-row{flex:1}
-  body.in-game .v2 .btn-exec{min-width:0;font-size:1.3rem!important}
+  body.in-game .v2 .play-row{gap:10px}
+  body.in-game .v2 .btn-exec{font-size:1.4rem!important;padding:11px 14px!important}
 }
 
 </style>
@@ -1228,7 +1227,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
       <button class="q-tool clr" onclick="clearQueue()" aria-label="Limpar todos os comandos"><span data-ico="x" data-size="16"></span> Limpar</button>
     </div>
   </div>
-  <!-- como um controle de videogame: setas de um lado, Executar do outro -->
+  <!-- setas e, logo embaixo, o Executar bem grande -->
   <div class="play-row">
     <div class="ctrl-pad dpad">
       <button class="ctrl-btn up" aria-label="Para cima" onclick="addCmd('up')"><span data-ico="arrowUp" data-size="30"></span></button>
@@ -1237,8 +1236,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
       <button class="ctrl-btn right" aria-label="Para a direita" onclick="addCmd('right')"><span data-ico="arrowRight" data-size="30"></span></button>
     </div>
     <div class="action-row">
-      <button class="btn-exec" onclick="executeQueue()"><span data-ico="play" data-size="34"></span><span>Executar</span></button>
-      <button class="btn-step" onclick="executeQueue(true)" title="Executa só o próximo comando"><span data-ico="step" data-size="16"></span> Um passo</button>
+      <button class="btn-exec" onclick="executeQueue()"><span data-ico="play" data-size="28"></span><span>Executar</span></button>
     </div>
   </div>
   <button class="hint-bar" onclick="toggleHint()">
