@@ -1002,31 +1002,41 @@ body.calm .star,body.calm .gift-bob,body.calm .map-node,body.calm .congrats-mimi
 body.calm .item-new-badge,body.calm .garden-badge,body.calm .goal-star,body.calm #mimi-final-wrap,body.calm .cell.in-mud,body.calm #mimi-token .mimi-inner{animation:none!important}
 body.calm .confetti{display:none!important}
 
-/* ══ ÁREA DOS COMANDOS MAIS LIMPA: Executar é o botão principal; Passo e Limpar ficam menores; a dica é discreta ══ */
-.action-row{display:grid!important;grid-template-columns:1fr 1fr;gap:10px;width:min(340px,calc(100vw - 24px))}
-.action-row .btn-exec{grid-column:1/-1;font-size:1.55rem!important;padding:15px 20px!important;border-radius:22px;letter-spacing:1px;
-  background:linear-gradient(170deg,#ffe24a,#ffbf1f 55%,#f59c00)!important;color:#3b2000;
-  box-shadow:0 6px 0 #b86a00,0 10px 24px rgba(255,170,0,.45),inset 0 2px 0 rgba(255,255,255,.6)}
-.action-row .btn-exec svg *{fill:#3b2000}
-.action-row .btn-exec::after{border-radius:22px 22px 50% 50%}
-.action-row .btn-exec:active{box-shadow:0 2px 0 #b86a00}
-@media (hover:hover){.action-row .btn-exec:hover{box-shadow:0 8px 0 #b86a00,0 14px 28px rgba(255,170,0,.55)}}
-/* com comandos na fila, o Executar "chama" a criança */
-.action-row .btn-exec.ready{animation:execCall 1.2s ease-in-out infinite}
-@keyframes execCall{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-body.calm .action-row .btn-exec.ready{animation:none}
-.action-row .btn-step,.action-row .btn-clear{font-size:1rem!important;padding:8px 10px!important;border-radius:16px;box-shadow:0 3px 0 rgba(0,0,0,.3)}
-.action-row .btn-step{background:#1d5fa8!important}
-.action-row .btn-clear{background:#a8262a!important}
-.action-row .btn-step::after,.action-row .btn-clear::after{display:none}
-.hint-bar{width:auto!important;padding:6px 18px!important;border-radius:999px;background:rgba(6,40,34,.55)!important;
-  border:2px dashed rgba(255,230,109,.7);box-shadow:none!important}
-.hint-bar::after{display:none}
-.hint-label{font-size:.95rem!important;letter-spacing:1px;background:none!important;-webkit-text-fill-color:#ffe66d!important;color:#ffe66d;filter:none!important}
-/* fila vazia: só uma frase no meio, sem caixa grande vazia */
-.queue-card.empty .q-row{display:none}
+/* ══ ÁREA DOS COMANDOS (v2): fila com as ferramentas; setas à esquerda e Executar grande à direita ══ */
+#screen-game .game-side.v2{display:flex;flex-direction:column;align-items:center;gap:12px}
+.v2 .queue-card{gap:4px}
+.v2 .q-tools{display:flex;justify-content:flex-end;gap:6px;padding-top:2px}
+.v2 .q-tool{display:inline-flex;align-items:center;gap:4px;border:none;border-radius:999px;padding:5px 11px;cursor:pointer;
+  font-family:'Fredoka One','Segoe UI',sans-serif;font-size:.85rem;letter-spacing:.5px;color:#fff;background:rgba(255,255,255,.14)}
+.v2 .q-tool:active{transform:translateY(2px)}
+.v2 .q-tool.rep{color:#ffd77a}.v2 .q-tool.clr{color:#ffb4b4}
+.v2 .q-tool.rep svg *{stroke:#ffd77a}
+.queue-card.empty .q-row,.queue-card.empty .q-tools{display:none}
 .queue-card.empty .q-msg{min-height:0;padding:10px 4px;font-size:.95rem}
-@media (min-width:980px) and (min-height:560px){.game-side .q-row{height:112px!important}}
+.v2 .q-msg:empty{display:none}
+.v2 .play-row{display:flex;align-items:center;justify-content:center;gap:18px}
+.v2 .dpad{display:grid!important;grid-template-columns:repeat(3,var(--pb,64px));grid-template-rows:repeat(2,var(--pb,64px));gap:8px}
+.v2 .dpad .ctrl-btn{width:var(--pb,64px);height:var(--pb,64px)}
+.v2 .dpad .up{grid-column:2;grid-row:1}.v2 .dpad .left{grid-column:1;grid-row:2}
+.v2 .dpad .down{grid-column:2;grid-row:2}.v2 .dpad .right{grid-column:3;grid-row:2}
+.v2 .action-row{display:flex!important;flex-direction:column;align-items:stretch;gap:8px;width:auto;max-width:none}
+.v2 .btn-exec{flex-direction:column;gap:2px!important;min-width:150px;min-height:calc(var(--pb,64px)*2 + 8px - 44px);font-size:1.45rem!important;padding:10px 18px!important;
+  border-radius:24px;letter-spacing:1px;background:linear-gradient(170deg,#ffe24a,#ffbf1f 55%,#f59c00)!important;color:#3b2000;
+  box-shadow:0 6px 0 #b86a00,0 10px 24px rgba(255,170,0,.45),inset 0 2px 0 rgba(255,255,255,.6)}
+.v2 .btn-exec svg *{fill:#3b2000}
+.v2 .btn-exec::after{border-radius:24px 24px 50% 50%}
+.v2 .btn-exec:active{box-shadow:0 2px 0 #b86a00}
+@media (hover:hover){.v2 .btn-exec:hover{box-shadow:0 8px 0 #b86a00,0 14px 28px rgba(255,170,0,.55)}}
+.v2 .btn-exec.ready{animation:execCall 1.2s ease-in-out infinite}
+@keyframes execCall{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+body.calm .v2 .btn-exec.ready{animation:none}
+.v2 .btn-step{font-size:.9rem!important;padding:7px 10px!important;border-radius:14px;background:#1d5fa8!important;box-shadow:0 3px 0 rgba(0,0,0,.3)}
+.v2 .btn-step::after{display:none}
+.v2 .hint-bar{width:auto!important;padding:6px 18px!important;border-radius:999px;background:rgba(6,40,34,.55)!important;
+  border:2px dashed rgba(255,230,109,.7);box-shadow:none!important}
+.v2 .hint-bar::after{display:none}
+.v2 .hint-label{font-size:.95rem!important;letter-spacing:1px;background:none!important;-webkit-text-fill-color:#ffe66d!important;color:#ffe66d;filter:none!important}
+@media (min-width:980px) and (min-height:560px){.game-side.v2 .q-row{height:112px!important}.v2 .dpad{--pb:70px}}
 
 /* ══ CELULAR EM PÉ: labirinto grande, tudo cabe na tela (e acima da barra do navegador) ══ */
 @media (max-width:520px){
@@ -1044,19 +1054,11 @@ body.calm .action-row .btn-exec.ready{animation:none}
   body.in-game .q-row{height:46px}
   body.in-game .q-chip{width:42px;height:42px}
   body.in-game .q-msg{min-height:1.2em;font-size:.76rem;line-height:1.15}
-  /* setas à esquerda, Executar / Passo / Limpar empilhados à direita */
-  body.in-game .game-side{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"q q" "pad act" "hint hint";
-    width:calc(100vw - 16px);align-items:center;column-gap:12px;row-gap:8px}
-  body.in-game .queue-card{grid-area:q}
-  body.in-game .ctrl-pad{grid-area:pad;gap:6px}
-  body.in-game .ctrl-row{gap:6px}
-  body.in-game .ctrl-btn{width:56px;height:56px}
-  body.in-game .ctrl-tool{width:56px}
-  body.in-game .ctrl-btn.tool{width:46px;height:46px}
-  body.in-game .action-row{grid-area:act;width:100%;gap:8px}
-  body.in-game .action-row .btn-exec{padding:16px 6px!important;font-size:1.35rem!important}
-  body.in-game .action-row .btn-step,body.in-game .action-row .btn-clear{padding:8px 4px!important;font-size:.9rem!important}
-  body.in-game .hint-bar{grid-area:hint;justify-self:center}
+  body.in-game .game-side.v2{width:calc(100vw - 16px);gap:8px}
+  body.in-game .v2 .dpad{--pb:56px;gap:6px}
+  body.in-game .v2 .play-row{gap:12px;width:100%;justify-content:space-between}
+  body.in-game .v2 .action-row{flex:1}
+  body.in-game .v2 .btn-exec{min-width:0;font-size:1.3rem!important}
 }
 
 </style>
@@ -1216,33 +1218,28 @@ body.calm .action-row .btn-exec.ready{animation:none}
     </div>
   </div>
  </div>
- <div class="game-side">
+ <div class="game-side v2">
   <div class="queue-card glass">
     <div class="q-row" id="queue-wrap" aria-label="Comandos da Mimi"></div>
     <div class="q-msg" id="queue-msg" aria-live="polite"></div>
-  </div>
-  <div class="ctrl-pad">
-    <div class="ctrl-row">
-      <div class="ctrl-tool">
-        <button class="ctrl-btn tool rep" aria-label="Repetir o último comando" title="Repete o último comando mais vezes" onclick="repeatLast()"><span data-ico="repeat" data-size="26"></span></button>
-        <span class="ctrl-cap">Repetir</span>
-      </div>
-      <button class="ctrl-btn" aria-label="Para cima" onclick="addCmd('up')"><span data-ico="arrowUp" data-size="30"></span></button>
-      <div class="ctrl-tool">
-        <button class="ctrl-btn tool undo" aria-label="Apagar o último comando" title="Apaga o último comando" onclick="undoCmd()"><span data-ico="undo" data-size="26"></span></button>
-        <span class="ctrl-cap">Apagar</span>
-      </div>
-    </div>
-    <div class="ctrl-row">
-      <button class="ctrl-btn" aria-label="Para a esquerda" onclick="addCmd('left')"><span data-ico="arrowLeft" data-size="30"></span></button>
-      <button class="ctrl-btn" aria-label="Para baixo" onclick="addCmd('down')"><span data-ico="arrowDown" data-size="30"></span></button>
-      <button class="ctrl-btn" aria-label="Para a direita" onclick="addCmd('right')"><span data-ico="arrowRight" data-size="30"></span></button>
+    <div class="q-tools">
+      <button class="q-tool rep" onclick="repeatLast()" aria-label="Repetir o último comando" title="Repete o último comando mais vezes"><span data-ico="repeat" data-size="18"></span> Repetir</button>
+      <button class="q-tool undo" onclick="undoCmd()" aria-label="Apagar o último comando" title="Apaga o último comando"><span data-ico="undo" data-size="18"></span> Apagar</button>
+      <button class="q-tool clr" onclick="clearQueue()" aria-label="Limpar todos os comandos"><span data-ico="x" data-size="16"></span> Limpar</button>
     </div>
   </div>
-  <div class="action-row">
-    <button class="btn-exec" onclick="executeQueue()"><span data-ico="play" data-size="20"></span> Executar</button>
-    <button class="btn-step" onclick="executeQueue(true)" title="Executa só o próximo comando"><span data-ico="step" data-size="18"></span> Passo</button>
-    <button class="btn-clear" onclick="clearQueue()"><span data-ico="x" data-size="18"></span> Limpar</button>
+  <!-- como um controle de videogame: setas de um lado, Executar do outro -->
+  <div class="play-row">
+    <div class="ctrl-pad dpad">
+      <button class="ctrl-btn up" aria-label="Para cima" onclick="addCmd('up')"><span data-ico="arrowUp" data-size="30"></span></button>
+      <button class="ctrl-btn left" aria-label="Para a esquerda" onclick="addCmd('left')"><span data-ico="arrowLeft" data-size="30"></span></button>
+      <button class="ctrl-btn down" aria-label="Para baixo" onclick="addCmd('down')"><span data-ico="arrowDown" data-size="30"></span></button>
+      <button class="ctrl-btn right" aria-label="Para a direita" onclick="addCmd('right')"><span data-ico="arrowRight" data-size="30"></span></button>
+    </div>
+    <div class="action-row">
+      <button class="btn-exec" onclick="executeQueue()"><span data-ico="play" data-size="34"></span><span>Executar</span></button>
+      <button class="btn-step" onclick="executeQueue(true)" title="Executa só o próximo comando"><span data-ico="step" data-size="16"></span> Um passo</button>
+    </div>
   </div>
   <button class="hint-bar" onclick="toggleHint()">
     <span class="hint-label" id="hint-label">COMO SAIR!</span>
@@ -3044,7 +3041,7 @@ function renderQueue(activeIdx=-1){
   }
   msgEl.textContent=msg;
   const qc=msgEl.closest('.queue-card');if(qc)qc.classList.toggle('empty',!cmdQueue.length);
-  const ex=document.querySelector('.btn-exec');if(ex)ex.classList.toggle('ready',!executing&&cmdQueue.length>doneCount);
+  const ex=document.querySelector('#screen-game .btn-exec');if(ex)ex.classList.toggle('ready',!executing&&cmdQueue.length>doneCount);
   // mantém à vista o comando que está rodando (ou o último que entrou)
   const target=activeIdx>=0?w.children[activeIdx+1]:w.lastElementChild;
   if(target){
