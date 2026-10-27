@@ -985,11 +985,41 @@ body.calm .garden-fly-path,body.calm .garden-badge{animation:none!important}
 @media (max-width:520px){.garden-title{font-size:1.9rem}.meta-title{font-size:1.35rem}}
 /* botão de parar/ligar animações (WCAG 2.2.2) */
 .btn-motion{top:72px}
-@media (max-width:520px){.btn-motion{top:58px}}
+@media (max-width:520px){.btn-motion{top:8px;right:56px}}
 .btn-motion.off{background:rgba(120,30,30,.65)}
 body.calm .star,body.calm .gift-bob,body.calm .map-node,body.calm .congrats-mimi,body.calm .phase-btn,body.calm .q-chip,
 body.calm .item-new-badge,body.calm .garden-badge,body.calm .goal-star,body.calm #mimi-final-wrap,body.calm .cell.in-mud,body.calm #mimi-token .mimi-inner{animation:none!important}
 body.calm .confetti{display:none!important}
+
+/* ══ CELULAR EM PÉ: labirinto grande, tudo cabe na tela (e acima da barra do navegador) ══ */
+@media (max-width:520px){
+  body.in-game{padding:8px 8px calc(84px + env(safe-area-inset-bottom,0px))}
+  body.in-game .game-main{width:calc(100vw - 16px);align-items:flex-start}
+  body.in-game .maze-card{align-self:center}
+  body.in-game #screen-game{padding:0;gap:8px}
+  body.in-game .game-main,body.in-game .game-side{gap:8px}
+  body.in-game .topbar{width:calc(100vw - 16px - 100px);padding:6px 10px;gap:6px}
+  body.in-game .lbl-phase{font-size:1rem}
+  body.in-game .lbl-timer{font-size:.95rem}
+  body.in-game .topbar .btn-ghost{padding:4px 10px!important;font-size:.8rem!important}
+  body.in-game .maze-card{padding:4px 0 2px}
+  body.in-game .queue-card{width:calc(100vw - 16px);padding:6px 8px;gap:2px}
+  body.in-game .q-row{height:46px}
+  body.in-game .q-chip{width:42px;height:42px}
+  body.in-game .q-msg{min-height:1.2em;font-size:.76rem;line-height:1.15}
+  /* setas à esquerda, Executar / Passo / Limpar empilhados à direita */
+  body.in-game .game-side{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"q q" "pad act" "hint hint";
+    width:calc(100vw - 16px);align-items:center;column-gap:12px;row-gap:8px}
+  body.in-game .queue-card{grid-area:q}
+  body.in-game .ctrl-pad{grid-area:pad;gap:6px}
+  body.in-game .ctrl-row{gap:6px}
+  body.in-game .ctrl-btn{width:56px;height:56px}
+  body.in-game .ctrl-tool{width:56px}
+  body.in-game .ctrl-btn.tool{width:46px;height:46px}
+  body.in-game .action-row{grid-area:act;flex-direction:column;flex-wrap:nowrap;gap:9px;max-width:none;width:100%}
+  body.in-game .action-row button{width:100%;padding:9px 10px!important;font-size:1.05rem!important}
+  body.in-game .hint-bar{grid-area:hint;width:100%;padding-top:7px;padding-bottom:7px}
+}
 
 </style>
 </head>
@@ -2239,6 +2269,7 @@ refreshStart();
 function showScreen(id){
   if(id!=='screen-phases'&&typeof stopMapWalk==='function'){stopMapWalk();if(window.Map3D)Map3D.dispose();}
   document.getElementById('scenery').classList.toggle('show',id==='screen-game');
+  document.body.classList.toggle('in-game',id==='screen-game');
   document.getElementById('garden-bg').classList.toggle('show',id==='screen-garden'||id==='screen-meta');
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
   const el=document.getElementById(id);el.style.display='flex';
@@ -2622,6 +2653,11 @@ function viewCols(lvl){
 }
 // Tela larga (computador): labirinto à esquerda, comandos à direita (ver CSS .game-side)
 function isWideLayout(){return window.innerWidth>=980&&window.innerHeight>=560;}
+// o que o cartão do labirinto ocupa além das casas (bordas, folga da fruta)
+function mazeExtra(){
+  const mc=document.querySelector('#screen-game .maze-card'),g=document.getElementById('game-grid');
+  return mc&&g&&g.offsetHeight?Math.max(6,mc.offsetHeight-g.offsetHeight):40;
+}
 function calcCell(lvl,ncols){
   const gap=0,rows=lvl.rows;
   let availW,availH,maxCs;
@@ -2634,6 +2670,15 @@ function calcCell(lvl,ncols){
     availW=Math.min(window.innerWidth-side,760)-24-(ncols-1)*gap;
     availH=window.innerHeight-440;
     maxCs=64;
+    // celular: mede o que sobra de verdade depois da barra do topo e dos botões
+    const sideEl=document.querySelector('#screen-game .game-side'),topEl=document.querySelector('#screen-game .topbar');
+    if(document.body.classList.contains('in-game')&&window.innerWidth<=520&&sideEl&&sideEl.offsetHeight&&topEl){
+      const bs=getComputedStyle(document.body);
+      const vh=window.visualViewport?visualViewport.height:window.innerHeight;
+      availH=vh-parseFloat(bs.paddingTop)-parseFloat(bs.paddingBottom)-topEl.offsetHeight-sideEl.offsetHeight-8*2-mazeExtra();
+      availH/=.92;                                         // as casas são um pouco mais baixas que largas
+      maxCs=72;
+    }
   }
   let cs=Math.min(maxCs,availW/ncols);
   if(availH>0)cs=Math.min(cs,(availH-(rows-1)*gap)/rows);
