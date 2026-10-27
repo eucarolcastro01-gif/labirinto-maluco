@@ -599,8 +599,12 @@ function updateRig(slot,dt){
   const sadFace=(st.mood==='sad'||st.sadT>0||st.mud)&&!(st.comfortT>0&&st.sadT===0);
   rig.eyes.forEach(e=>e.visible=!happyFace);
   rig.happyEyes.forEach(e=>e.visible=happyFace);
-  rig.smile.visible=!sadFace&&chomp<.35;rig.oMouth.visible=sadFace||chomp>=.35;
-  if(chomp>=.35)rig.oMouth.scale.set(.06*1.6,.06*1.6*chomp,.03);else rig.oMouth.scale.set(.06,.051,.03);
+  // falando: a boquinha abre e fecha no ritmo da fala e a cabeça balança de leve
+  const talk=M3.talking&&!sadFace&&chomp<.35?Math.max(0,Math.sin(performance.now()/58)*.6+Math.sin(performance.now()/97)*.5):0;
+  rig.smile.visible=!sadFace&&chomp<.35&&talk<.25;rig.oMouth.visible=sadFace||chomp>=.35||talk>=.25;
+  if(chomp>=.35)rig.oMouth.scale.set(.06*1.6,.06*1.6*chomp,.03);
+  else if(talk>=.25)rig.oMouth.scale.set(.06*1.3,.06*(.5+talk*.9),.03);
+  else rig.oMouth.scale.set(.06,.051,.03);
   rig.sweat.visible=sadFace;
   if(sadFace)rig.sweat.position.y=.42-((t*.6)%1)*.15;
   // piscar
@@ -627,6 +631,7 @@ function updateRig(slot,dt){
   if(rig.outfitAnim)rig.outfitAnim(t,moving);
   if(waveLift){rig.head.rotation.z+=waveLift*.35;rig.head.rotation.x=Math.sin(performance.now()/130)*.35*waveLift;rig.segs[0].g.position.y+=waveLift*.18;}
   else rig.head.rotation.x=0;
+  if(M3.talking)rig.head.rotation.x+=Math.sin(performance.now()/180)*.06;
   if(chomp)rig.head.rotation.z-=chomp*.55;         // abaixa a cabeça para morder
   if(nod)rig.head.rotation.z+=nod;
   if(dance)rig.head.rotation.x+=Math.sin((1-st.danceT)*Math.PI*8)*.25*dance;

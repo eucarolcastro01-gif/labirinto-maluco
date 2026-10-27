@@ -2294,7 +2294,14 @@ function pickVoice(){
   if(!('speechSynthesis' in window))return;
   try{
     const voices=speechSynthesis.getVoices();
-    ptVoice=voices.find(v=>/^pt[-_]BR/i.test(v.lang))||voices.find(v=>/^pt/i.test(v.lang))||null;
+    // a voz da Mimi: prefere as vozes femininas mais naturais em português do Brasil
+    const pt=voices.filter(v=>/^pt/i.test(v.lang));
+    const score=v=>(/^pt[-_]BR/i.test(v.lang)?50:0)
+      +(/natural|online|neural|premium|enhanced|aprimorad|melhorad/i.test(v.name)?30:0)
+      +(/luciana|francisca|thalita|fernanda|vit[oó]ria|let[ií]cia|maria|joana|catarina|raquel|camila|google/i.test(v.name)?20:0)
+      -(/felipe|daniel|ant[oô]nio|ricardo|duarte|male|masculin/i.test(v.name)?40:0)
+      +(v.localService?2:0);
+    ptVoice=pt.sort((a,b)=>score(b)-score(a))[0]||null;
   }catch(e){}
   if(ptVoice&&pendingSpeech){const t=pendingSpeech;pendingSpeech=null;speak(t);}
 }
@@ -2319,8 +2326,10 @@ function speak(text){
   try{
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
-    u.voice=ptVoice;u.lang=ptVoice.lang;u.rate=.9;u.pitch=1.15;
-    u.onstart=()=>musicDuck(true);u.onend=u.onerror=()=>musicDuck(false);
+    // quem fala é a Mimi: vozinha aguda e animada, num ritmo gostoso (nem lento, nem corrido)
+    u.voice=ptVoice;u.lang=ptVoice.lang;u.rate=1.12;u.pitch=1.75;
+    u.onstart=()=>{musicDuck(true);if(window.Mimi3D)Mimi3D.talking=true;};
+    u.onend=u.onerror=()=>{musicDuck(false);if(window.Mimi3D)Mimi3D.talking=false;};
     speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -2600,7 +2609,7 @@ function startPhase(idx){
   else{tm.style.visibility='visible';startTimer();}
   showScreen('screen-game');
   renderGrid(true,true);renderQueue();
-  if(idx===0)setTimeout(()=>speak('Treino! Toque nas setas para levar a Mimi até a estrela. Depois toque em executar.'),700);
+  if(idx===0)setTimeout(()=>speak('Treino! Toque nas setas para me levar até a estrela. Depois toque em executar!'),700);
 }
 
 
@@ -3064,7 +3073,7 @@ async function handleError(kind,i,k,prevR,prevC,myRun){
 
   if(!second){
     if(kind==='rock')trail.delete(`${playerR},${playerC}`);
-    showErrorToast(kind==='rock'?'rock':'brick',`Ops! Você bateu na ${what}!`,
+    showErrorToast(kind==='rock'?'rock':'brick',`Ops! Eu bati na ${what}!`,
       training?'Tente de novo. Você consegue!':'Tudo bem! Você pode continuar de onde parou.');
     sfxChance();
     await sleep(1700);if(myRun!==runId)return;
@@ -3080,7 +3089,7 @@ async function handleError(kind,i,k,prevR,prevC,myRun){
   }
 
   if(kind==='rock')penRock+=25;else penWall+=5;
-  showErrorToast(kind==='rock'?'rock':'brick',`Bateu na ${what} de novo!`,'A fase vai recomeçar. Você consegue!');
+  showErrorToast(kind==='rock'?'rock':'brick',`Bati na ${what} de novo!`,'A fase vai recomeçar. Você consegue!');
   sfxRestart();
   await sleep(1900);if(myRun!==runId)return;
   hideToast('toast-error');
@@ -3449,7 +3458,7 @@ function showFinal(){
   const gf=document.getElementById('garden-fly');gf.dataset.fly='1';
   showMimi(gf,110,'happy');
   spawnGardenParticles();confetti();
-  speak('A Mimi virou uma borboleta! Você foi um programador incrível!');
+  speak('Eu virei uma borboleta! Você foi um programador incrível!');
 }
 
 // TRANSFORMAÇÃO: lagarta → casulo → borboleta, e depois o resultado final
@@ -3459,16 +3468,16 @@ function showMetamorphosis(){
   showScreen('screen-meta');
   const stage=document.getElementById('meta-stage'),title=document.getElementById('meta-title'),go=document.getElementById('meta-go');
   go.hidden=true;
-  const say=t=>{title.textContent=t;speak(t);};
-  say('A Mimi comeu todas as frutas!');
+  const say=(t,mine)=>{title.textContent=t;speak(mine||t);};   // na tela aparece a história; a Mimi fala em primeira pessoa
+  say('A Mimi comeu todas as frutas!','Eu comi todas as frutas!');
   delete stage.dataset.fly;
   const size=Math.min(340,window.innerWidth*.76);
   let slot=null;
   if(Mimi3D.ok){slot=Mimi3D.mount(stage,{size,mood:'happy'});slot.setLook(equippedHat,equippedOutfit);slot.setColor(mimiColor);slot.setButterfly(false);slot.happy();}
   else stage.innerHTML=makeMimi(Math.round(size*.7),equippedHat,equippedOutfit,'happy');
   const later=(ms,f)=>setTimeout(()=>{if(run===metaRun)f();},ms);
-  later(1800,()=>{say('Ela está fazendo um casulo...');if(slot)slot.metamorph();});
-  later(4600,()=>{say('Puf! A Mimi virou uma borboleta!');sfxWin();mimiSparkle();confetti();if(slot)slot.face(-.75);else stage.innerHTML=ico('butterfly',Math.round(size*.6));});
+  later(1800,()=>{say('Ela está fazendo um casulo...','Agora vou fazer um casulo...');if(slot)slot.metamorph();});
+  later(4600,()=>{say('Puf! A Mimi virou uma borboleta!','Puf! Eu virei uma borboleta!');sfxWin();mimiSparkle();confetti();if(slot)slot.face(-.75);else stage.innerHTML=ico('butterfly',Math.round(size*.6));});
   later(5600,()=>{go.hidden=false;go.focus();});
   later(9000,()=>{if(document.getElementById('screen-meta').classList.contains('active'))showFinal();});
 }
