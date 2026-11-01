@@ -457,7 +457,7 @@ body{
   filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));
 }
 .item-name{
-  font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:.8rem;color:rgba(255,255,255,.85);
+  font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:.8rem;color:#fff;
   position:relative;z-index:1;text-align:center;
   line-height:1.1;
 }
@@ -468,7 +468,7 @@ body{
 }
 .item-new-badge{
   position:absolute;top:4px;right:4px;
-  background:#ff3366;color:#fff;
+  background:#d81b4f;color:#fff;
   font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;font-size:.8rem;
   padding:1px 5px;border-radius:6px;z-index:3;
   box-shadow:0 2px 6px rgba(0,0,0,.3);
@@ -743,7 +743,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 .dressup-card{width:min(640px,calc(100vw - 24px))}
 .items-grid{grid-template-columns:repeat(auto-fill,minmax(86px,1fr))}
 .item-slot{aspect-ratio:auto;min-height:92px;padding:10px 4px 12px;justify-content:flex-start;gap:5px}
-.item-name{font-size:.68rem;letter-spacing:0;line-height:1.15;padding:0 2px;overflow-wrap:break-word}
+.item-name{font-size:.75rem;letter-spacing:0;line-height:1.15;padding:0 2px;overflow-wrap:break-word}
 .item-lock{position:static;transform:none;height:34px;align-items:center}
 .item-new-badge{top:-1px;right:-1px;font-size:.6rem;padding:1px 5px;border-radius:0 12px 0 8px}
 
@@ -813,6 +813,8 @@ button:focus-visible{outline:4px solid #ffd700}
 .say-bubble{position:absolute;z-index:950;display:none;max-width:min(300px,calc(100vw - 16px));background:#fff;border:2px solid var(--lilac);border-radius:18px;
   padding:8px 14px;font-family:'Nunito','Segoe UI',Arial,sans-serif;font-weight:900;font-size:1rem;line-height:1.25;color:var(--ink);text-align:center;
   box-shadow:0 4px 0 rgba(160,138,230,.35),0 8px 18px rgba(0,0,0,.18);opacity:0;transform:scale(.6);transform-origin:var(--tail,50%) 100%;cursor:pointer}
+.say-bubble::before,.mimi-bubble::before{content:'';display:inline-block;width:18px;height:18px;margin:0 6px -3px 0;opacity:.75;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 9H7L12 4.5V19.5L7 15H3Z' fill='%236a4fc7'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7M18.4 5.6a9 9 0 0 1 0 12.8' fill='none' stroke='%236a4fc7' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E")}
+.mimi-bubble{cursor:pointer}
 .say-bubble.show{animation:sayIn .35s cubic-bezier(.34,1.56,.64,1) forwards}
 .say-bubble::after{content:'';position:absolute;left:var(--tail,50%);bottom:-9px;width:14px;height:14px;background:#fff;
   border-right:2px solid var(--lilac);border-bottom:2px solid var(--lilac);transform:translateX(-50%) rotate(45deg)}
@@ -825,6 +827,9 @@ body.calm .say-bubble.show{animation:none;opacity:1;transform:none}
 /* pergunta antes da dica */
 .modal-back{position:fixed;inset:0;z-index:950;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(74,63,107,.35)}
 .modal-back[hidden]{display:none}
+.btn-adults{background:rgba(6,40,34,.7);border:none;border-radius:999px;color:#fff;font:800 .85rem 'Nunito','Segoe UI',Arial,sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:7px 14px}
+.adults-card{max-width:480px}
+.adults-list{margin:4px 0 0;padding-left:20px;text-align:left;display:flex;flex-direction:column;gap:8px;font:700 .95rem/1.35 'Nunito','Segoe UI',Arial,sans-serif;color:#3a3355;text-transform:none;letter-spacing:0}
 .modal-card{max-width:420px;width:100%;padding:22px 22px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;
   background:rgba(255,255,255,.97);animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both}
 .modal-msg{font-family:'Fredoka One','Segoe UI',sans-serif;font-size:1.35rem;color:var(--ink)}
@@ -996,7 +1001,11 @@ body.calm .garden-fly-path,body.calm .garden-badge{animation:none!important}
 @media (max-width:520px){.garden-title{font-size:1.9rem}.meta-title{font-size:1.35rem}}
 /* botão de parar/ligar animações (WCAG 2.2.2) */
 .btn-motion{top:72px}
-@media (max-width:520px){.btn-motion{top:8px;right:56px}}
+.btn-voice{top:132px}
+.btn-voice.off{background:rgba(10,15,40,.55)}
+.btn-voice:not(.off){background:#8e5cf0;border-color:#fff}
+/* celular: em linha, na mesma ordem do computador (som, pausa, voz) */
+@media (max-width:520px){.btn-sound{right:104px}.btn-motion{top:8px;right:56px}.btn-voice{top:8px;right:8px}}
 .btn-motion.off{background:rgba(120,30,30,.65)}
 body.calm .star,body.calm .gift-bob,body.calm .map-node,body.calm .congrats-mimi,body.calm .phase-btn,body.calm .q-chip,
 body.calm .item-new-badge,body.calm .garden-badge,body.calm .goal-star,body.calm #mimi-final-wrap,body.calm .cell.in-mud,body.calm #mimi-token .mimi-inner{animation:none!important}
@@ -1014,6 +1023,13 @@ body.calm .confetti{display:none!important}
 .queue-card.empty .q-row,.queue-card.empty .q-tools{display:none}
 .queue-card.empty .q-msg{min-height:0;padding:10px 4px;font-size:.95rem}
 .v2 .q-msg:empty{display:none}
+.sr-only{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.sc-chips{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:8px auto 6px;max-width:440px}
+.sc-chip{display:inline-flex;align-items:center;gap:1px;padding:4px 6px;border-radius:10px;background:#6f3fd9;color:#fff;font-size:.8rem;box-shadow:0 2px 0 #4a2799}
+/* tela de parabéns: os botões ficam sempre à vista, mesmo em notebook de tela baixa */
+#screen-congrats .nav-row{position:sticky;bottom:10px;z-index:20;padding:8px 12px;border-radius:999px;background:rgba(6,40,34,.82);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.q-listen{align-self:center;display:inline-flex;align-items:center;gap:6px;margin-top:2px;padding:5px 14px;border-radius:999px;border:2px solid rgba(255,255,255,.5);background:rgba(255,255,255,.14);color:#fff;font:800 .85rem 'Nunito','Segoe UI',Arial,sans-serif;cursor:pointer}
+.q-msg:empty+.q-listen{display:none}
 .v2 .play-row{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
 .v2 .dpad{display:grid!important;grid-template-columns:repeat(3,var(--pb,64px));grid-template-rows:repeat(2,var(--pb,64px));gap:8px}
 .v2 .dpad .ctrl-btn{width:var(--pb,64px);height:var(--pb,64px)}
@@ -1032,10 +1048,10 @@ body.calm .confetti{display:none!important}
 body.calm .v2 .btn-exec.ready{animation:none}
 .v2 .btn-step{font-size:.9rem!important;padding:7px 10px!important;border-radius:14px;background:#1d5fa8!important;box-shadow:0 3px 0 rgba(0,0,0,.3)}
 .v2 .btn-step::after{display:none}
-.v2 .hint-bar{width:auto!important;padding:6px 18px!important;border-radius:999px;background:rgba(6,40,34,.55)!important;
-  border:2px dashed rgba(255,230,109,.7);box-shadow:none!important}
+.v2 .hint-bar{width:auto!important;padding:9px 22px!important;border-radius:999px;background:rgba(6,40,34,.7)!important;display:inline-flex;align-items:center;gap:8px;
+  border:3px solid #ffe66d;box-shadow:none!important}
 .v2 .hint-bar::after{display:none}
-.v2 .hint-label{font-size:.95rem!important;letter-spacing:1px;background:none!important;-webkit-text-fill-color:#ffe66d!important;color:#ffe66d;filter:none!important}
+.v2 .hint-label{font-size:1.1rem!important;letter-spacing:1px;background:none!important;-webkit-text-fill-color:#ffe66d!important;color:#ffe66d;filter:none!important}
 @media (min-width:980px) and (min-height:560px){.game-side.v2 .q-row{height:112px!important}.v2 .dpad{--pb:70px}}
 
 /* ══ CELULAR EM PÉ: labirinto grande, tudo cabe na tela (e acima da barra do navegador) ══ */
@@ -1045,13 +1061,14 @@ body.calm .v2 .btn-exec.ready{animation:none}
   body.in-game .maze-card{align-self:center}
   body.in-game #screen-game{padding:0;gap:8px}
   body.in-game .game-main,body.in-game .game-side{gap:8px}
-  body.in-game .topbar{width:calc(100vw - 16px - 100px);padding:6px 10px;gap:6px}
+  body.in-game .lbl-timer{display:none}   /* celular: o relógio não tira pontos e o tempo aparece no fim da fase; sobra espaço para os 3 botões do canto */
+  body.in-game .topbar{width:calc(100vw - 16px - 150px);padding:6px 10px;gap:6px}
   body.in-game .lbl-phase{font-size:1rem}
   body.in-game .lbl-timer{font-size:.95rem}
   body.in-game .topbar .btn-ghost{padding:4px 10px!important;font-size:.8rem!important}
   body.in-game .maze-card{padding:4px 0 2px}
   body.in-game .queue-card{width:calc(100vw - 16px);padding:6px 8px;gap:2px}
-  body.in-game .q-row{height:46px}
+  body.in-game .q-row{height:auto;min-height:46px;max-height:94px;flex-wrap:wrap;align-content:flex-start;overflow-x:hidden;overflow-y:auto}
   body.in-game .q-chip{width:42px;height:42px}
   body.in-game .q-msg{min-height:1.2em;font-size:.76rem;line-height:1.15}
   body.in-game .game-side.v2{width:calc(100vw - 16px);gap:8px}
@@ -1064,9 +1081,10 @@ body.calm .v2 .btn-exec.ready{animation:none}
 </head>
 <body>
 
-<div id="say-bubble" class="say-bubble" role="status" aria-live="polite" onclick="hideSay()"></div>
+<div id="say-bubble" class="say-bubble" role="status" aria-live="polite" onclick="listenBubble()" title="Toque para ouvir"></div>
 <button id="btn-sound" class="btn-sound" onclick="toggleSound()" aria-label="Ligar ou desligar o som"></button>
 <button id="btn-motion" class="btn-sound btn-motion" onclick="toggleMotion()"></button>
+<button id="btn-voice" class="btn-sound btn-voice" onclick="toggleVoice()"></button>
 
 <!-- fundo do Jardim Secreto (fica fora da tela animada para cobrir a janela inteira, sem recorte) -->
 <div class="garden-bg" id="garden-bg" aria-hidden="true"></div>
@@ -1093,7 +1111,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
 
     <!-- cena: a Mimi numa folha, olhando para a estrela (tocar na Mimi faz ela dar oi) -->
     <div class="mimi-hello">
-      <div class="mimi-bubble" id="mimi-bubble" aria-live="polite">Oi! Me ajuda a chegar na estrela?</div>
+      <div class="mimi-bubble" id="mimi-bubble" aria-live="polite" onclick="event.stopPropagation();sayAloud(this.textContent)" title="Toque para ouvir">Oi! Me ajuda a chegar na estrela?</div>
       <div class="stage-row">
         <button class="mimi-touch" onclick="pokeMimi()" aria-label="Tocar na Mimi para ela dizer oi">
           <svg class="stage-leaf" viewBox="0 0 200 60" aria-hidden="true"><path d="M8,34 C40,4 150,0 194,30 C150,58 40,60 8,34Z" fill="#2fb55a" stroke="#1f8a3a" stroke-width="3"/><path d="M14,34 Q100,22 188,30" stroke="#5fd47e" stroke-width="3" fill="none"/></svg>
@@ -1112,6 +1130,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
         JOGAR
       </button>
       <button class="btn-how" onclick="showScreen('screen-how')"><span data-ico="help" data-size="22"></span> Como jogar</button>
+      <button class="btn-adults" onclick="openModal('adults-info')">Para pais e professores</button>
     </div>
 
   </div>
@@ -1213,6 +1232,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
     <div class="grid-wrap">
       <div id="fruit-layer" aria-hidden="true"></div>
       <div id="game-grid"></div>
+      <div id="maze-status" class="sr-only" aria-live="polite"></div>
       <div id="mimi-token" class="instant" aria-hidden="true"><span class="mimi-inner"></span></div>
     </div>
   </div>
@@ -1221,6 +1241,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
   <div class="queue-card glass">
     <div class="q-row" id="queue-wrap" aria-label="Comandos da Mimi"></div>
     <div class="q-msg" id="queue-msg" aria-live="polite"></div>
+          <button type="button" class="q-listen" onclick="sayAloud(document.getElementById('queue-msg').textContent)" aria-label="Ouvir a mensagem"><span data-ico="soundOn" data-size="18"></span> Ouvir</button>
     <div class="q-tools">
       <button class="q-tool rep" onclick="repeatLast()" aria-label="Repetir o último comando" title="Repete o último comando mais vezes"><span data-ico="repeat" data-size="18"></span> Repetir</button>
       <button class="q-tool undo" onclick="undoCmd()" aria-label="Apagar o último comando" title="Apaga o último comando"><span data-ico="undo" data-size="18"></span> Apagar</button>
@@ -1240,7 +1261,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
     </div>
   </div>
   <button class="hint-bar" onclick="toggleHint()">
-    <span class="hint-label" id="hint-label">COMO SAIR!</span>
+    <span class="hint-ico" data-ico="bulb" data-size="22" aria-hidden="true"></span><span class="hint-label" id="hint-label">DICA</span>
   </button>
  </div>
 </div>
@@ -1419,7 +1440,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
     </div>
 
     <div class="garden-msg">
-      <span data-ico="garland" data-size="22"></span> Você foi um programador incrível! <span data-ico="garland" data-size="22"></span>
+      <span data-ico="garland" data-size="22"></span> Você programou muito bem! <span data-ico="garland" data-size="22"></span>
     </div>
 
     <div class="garden-score-row">
@@ -1442,6 +1463,31 @@ body.calm .v2 .btn-exec.ready{animation:none}
 </div>
 
 <!-- PERGUNTA ANTES DA DICA -->
+<!-- PARA PAIS E PROFESSORES: o que o jogo guarda (LGPD / ECA Digital) -->
+<div class="modal-back" id="adults-info" hidden onclick="if(event.target===this)closeModal('adults-info')">
+  <div class="modal-card glass adults-card" role="dialog" aria-modal="true" aria-labelledby="adults-title">
+    <div class="modal-msg" id="adults-title">Para pais e professores</div>
+    <ul class="adults-list">
+      <li>O jogo não pede nome, e-mail, foto nem nenhum outro dado da criança.</li>
+      <li>Nada é enviado para a internet. O progresso (fases, estrelas e roupinhas) fica salvo só neste aparelho e some ao limpar os dados do navegador.</li>
+      <li>Não tem anúncios, compras, sorteios, chat nem links para fora do jogo.</li>
+      <li>Para quem ainda está aprendendo a ler, ligue a voz da Mimi no botão do balãozinho, no canto da tela.</li>
+      <li>A cada 20 minutos jogando, a Mimi sugere uma pausa.</li>
+    </ul>
+    <div class="modal-btns"><button class="btn-exec" onclick="closeModal('adults-info')">Entendi</button></div>
+  </div>
+</div>
+
+<!-- PAUSA: a cada 20 minutos de jogo, a Mimi sugere descansar -->
+<div class="modal-back" id="break-reminder" hidden>
+  <div class="modal-card glass" role="dialog" aria-modal="true" aria-labelledby="break-msg" aria-describedby="break-sub">
+    <div class="modal-icon"><span data-ico="heart" data-size="56"></span></div>
+    <div class="modal-msg" id="break-msg">Que tal uma pausa?</div>
+    <div class="modal-sub" id="break-sub">Você já está jogando faz um tempinho. Beba água, estique o corpo e descanse os olhos!</div>
+    <div class="modal-btns"><button class="btn-exec" id="break-ok" onclick="closeModal('break-reminder')">Voltar a jogar</button></div>
+  </div>
+</div>
+
 <div class="modal-back" id="hint-confirm" hidden>
   <div class="modal-card glass" role="dialog" aria-modal="true" aria-labelledby="hint-confirm-msg" aria-describedby="hint-confirm-sub">
     <div class="modal-icon"><span data-ico="bulb" data-size="56"></span></div>
@@ -1798,6 +1844,8 @@ const ICONS={
   arrowLeft:`<polygon points="3,12 20,2 20,22" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>`,
   arrowRight:`<polygon points="21,12 4,2 4,22" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>`,
   soundOn:`<path d="M3 9 H7 L12 4.5 V19.5 L7 15 H3 Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M15.5 8.5 a5 5 0 0 1 0 7 M18.4 5.6 a9 9 0 0 1 0 12.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>`,
+  voiceOn:`<path d="M4 4.5 H20 a2 2 0 0 1 2 2 V15 a2 2 0 0 1 -2 2 H11 L6.5 20.5 V17 H4 a2 2 0 0 1 -2 -2 V6.5 a2 2 0 0 1 2 -2 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="10.8" r="1.5" fill="currentColor"/><circle cx="12" cy="10.8" r="1.5" fill="currentColor"/><circle cx="16.5" cy="10.8" r="1.5" fill="currentColor"/>`,
+  voiceOff:`<path d="M4 4.5 H20 a2 2 0 0 1 2 2 V15 a2 2 0 0 1 -2 2 H11 L6.5 20.5 V17 H4 a2 2 0 0 1 -2 -2 V6.5 a2 2 0 0 1 2 -2 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 2.5 L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>`,
   soundOff:`<path d="M3 9 H7 L12 4.5 V19.5 L7 15 H3 Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M16 9 L22 15 M22 9 L16 15" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>`,
 };
 function ico(name,size=24){
@@ -2098,7 +2146,7 @@ let phaseScores=new Array(PHASE_COUNT+1).fill(null);  // [0] = treino (não entr
 let timer=null,timerSecs=0;
 let hintOn=false,hintPath=[],penHint=false;
 const HINT_COST=15, MISSING_COST=15, EXTRA_STEP_COST=7;
-function hintLabelText(){return curPhase===0||penHint?'Como sair!':'Como sair! (menos '+HINT_COST+' pontos)';}
+function hintLabelText(){return curPhase===0||penHint?'Dica':'Dica (tira '+HINT_COST+' pontos)';}
 let collected=new Set();
 // brinde que a criança já tem não aparece mais na fase (e não tira pontos)
 function giftOwned(v){const id=(PHASE_PICKUPS[curPhase]||{})[v];return !!id&&unlockedItems.has(id);}
@@ -2139,7 +2187,7 @@ function saveState(){
       unlockedItems:[...unlockedItems],
       equippedHat,equippedOutfit,
       seenItems:[...seenItems],
-      soundOn,motionOn,mimiColor,
+      soundOn,motionOn,voiceOn,mimiColor,
       seenColors:[...seenColors],
     }));
   }catch(e){console.warn('Não foi possível salvar o progresso:',e);}
@@ -2169,6 +2217,7 @@ function loadState(){
     if(Array.isArray(data.seenItems))data.seenItems.filter(valid).forEach(id=>seenItems.add(id));
     if(typeof data.soundOn==='boolean')soundOn=data.soundOn;
     if(typeof data.motionOn==='boolean')motionOn=data.motionOn;
+    if(typeof data.voiceOn==='boolean')voiceOn=data.voiceOn;
     const OLD_COL={dourada:'bege',laranja:'vermelha'},cid=id=>OLD_COL[id]||id;
     const col=MIMI_COLORS.find(c=>c.id===cid(data.mimiColor));
     if(col&&colorUnlocked(col))mimiColor=col.id;
@@ -2332,7 +2381,8 @@ document.addEventListener('pointerdown',function unlockAudio(){
 // opts.bubble=false: o texto já está na tela (aviso, título), então só tocam os barulhinhos
 let sayTimer=0;
 function speak(text,opts={}){
-  if(opts.sound!==false)mimiBabble(text);
+  lastSaid=text;
+  if(!(voiceOn&&soundOn&&sayAloud(text))&&opts.sound!==false)mimiBabble(text);
   if(opts.bubble===false)return;
   const active=document.querySelector('.screen.active');
   if(active&&active.id==='screen-start'){const b=document.getElementById('mimi-bubble');if(b){b.textContent=text;return;}}
@@ -2359,6 +2409,43 @@ function speak(text,opts={}){
   el.classList.toggle('below',below);el.classList.add('show');
   clearTimeout(sayTimer);
   sayTimer=setTimeout(hideSay,Math.max(2600,text.length*75));   // fica o tempo de uma criança ler
+}
+// VOZ DA MIMI (opcional, começa desligada): lê em voz alta o que a Mimi diz, para quem ainda está aprendendo a ler.
+// Liga no botão do balãozinho (canto da tela). Mesmo desligada, tocar num balão ou em "Ouvir" lê aquele texto.
+let voiceOn=false,ptVoice=null,lastSaid='';
+function pickVoice(){
+  if(!('speechSynthesis' in window))return;
+  const v=speechSynthesis.getVoices();
+  ptVoice=v.find(x=>/^pt[-_]BR/i.test(x.lang))||v.find(x=>/^pt/i.test(x.lang))||null;
+}
+if('speechSynthesis' in window){pickVoice();try{speechSynthesis.addEventListener('voiceschanged',pickVoice);}catch(e){speechSynthesis.onvoiceschanged=pickVoice;}}
+function sayAloud(text){
+  text=(text||'').replace(/\s+/g,' ').trim();
+  if(!text||!soundOn||!('speechSynthesis' in window))return false;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='pt-BR';if(ptVoice)u.voice=ptVoice;u.rate=.95;u.pitch=1.35;
+    if(window.Mimi3D){Mimi3D.talking=true;u.onend=u.onerror=()=>{Mimi3D.talking=false;};}
+    speechSynthesis.speak(u);return true;
+  }catch(e){return false;}
+}
+function listenBubble(){
+  const el=document.getElementById('say-bubble');if(!el)return;
+  sayAloud(el.textContent);
+  clearTimeout(sayTimer);sayTimer=setTimeout(hideSay,Math.max(3500,el.textContent.length*90));   // fica mais um pouco enquanto ela fala
+}
+function updateVoiceBtn(){
+  const b=document.getElementById('btn-voice');if(!b)return;
+  b.innerHTML=ico(voiceOn?'voiceOn':'voiceOff',26);
+  b.classList.toggle('off',!voiceOn);
+  const t=voiceOn?'Desligar a voz da Mimi':'Ligar a voz da Mimi (ela lê os textos)';
+  b.setAttribute('aria-label',t);b.title=t;b.setAttribute('aria-pressed',String(voiceOn));
+}
+function toggleVoice(){
+  voiceOn=!voiceOn;updateVoiceBtn();saveState();
+  if(voiceOn){if(!soundOn){soundOn=true;updateSoundBtn();musicStart();}sayAloud('Oba! Agora eu leio tudo para você!');}
+  else try{speechSynthesis.cancel();}catch(e){}
 }
 function hideSay(){clearTimeout(sayTimer);const el=document.getElementById('say-bubble');if(el){el.classList.remove('show');el.style.display='none';}}
 // "vozinha" da Mimi: um barulhinho por sílaba (no máximo 10), e a boquinha mexe junto
@@ -2391,7 +2478,7 @@ function toggleMotion(){motionOn=!motionOn;updateMotionBtn();saveState();}
 function toggleSound(){
   soundOn=!soundOn;
   updateSoundBtn();saveState();
-  if(soundOn){sfxAdd();musicStart();}else musicStop();
+  if(soundOn){sfxAdd();musicStart();}else{musicStop();try{speechSynthesis.cancel();}catch(e){}}
 }
 
 // ═══════════════════════════════════
@@ -2402,6 +2489,7 @@ fillIcons();
 document.querySelectorAll('[data-stars]').forEach(e=>{e.innerHTML=starsHTML(3,36);});
 updateSoundBtn();
 updateMotionBtn();
+updateVoiceBtn();
 showMimi(document.getElementById('how-mimi'),52,'normal');
 refreshStart();
 
@@ -2649,9 +2737,27 @@ function setTimerText(){
   const m=String(Math.floor(timerSecs/60)).padStart(2,'0'),s=String(timerSecs%60).padStart(2,'0');
   document.getElementById('timer-text').textContent=`${m}:${s}`;
 }
+// PAUSA: conta o tempo jogando (só com uma fase aberta) e, a cada 20 minutos, a Mimi sugere descansar
+const BREAK_EVERY=20*60;
+let playSecs=0;
 function startTimer(){
   clearInterval(timer);timerSecs=0;setTimerText();
-  timer=setInterval(()=>{timerSecs++;setTimerText();},1000);
+  timer=setInterval(()=>{
+    timerSecs++;setTimerText();
+    if(++playSecs%BREAK_EVERY===0&&!executing)showBreak();
+    else if(playSecs%BREAK_EVERY===0)playSecs--;      // espera a Mimi parar de andar
+  },1000);
+}
+function showBreak(){openModal('break-reminder');speak('Que tal uma pausa? Beba água, estique o corpo e descanse os olhos!',{bubble:false});}
+let modalReturn=null;
+function openModal(id){
+  modalReturn=document.activeElement;
+  const m=document.getElementById(id);m.hidden=false;
+  const b=m.querySelector('button');if(b)b.focus();
+}
+function closeModal(id){
+  document.getElementById(id).hidden=true;
+  if(modalReturn&&modalReturn.focus)try{modalReturn.focus();}catch(e){}
 }
 
 // ═══════════════════════════════════
@@ -2660,6 +2766,7 @@ function startTimer(){
 function startPhase(idx){
   if(!isUnlocked(idx)){showPhases();return;}   // fase ainda fechada: volta para o mapa
   runId++;hideAllToasts();            // cancela qualquer execução que ainda estivesse rodando
+  document.getElementById('maze-status').textContent='';
   curPhase=idx;cmdQueue=[];executing=false;doneCount=0;errorCount=0;
   mapMimiAt=idx;                      // no mapa, a Mimi vai estar nesta fruta
   hintOn=false;hintPath=[];penHint=false;collected=new Set();
@@ -2863,10 +2970,22 @@ function calcCell(lvl,ncols){
   if(availH>0)cs=Math.min(cs,(availH-(rows-1)*gap)/rows);
   return Math.max(20,Math.floor(cs));
 }
+// LEITOR DE TELA: o labirinto é um desenho, então ele ganha uma frase dizendo onde a Mimi está
+function mazeDescription(){
+  const lvl=LEVELS[curPhase],st=findCells(lvl,3)[0];
+  const d=st?distMap(lvl,playerR,playerC)[st[0]][st[1]]:-1;
+  const gifts=[4,7].filter(giftPending).length;
+  let t=`Labirinto da fruta ${FRUITS[curPhase].name}. `;
+  t+=d===0?'A Mimi chegou na estrela.':d>0?`A Mimi está a ${d} ${d===1?'casa':'casas'} da estrela.`:'A Mimi está no labirinto.';
+  if(gifts)t+=gifts===1?' Tem um presente no caminho.':` Tem ${gifts} presentes no caminho.`;
+  return t;
+}
+function announceMaze(){const el=document.getElementById('maze-status');if(el)el.textContent=mazeDescription();}
 function renderGrid(animate=false,instant=false){
   const lvl=LEVELS[curPhase];
   const [c0,c1]=viewCols(lvl),ncols=c1-c0+1;
   const g=document.getElementById('game-grid');
+  g.setAttribute('role','img');g.setAttribute('aria-label',mazeDescription());
   const cs=calcCell(lvl,ncols);window.__cs=cs;
   g.style.setProperty('--cs',cs+'px');
   g.style.gridTemplateColumns=`repeat(${ncols},${cs}px)`;
@@ -2963,8 +3082,10 @@ window.addEventListener('resize',()=>{
 });
 // Teclado: setas = comandos, Enter = executar, Backspace = apagar o último, Esc = limpar
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!document.getElementById('adults-info').hidden){closeModal('adults-info');return;}
   if(!document.getElementById('screen-game').classList.contains('active'))return;
   if(!document.getElementById('hint-confirm').hidden){if(e.key==='Escape')confirmHint(false);return;}   // com a pergunta aberta, o teclado só responde a ela
+  if(!document.getElementById('break-reminder').hidden){if(e.key==='Escape')closeModal('break-reminder');return;}
   const map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
   const onArrowBtn=e.target.matches&&e.target.matches('.ctrl-btn:not(.tool)');
   if(map[e.key]){e.preventDefault();addCmd(map[e.key]);}
@@ -3129,7 +3250,7 @@ async function executeQueue(stepOnly=false){
 
   // Os comandos acabaram sem chegar na estrela: não é erro. A Mimi fica onde parou e o jogador continua.
   doneCount=end;executing=false;
-  refreshHint();renderGrid();renderQueue();
+  refreshHint();renderGrid();renderQueue();announceMaze();
 }
 
 // ERRO: 1º erro = chance de continuar (sem punição). 2º erro = a fase recomeça. No treino, sempre há nova chance.
@@ -3158,16 +3279,20 @@ async function handleError(kind,i,k,prevR,prevC,myRun){
     if(k>0)keep.push({d:cmdQueue[i].d,n:k});
     cmdQueue=keep;doneCount=keep.length;
     executing=false;
-    refreshHint();renderGrid();renderQueue();
+    refreshHint();renderGrid();renderQueue();announceMaze();
     return;
   }
 
   if(kind==='rock')penRock+=25;else penWall+=5;
-  showErrorToast(kind==='rock'?'rock':'brick',`Bati na ${what} de novo!`,'A fase vai recomeçar. Você consegue!');
+  showErrorToast(kind==='rock'?'rock':'brick',`Bati na ${what} de novo!`,'Vou voltar para o começo. Seus comandos ficam aí para você consertar!');
   sfxRestart();
-  await sleep(1900);if(myRun!==runId)return;
+  await sleep(2400);if(myRun!==runId)return;
   hideToast('toast-error');
+  // some só o comando que errou (e os seguintes); o resto fica na fila e roda de novo desde o começo
+  const keep=cmdQueue.slice(0,i);
+  if(k>0)keep.push({d:cmdQueue[i].d,n:k});
   restartAttempt();
+  cmdQueue=keep;renderQueue();
 }
 
 function restartAttempt(){
@@ -3335,21 +3460,23 @@ function phaseComplete(steps,blocks=steps){
   document.querySelector('.dressup-card').style.display='';
 
   let bd='';
-  if(extra>0)    bd+=`<span style="color:#ffdce4">−${extra*EXTRA_STEP_COST} pontos: passos a mais</span><br>`;
-  if(missing>0)  bd+=`<span style="color:#ffd66b">−${missing*MISSING_COST} pontos: ${missing===1?'brinde não coletado':'brindes não coletados'}</span><br>`;
+  if(extra>0)    bd+=`<span style="color:#ffdce4">−${extra*EXTRA_STEP_COST} pontos: andou a mais</span><br>`;
+  if(missing>0)  bd+=`<span style="color:#ffd66b">−${missing*MISSING_COST} pontos: ${missing===1?'presente ficou para trás':'presentes ficaram para trás'}</span><br>`;
   if(penMud>0)   bd+=`<span style="color:#ffcf9a">−${penMud} pontos: lama</span><br>`;
   if(penRock>0)  bd+=`<span style="color:#ff9aa8">−${penRock} pontos: pedra</span><br>`;
   if(penWall>0)  bd+=`<span style="color:#ffb27a">−${penWall} pontos: parede</span><br>`;
   if(hPen>0)     bd+=`<span style="color:#e2b0ff">−${hPen} pontos: dica usada</span><br>`;
 
-  const spAll=minRoute(lvl,[4,7].filter(v=>collected.has(v)||giftPending(v)).flatMap(v=>findCells(lvl,v)));
-  const cmdTxt=blocks<steps?` com só ${blocks} comandos`:'';
+  // frases curtas para 6 a 8 anos + as setas que a criança usou (cada seta com ×2, ×3 conta como uma)
+  const cmds=lastPath&&lastPath.phase===curPhase?lastPath.cmds:[];
+  const chips=`<span class="sc-chips" aria-label="Setas usadas: ${cmds.map(c=>ARROW_NAME[c.d]+(c.n>1?` ${c.n} vezes`:'')).join(', ')}">${cmds.map(c=>`<span class="sc-chip">${ico(ARROW_ICON[c.d],18)}${c.n>1?`<b>×${c.n}</b>`:''}</span>`).join('')}</span>`;
+  const setas=`${blocks} ${blocks===1?'seta':'setas'}`;
   const algoMsg=missing>0
-    ? `<span style="color:#ffe3a8;font-size:.95rem">${ico('bulb',18)} Você usou ${steps} passos${cmdTxt}. Pegando ${missing===1?'o brinde que faltou':'os brindes que faltaram'}, o caminho mínimo é ${spAll} passos.</span>`
+    ? `<span style="color:#ffe3a8;font-size:.95rem">${ico('bulb',18)} Você usou ${setas}. Da próxima vez, pegue ${missing===1?'o presente':'os presentes'} no caminho!</span>`
     : steps<=sp
-    ? `<span style="color:#9effc4;font-size:.95rem">${ico('bulb',18)} Algoritmo ótimo! Você usou ${steps} passos${cmdTxt} (mínimo: ${sp})</span>`
-    : `<span style="color:#ffe3a8;font-size:.95rem">${ico('bulb',18)} Você usou ${steps} passos${cmdTxt}. O caminho mínimo era ${sp}.</span>`;
-  const timeMsg=`<br><span style="color:#bfe3ff;font-size:.9rem">${ico('clock',16)} Tempo: ${fmtTime(timerSecs)} (não tira pontos)</span>`;
+    ? `<span style="color:#9effc4;font-size:.95rem">${ico('bulb',18)} Caminho mais curto! Você usou ${setas}.</span>`
+    : `<span style="color:#ffe3a8;font-size:.95rem">${ico('bulb',18)} Você usou ${setas}. Tem um caminho mais curto. Quer tentar achar?</span>`;
+  const timeMsg=`${chips}<span style="color:#bfe3ff;font-size:.9rem">${ico('clock',16)} Tempo: ${fmtTime(timerSecs)} (o tempo não tira pontos)</span>`;
   const bestMsg=(!improved)?`<br><span style="font-size:.9rem">${ico('star',16)} Sua melhor nota continua sendo ${best} pontos</span>`:'';
 
   document.getElementById('score-breakdown').innerHTML=
@@ -3505,7 +3632,7 @@ function renderItemsGrid(){
         saveState();
       };
     } else {
-      slot.innerHTML=`<span class="item-lock">${ico('lock',30)}</span><span class="item-name" style="opacity:.6">${item.label}</span>`;
+      slot.innerHTML=`<span class="item-lock">${ico('lock',30)}</span><span class="item-name" style="opacity:.85">${item.label}</span>`;
     }
     grid.appendChild(slot);
   });
@@ -3534,7 +3661,7 @@ function showFinal(){
   const gf=document.getElementById('garden-fly');gf.dataset.fly='1';
   showMimi(gf,110,'happy');
   spawnGardenParticles();confetti();
-  speak('Eu virei uma borboleta! Você foi um programador incrível!',{bubble:false});
+  speak('Eu virei uma borboleta! Você programou muito bem!',{bubble:false});
 }
 
 // TRANSFORMAÇÃO: lagarta → casulo → borboleta, e depois o resultado final
