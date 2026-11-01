@@ -201,10 +201,12 @@ function buildHat(id){
     });
     g.rotation.z=-.15;
   }else if(id==='hat_laco'){
-    const pink=phys({color:'#ff9ec7',roughness:.35,clearcoat:.6,sheen:.5});
+    // laço pink forte (bem diferente do rosa da Mimi)
+    const pink=phys({color:'#ff1f8e',roughness:.35,clearcoat:.6,sheen:.5});
+    const knot=phys({color:'#d4006e',roughness:.35,clearcoat:.6,sheen:.5});
     const l=ball(.17,pink,0,.12,-.17,.6,.75,1.15);l.rotation.x=.4;g.add(l);
     const r=ball(.17,pink,0,.12,.17,.6,.75,1.15);r.rotation.x=-.4;g.add(r);
-    g.add(ball(.08,pink,0,.12,0));
+    g.add(ball(.08,knot,0,.12,0));
     g.position.set(.05,0,.1);g.rotation.x=-.35;
   }else if(id==='hat_bone'){
     const blue=std('#8ecbf5',{roughness:.6});

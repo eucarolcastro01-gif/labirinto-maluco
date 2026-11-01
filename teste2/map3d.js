@@ -79,8 +79,8 @@ function buildFruit(id){
   g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.userData.color=o.material.color.clone();}});
   return g;
 }
-// fruta fechada: fica cinzinha
-function tint(g,locked){g.traverse(o=>{if(o.isMesh){const c=o.userData.color.clone();if(locked){const l=c.getHSL({}).l;c.setHSL(.7,.08,.38+l*.3);}o.material.color.copy(c);if(o.material.map)o.material.opacity=1;}});}
+// fruta fechada: fica apagadinha (todas do mesmo jeito), mas ainda dá para reconhecer a fruta
+function tint(g,locked){g.traverse(o=>{if(o.isMesh){const c=o.userData.color.clone();if(locked)c.lerp(new THREE.Color('#9a9aa8'),o.material.map?.55:.45);o.material.color.copy(c);if(o.material.map)o.material.opacity=1;}});}
 
 // ── ENFEITES ──
 function tree(x,z,s=1,kind=0){
@@ -218,7 +218,7 @@ M.build=function(container,opts){
   const st={scene,cam,curve,fruits,stones,clouds,wide,container,t:0,pop:[]};
   function resize(){
     const W=container.clientWidth,Hh=container.clientHeight;
-    renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+    renderer.setPixelRatio(Math.min(1.5,window.devicePixelRatio||1));   // mais leve em celular simples
     renderer.setSize(W,Hh,false);
     renderer.domElement.style.width=W+'px';renderer.domElement.style.height=Hh+'px';
     cam.aspect=W/Hh;
