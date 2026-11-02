@@ -45,12 +45,10 @@ const MAT={
   sweat: phys({color:'#bfe3ff',roughness:.05,transmission:.4,transparent:true,opacity:.85,clearcoat:1}),
   gold:  new THREE.MeshStandardMaterial({color:'#ffd166',metalness:.75,roughness:.28}),
 };
-// cores que a criança ganha jogando (cada fase vencida libera uma). Sem compras e sem sorteio.
+// as 4 cores da Mimi: rosa, bege, vermelha e azul (liberadas jogando). Sem compras e sem sorteio.
 const COLORS={
   rosa:   {body:'#ee5fae',head:'#f477bd',belly:'#ffb3d9',leg:'#d9579f',stalk:'#c94f97',tip:'#ffd166'},
   azul:   {body:'#3d9ff0',head:'#5ab3f6',belly:'#c4e4ff',leg:'#2f88d8',stalk:'#2a76c0',tip:'#ffd166'},
-  verde:  {body:'#43bf63',head:'#5fd07e',belly:'#ccf3d6',leg:'#35a553',stalk:'#2c8f47',tip:'#ffd166'},
-  roxa:   {body:'#9a68f0',head:'#ac82f6',belly:'#e0d3ff',leg:'#8553de',stalk:'#7144c8',tip:'#ffd166'},
   vermelha:{body:'#e53935',head:'#ef5350',belly:'#ffcdd2',leg:'#c62828',stalk:'#b71c1c',tip:'#ffd166'},
   bege:   {body:'#efe3cc',head:'#f6ecda',belly:'#fffaf0',leg:'#d9c7a6',stalk:'#bfa983',tip:'#ff8fc4'},
 };
@@ -219,7 +217,7 @@ function buildHat(id){
   return g;
 }
 
-// ── ROUPINHAS (tênis, suéter, mochila, cachecol, pintinhas) ──
+// ── ROUPINHAS (manchas de vaquinha, joaninha e suéter amarelo) ──
 // tecido listrado desenhado num canvas (listras horizontais = tricô)
 function stripeTex(cols,n=8,knit=true){
   const c=document.createElement('canvas');c.width=64;c.height=128;const x=c.getContext('2d');
@@ -227,32 +225,18 @@ function stripeTex(cols,n=8,knit=true){
   if(knit){x.strokeStyle='rgba(0,0,0,.12)';x.lineWidth=1.5;for(let y=0;y<128;y+=6)for(let xx=0;xx<64;xx+=8){x.beginPath();x.moveTo(xx,y);x.lineTo(xx+4,y+4);x.lineTo(xx+8,y);x.stroke();}}
   const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;
 }
-const SHOE_COLS=['#ff3b55','#3d9ff0','#ffd23f','#43bf63'];
+// "casquinha" que cobre a parte de cima de cada gomo (theta = até onde desce)
+const capGeo=theta=>new THREE.SphereGeometry(1,40,20,0,Math.PI*2,0,theta);
+const LADY_CAP=capGeo(Math.PI*.56),SWEAT_CAP=capGeo(Math.PI*.66);
+let sweaterTex=null;
 function addExtra(g,parent,m){parent.add(m);g.userData.extra=(g.userData.extra||[]).concat(m);}
+function spotOn(s,d,r,mat,lift=.99){
+  const v=new THREE.Vector3(...d).normalize();
+  const m=ball(r,mat,0,0,0,1,1,.35);m.position.copy(v.clone().multiplyScalar(s.r*lift));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),v);return m;
+}
 function buildOutfit(id,rig){
   const g=new THREE.Group();
-  if(id==='out_tenis'){
-    // um tênis em cada perninha: cano colorido, sola branca e cadarço
-    rig.segs.forEach((s,i)=>s.legs.forEach((l,k)=>{
-      const shoe=new THREE.Group();shoe.position.set(.05,-.14,0);shoe.scale.setScalar(1.7);
-      const col=SHOE_COLS[(i+k)%SHOE_COLS.length];
-      shoe.add(ball(.09,std(col,{roughness:.45}),.02,.01,0,1.45,.75,1));
-      shoe.add(ball(.09,std('#ffffff',{roughness:.6}),.03,-.035,0,1.55,.35,1.08));
-      const lace=mesh(new THREE.TorusGeometry(.03,.008,6,12),std('#ffffff'),false);lace.position.set(.05,.06,0);lace.rotation.x=Math.PI/2;shoe.add(lace);
-      addExtra(g,l,shoe);
-    }));
-  }else if(id==='out_galochas'){
-    // galochas de chuva amarelas em cada perninha
-    const boot=std('#ffd23f',{roughness:.35}),sole=std('#c98a00',{roughness:.6});
-    rig.segs.forEach(s=>s.legs.forEach(l=>{
-      const b=new THREE.Group();b.position.set(.02,-.08,0);b.scale.setScalar(1.6);
-      const shaft=mesh(new THREE.CylinderGeometry(.06,.065,.12,14),boot);shaft.position.y=-.01;b.add(shaft);
-      const rim=mesh(new THREE.TorusGeometry(.06,.014,6,16),sole,false);rim.rotation.x=Math.PI/2;rim.position.y=.05;b.add(rim);
-      b.add(ball(.075,boot,.035,-.07,0,1.45,.7,1));
-      b.add(ball(.075,sole,.04,-.1,0,1.5,.3,1.05));
-      addExtra(g,l,b);
-    }));
-  }else if(id==='out_vaquinha'){
+  if(id==='out_vaquinha'){
     // manchinhas de vaquinha: brancas e pretas, com bordas arredondadas
     const white=std('#ffffff',{roughness:.6}),black=std('#1d1a2e',{roughness:.5});
     const spots=[[0,1,0,0],[.3,.6,.75,1],[-.4,.7,-.6,0],[-.2,.45,.85,0],[.25,.5,-.8,1]];
@@ -264,23 +248,27 @@ function buildOutfit(id,rig){
       [[0,0,1],[.6,.35,.6],[-.5,.4,.55],[.2,-.55,.6]].forEach(([dx,dy,sc])=>blob.add(ball(r*sc,mat,dx*r,dy*r,0,1,1,.3)));
       addExtra(g,s.g,blob);
     }));
-  }else if(id==='out_abelha'){
-    // listras finas de abelhinha pintadas no corpo (bem rente, sem sobrar para fora)
-    const c=document.createElement('canvas');c.width=16;c.height=128;const x=c.getContext('2d');
-    x.fillStyle='#000000';x.fillRect(0,52,16,24);
-    const tex=new THREE.CanvasTexture(c);
-    const mat=new THREE.MeshStandardMaterial({map:tex,alphaTest:.5,roughness:1,metalness:0});
-    rig.segs.forEach(s=>{const sh=ball(s.r*1.012,mat,0,0,0,1,1,1);sh.rotation.z=Math.PI/2;sh.castShadow=false;addExtra(g,s.g,sh);});
-  }else if(id==='out_pintinhas'){
-    // pintinhas pretas de joaninha espalhadas pelo corpo
+  }else if(id==='out_joaninha'){
+    // casquinha vermelha de joaninha com bolinhas pretas
+    const red=phys({color:'#e8323f',roughness:.3,clearcoat:.8,clearcoatRoughness:.2});
     const dot=std('#1d1a2e',{roughness:.35});
-    const dirs=[[0,1,0],[.35,.75,.55],[-.35,.75,-.55],[-.3,.7,.6],[.3,.7,-.6],[0,.35,.95],[0,.35,-.95]];
-    rig.segs.forEach((s,i)=>dirs.forEach((d,k)=>{
-      if((i+k)%2&&k>0)return;
-      const v=new THREE.Vector3(...d).normalize();
-      const m=ball(.09+(k===0?.03:0),dot,0,0,0,1,1,.35);m.position.copy(v.clone().multiplyScalar(s.r*.99));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),v);
-      addExtra(g,s.g,m);
-    }));
+    const dirs=[[0,1,0],[.35,.75,.55],[-.35,.75,-.55],[-.3,.7,.6],[.3,.7,-.6],[0,.4,.9],[0,.4,-.9]];
+    rig.segs.forEach((s,i)=>{
+      const cap=mesh(LADY_CAP,red);cap.scale.setScalar(s.r*1.03);addExtra(g,s.g,cap);
+      dirs.forEach((d,k)=>{if((i+k)%2&&k>0)return;addExtra(g,s.g,spotOn(s,d,.085+(k===0?.03:0),dot,1.03));});
+    });
+  }else if(id==='out_sueter'){
+    // suéter amarelo de tricô, com barrinha mais escura em cada gomo
+    if(!sweaterTex){sweaterTex=stripeTex(['#ffd23f','#ffc21a'],10);sweaterTex.repeat.set(4,1);}
+    const knit=phys({color:'#ffffff',map:sweaterTex,roughness:.9,sheen:.6,sheenColor:new THREE.Color('#fff3c4')});
+    const rib=std('#f0a800',{roughness:.8});
+    const th=Math.PI*.66;
+    rig.segs.forEach(s=>{
+      const R=s.r*1.045;
+      const cap=mesh(SWEAT_CAP,knit);cap.scale.setScalar(R);addExtra(g,s.g,cap);
+      const ring=mesh(new THREE.TorusGeometry(R*Math.sin(th),.035,8,40),rib,false);
+      ring.rotation.x=Math.PI/2;ring.position.y=R*Math.cos(th);addExtra(g,s.g,ring);
+    });
   }
   return g;
 }
@@ -358,19 +346,15 @@ function flyDeco(rig){
   (u.decoParts||[]).forEach(m=>m.parent&&m.parent.remove(m));u.decoParts=[];
   const add=(par,m)=>{par.add(m);u.decoParts.push(m);};
   const outfit=(rig.look||'').split('|')[1];
-  if(outfit==='out_pintinhas'){
+  if(outfit==='out_joaninha'){
     const dot=std('#1d1a2e',{roughness:.35,side:THREE.DoubleSide});
     u.wings.forEach(w=>{[[.4,1.15,.16],[.05,1.45,.11],[-.7,.8,.14],[.6,.6,.09]].forEach(([x,z,r])=>[.03,-.03].forEach(o=>{const d=mesh(WG.dot,dot,false);d.position.set(x,o,z);d.scale.setScalar(r);add(w.inner,d);}));});
   }else if(outfit==='out_vaquinha'){
     const white=std('#ffffff',{roughness:.6,side:THREE.DoubleSide}),black=std('#1d1a2e',{roughness:.5,side:THREE.DoubleSide});
     u.wings.forEach(w=>{[[.4,1.15,.2,white],[0,1.5,.13,black],[-.75,.8,.18,black],[.65,.6,.11,white]].forEach(([x,z,r,m])=>[.03,-.03].forEach(o=>{[[0,0,1],[.6,.4,.6],[-.5,.5,.5]].forEach(([dx,dz,sc])=>{const d=mesh(WG.dot,m,false);d.position.set(x+dx*r,o,z+dz*r);d.scale.setScalar(r*sc);add(w.inner,d);});}));});
-  }else if(outfit==='out_abelha'){
-    const black=std('#1d1a2e',{roughness:.5});
-    [-.3,-.62].forEach(x=>{const b=ball(.3,black,x,.72,0,.35,1.04,1.04);b.castShadow=false;add(u.deco,b);});
-  }else if(outfit==='out_galochas'){
-    [[.2,1],[.2,-1],[-.1,1],[-.1,-1]].forEach(([x,side])=>{const b=ball(.08,std('#ffd23f',{roughness:.35}),x,.42,side*.22,1.3,1.2,1);add(u.deco,b);});
-  }else if(outfit==='out_tenis'){
-    [[.2,1],[.2,-1],[-.1,1],[-.1,-1]].forEach(([x,side],i)=>{const sh=ball(.08,std(SHOE_COLS[i],{roughness:.45}),x,.42,side*.22,1.5,.8,1);add(u.deco,sh);});
+  }else if(outfit==='out_sueter'){
+    const knit=std('#ffd23f',{roughness:.9});
+    [-.3,-.62].forEach(x=>{const b=ball(.3,knit,x,.72,0,.35,1.04,1.04);b.castShadow=false;add(u.deco,b);});
   }
 }
 function setButterfly(rig,on){

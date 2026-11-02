@@ -1538,16 +1538,12 @@ function makeMimi(w=100, hat=null, outfit=null, mood='normal'){
   let outfitTopSVG='';
   // roupinhas no desenho (usado só quando o navegador não tem 3D)
   const SEGB=[[28,76,22],[54,72,20],[78,70,20]];
-  if(outfit==='out_tenis'){
-    outfitTopSVG=SEGB.map(([x,y],i)=>[-9,9].map((d,k)=>`<ellipse cx="${x+d}" cy="${y+21}" rx="7" ry="4.5" fill="${['#ff3b55','#3d9ff0','#ffd23f','#43bf63'][(i+k)%4]}" stroke="#333" stroke-width="1"/><rect x="${x+d-7}" y="${y+23}" width="14" height="2.5" rx="1" fill="#fff"/>`).join('')).join('');
-  } else if(outfit==='out_galochas'){
-    outfitTopSVG=SEGB.map(([x,y])=>[-9,9].map(d=>`<rect x="${x+d-5}" y="${y+12}" width="10" height="11" rx="3" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2"/><ellipse cx="${x+d+2}" cy="${y+23}" rx="7" ry="3.5" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2"/>`).join('')).join('');
-  } else if(outfit==='out_vaquinha'){
+  if(outfit==='out_vaquinha'){
     outfitTopSVG=SEGB.map(([x,y,r],i)=>`<path d="M${x-r*.5},${y-r*.55} q8,-6 13,1 q4,7 -4,10 q-10,2 -9,-11z" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width="${i%2?0:1}"/><circle cx="${x+r*.35}" cy="${y+r*.15}" r="4" fill="${i%2?'#fff':'#1d1a2e'}"/>`).join('');
-  } else if(outfit==='out_abelha'){
-    outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-3},${y-r*.82} Q${x+2},${y} ${x-3},${y+r*.82}" stroke="#1d1a2e" stroke-width="5" fill="none" stroke-linecap="round"/>`).join('');
-  } else if(outfit==='out_pintinhas'){
-    outfitTopSVG=SEGB.map(([x,y,r])=>`<circle cx="${x-r*.35}" cy="${y-r*.3}" r="4.5" fill="#1d1a2e"/><circle cx="${x+r*.4}" cy="${y-r*.1}" r="3.6" fill="#1d1a2e"/><circle cx="${x}" cy="${y+r*.4}" r="3.2" fill="#1d1a2e"/>`).join('');
+  } else if(outfit==='out_joaninha'){
+    outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-r*.95},${y+r*.1} A${r*.95},${r*.95} 0 0 1 ${x+r*.95},${y+r*.1}Z" fill="#e8323f" stroke="#8a1020" stroke-width="1.2"/><circle cx="${x-r*.4}" cy="${y-r*.35}" r="4" fill="#1d1a2e"/><circle cx="${x+r*.4}" cy="${y-r*.3}" r="3.4" fill="#1d1a2e"/><circle cx="${x}" cy="${y-r*.7}" r="2.8" fill="#1d1a2e"/>`).join('');
+  } else if(outfit==='out_sueter'){
+    outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-r},${y+r*.25} A${r},${r} 0 0 1 ${x+r},${y+r*.25}Z" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2"/><rect x="${x-r}" y="${y+r*.18}" width="${r*2}" height="4" rx="2" fill="#f5b800"/><path d="M${x-r*.6},${y-r*.35} h${r*1.2} M${x-r*.75},${y-r*.05} h${r*1.5}" stroke="#f5b800" stroke-width="2" stroke-dasharray="3 2"/>`).join('');
   }
 
   let hatSVG='';
@@ -1755,11 +1751,9 @@ function makeMimiTiny(){
   let outfitBehindSVG = '';
   let outfitTopSVG = '';
   const SEGT=[[16,48,14],[30,45,13],[44,42,13]];
-  if(outfit==='out_tenis') outfitTopSVG=SEGT.map(([x,y],i)=>`<ellipse cx="${x}" cy="${y+13}" rx="6" ry="3.5" fill="${['#ff3b55','#3d9ff0','#ffd23f'][i]}" stroke="#333" stroke-width=".8"/>`).join('');
-  else if(outfit==='out_galochas') outfitTopSVG=SEGT.map(([x,y])=>`<rect x="${x-4}" y="${y+8}" width="8" height="8" rx="2" fill="#ffd23f" stroke="#c98a00" stroke-width=".8"/>`).join('');
-  else if(outfit==='out_vaquinha') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<circle cx="${x-r*.25}" cy="${y-r*.3}" r="3.6" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width=".6"/>`).join('');
-  else if(outfit==='out_abelha') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x},${y-r*.8} V${y+r*.8}" stroke="#1d1a2e" stroke-width="3.5" stroke-linecap="round"/>`).join('');
-  else if(outfit==='out_pintinhas') outfitTopSVG=SEGT.map(([x,y,r])=>`<circle cx="${x-r*.3}" cy="${y-r*.3}" r="2.6" fill="#1d1a2e"/><circle cx="${x+r*.35}" cy="${y}" r="2.2" fill="#1d1a2e"/>`).join('');
+  if(outfit==='out_vaquinha') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<circle cx="${x-r*.25}" cy="${y-r*.3}" r="3.6" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width=".6"/>`).join('');
+  else if(outfit==='out_joaninha') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x-r*.9},${y} A${r*.9},${r*.9} 0 0 1 ${x+r*.9},${y}Z" fill="#e8323f" stroke="#8a1020" stroke-width=".8"/><circle cx="${x-r*.3}" cy="${y-r*.4}" r="2.4" fill="#1d1a2e"/><circle cx="${x+r*.35}" cy="${y-r*.3}" r="2" fill="#1d1a2e"/>`).join('');
+  else if(outfit==='out_sueter') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x-r*.95},${y+r*.2} A${r*.95},${r*.95} 0 0 1 ${x+r*.95},${y+r*.2}Z" fill="#ffd23f" stroke="#c98a00" stroke-width=".8"/>`).join('');
 
   return `<svg width="${tw}" height="${th}" viewBox="0 0 88 72" xmlns="http://www.w3.org/2000/svg">
   ${outfitBehindSVG}
@@ -1831,6 +1825,7 @@ const ICONS={
   bee:`<ellipse cx="12" cy="14" rx="7.5" ry="6.5" fill="#ffd23f" stroke="#1d1a2e" stroke-width="1.1"/><path d="M9 8.3 V19.7 M14.5 7.8 V20.2" stroke="#1d1a2e" stroke-width="2.4"/><ellipse cx="9" cy="5.5" rx="4" ry="3" fill="#cfefff" stroke="#6aa" stroke-width=".9"/><ellipse cx="15" cy="5.5" rx="4" ry="3" fill="#cfefff" stroke="#6aa" stroke-width=".9"/>`,
   ladybug:`<circle cx="12" cy="13.5" r="8" fill="#e8323f" stroke="#8a1020" stroke-width="1.1"/><path d="M12 5.5 V21.5" stroke="#1d1a2e" stroke-width="1.2"/><circle cx="12" cy="5.5" r="3.6" fill="#1d1a2e"/><g fill="#1d1a2e"><circle cx="8" cy="11" r="1.8"/><circle cx="16" cy="11" r="1.8"/><circle cx="8.5" cy="16.5" r="1.6"/><circle cx="15.5" cy="16.5" r="1.6"/></g>`,
   sneaker:`<path d="M3 15 Q3 9 7 9 L10 9 Q11 12 15 12.5 L19 13.5 Q21.5 14.5 21.5 17 H3Z" fill="#3d9ff0" stroke="#1f5c9e" stroke-width="1.1" stroke-linejoin="round"/><path d="M3 17 H21.5 V19 Q21.5 20 20.5 20 H4 Q3 20 3 19Z" fill="#fff" stroke="#9aa" stroke-width=".9"/><path d="M9.5 11 L12 10.5 M10.5 12.5 L13 12" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>`,
+  sweater:`<path d="M8 3 L3 7 L4.5 14 L7 13.5 V21 H17 V13.5 L19.5 14 L21 7 L16 3 Q12 6 8 3 Z" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 19 H17 M8 10 H16 M8 13 H16" stroke="#f5a800" stroke-width="1.1" stroke-dasharray="1.6 1.2"/>`,
   shirt:`<path d="M8 3 L3 6 L5 10 L7.5 9 V21 H16.5 V9 L19 10 L21 6 L16 3 Q12 6 8 3 Z" fill="#5ecfca" stroke="#2a8f8a" stroke-width="1.2" stroke-linejoin="round"/>`,
   trophy:`<path d="M7 3 H17 V9 a5 5 0 0 1 -10 0 Z" fill="#ffd700" stroke="#c8a000" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5 H3.5 V7 a4 4 0 0 0 4 4 M17 5 H20.5 V7 a4 4 0 0 1 -4 4" fill="none" stroke="#c8a000" stroke-width="1.6" stroke-linecap="round"/><rect x="10.5" y="13.5" width="3" height="4" fill="#e8b800" stroke="#c8a000" stroke-width="1"/><rect x="7" y="17.5" width="10" height="3.5" rx="1" fill="#ffd700" stroke="#c8a000" stroke-width="1.2"/>`,
   bulb:`<path d="M12 2 a7 7 0 0 0 -4 12.7 V17 h8 v-2.3 A7 7 0 0 0 12 2 Z" fill="#ffe66d" stroke="#d4a000" stroke-width="1.2" stroke-linejoin="round"/><rect x="8.5" y="18" width="7" height="2.4" rx="1.2" fill="#b0b4c4" stroke="#7a8094" stroke-width=".8"/><rect x="9.5" y="20.6" width="5" height="1.6" rx=".8" fill="#9aa0b4"/>`,
@@ -1876,19 +1871,17 @@ const ITEMS=[
   {id:'hat_laco',     type:'hat',    icon:'bow',       label:'Laço Fofo'},
   {id:'hat_bone',     type:'hat',    icon:'cap',       label:'Boné'},
   {id:'out_vaquinha', type:'outfit', icon:'cow',       label:'Vaquinha'},
-  {id:'out_galochas', type:'outfit', icon:'boot',      label:'Galochas'},
-  {id:'out_abelha',   type:'outfit', icon:'bee',       label:'Abelhinha'},
-  {id:'out_pintinhas',type:'outfit', icon:'ladybug',   label:'Pintinhas'},
-  {id:'out_tenis',    type:'outfit', icon:'sneaker',   label:'Tênis'},
+  {id:'out_joaninha', type:'outfit', icon:'ladybug',   label:'Joaninha'},
+  {id:'out_sueter',   type:'outfit', icon:'sweater',   label:'Suéter Amarelo'},
 ];
 // índice 0 = treino (sem brindes). Valor 4 = brinde A (chapéu), valor 7 = brinde B (roupa)
 const PHASE_COUNT=5;
 const PHASE_PICKUPS=[
   null,
-  {4:'hat_laco'},              // um presente por fruta, intercalando chapéu e roupinha
-  {7:'out_tenis'},
-  {4:'hat_flor'},
-  {7:'out_pintinhas'},
+  {4:'hat_laco'},              // um presente por fruta: o laço, as 3 roupinhas e a coroa no fim
+  {7:'out_vaquinha'},
+  {4:'out_sueter'},
+  {7:'out_joaninha'},
   {4:'hat_coroa'},             // a coroa é o prêmio da última fruta
 ];
 // só aparecem no armário os presentes que dá para ganhar (e os que a criança já ganhou antes)
@@ -2163,14 +2156,12 @@ let replayLog=[];
 let lastPath=null;     // último caminho que chegou na estrela: {phase, cmds} (usado em "Rever caminho")
 const seenItems=new Set();
 let soundOn=true;
-// CORES DA MIMI: rosa desde o começo; cada fase vencida libera mais uma. Nada de compras nem sorteio.
+// CORES DA MIMI: rosa desde o começo; bege, vermelha e azul são liberadas jogando. Nada de compras nem sorteio.
 const MIMI_COLORS=[
   {id:'rosa',label:'Rosa',sw:'#ee5fae',phase:-1,hue:0},
-  {id:'azul',label:'Azul',sw:'#3d9ff0',phase:0,hue:-115},
-  {id:'verde',label:'Verde',sw:'#43bf63',phase:1,hue:-190},
-  {id:'roxa',label:'Roxa',sw:'#9a68f0',phase:2,hue:-60},
-  {id:'vermelha',label:'Vermelha',sw:'#e53935',phase:3,hue:35,flt:'hue-rotate(35deg) saturate(1.3)'},
-  {id:'bege',label:'Bege',sw:'#efe3cc',phase:4,hue:0,flt:'saturate(.12) brightness(1.35) sepia(.25)'},
+  {id:'bege',label:'Bege',sw:'#efe3cc',phase:0,hue:0,flt:'saturate(.12) brightness(1.35) sepia(.25)'},
+  {id:'vermelha',label:'Vermelha',sw:'#e53935',phase:2,hue:35,flt:'hue-rotate(35deg) saturate(1.3)'},
+  {id:'azul',label:'Azul',sw:'#3d9ff0',phase:4,hue:-115},
 ];
 let mimiColor='rosa';
 const seenColors=new Set(['rosa']);
@@ -2205,7 +2196,8 @@ function loadState(){
     if(!raw)return;
     const data=JSON.parse(raw);
     // as roupas antigas viraram roupas novas (mesma fase em que a criança ganhou)
-    const OLD_OUT={out_capa:'out_vaquinha',out_borboleta:'out_galochas',out_arcoirs:'out_abelha',out_mochila:'out_vaquinha',out_sueter:'out_galochas',out_cachecol:'out_abelha',out_estrela:'out_pintinhas',out_coracao:'out_tenis'};
+    const OLD_OUT={out_capa:'out_vaquinha',out_borboleta:'out_sueter',out_arcoirs:'out_joaninha',out_mochila:'out_vaquinha',out_cachecol:'out_joaninha',out_estrela:'out_joaninha',out_coracao:'out_vaquinha',
+      out_tenis:'out_vaquinha',out_galochas:'out_sueter',out_abelha:'out_sueter',out_pintinhas:'out_joaninha'};
     const mig=id=>OLD_OUT[id]||id;
     if(Array.isArray(data.unlockedItems))data.unlockedItems=data.unlockedItems.map(mig);
     if(Array.isArray(data.seenItems))data.seenItems=data.seenItems.map(mig);
@@ -3549,11 +3541,11 @@ function switchCat(cat, btn){
 
 // Cores de raridade por acessório
 const RARITY={
-  hat_coroa:'#ffd166', out_vaquinha:'#ffd166',          // dourado — lendário
-  hat_cartola:'#c3a6f5', out_galochas:'#c3a6f5',   // roxo — épico
-  hat_bone:'#7cb8f0', out_abelha:'#7cb8f0',        // azul — raro
-  hat_flor:'#7fd8a6', out_pintinhas:'#7fd8a6',        // verde — comum
-  hat_laco:'#ffb27a', out_tenis:'#ffb27a',        // laranja — inicial
+  hat_coroa:'#ffd166', out_joaninha:'#ffd166',          // dourado — lendário
+  hat_cartola:'#c3a6f5', out_sueter:'#c3a6f5',   // roxo — épico
+  hat_bone:'#7cb8f0',        // azul — raro
+  hat_flor:'#7fd8a6',        // verde — comum
+  hat_laco:'#ffb27a', out_vaquinha:'#ffb27a',        // laranja — inicial
 };
 
 function buildDressup(){
