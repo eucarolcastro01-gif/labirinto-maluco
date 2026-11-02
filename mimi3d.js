@@ -258,6 +258,20 @@ function buildOutfit(id,rig){
       const cap=mesh(LADY_CAP,red);cap.scale.setScalar(s.r*1.03);addExtra(g,s.g,cap);
       dirs.forEach((d,k)=>{if((i+k)%2&&k>0)return;addExtra(g,s.g,spotOn(s,d,.085+(k===0?.03:0),dot,1.03));});
     });
+  }else if(id==='out_coracao'){
+    // coraçõezinhos espalhados pelos gomos (vermelho, pink e rosa-claro)
+    const cols=[phys({color:'#e8173f',roughness:.3,clearcoat:.7}),phys({color:'#ffffff',roughness:.35,clearcoat:.6}),phys({color:'#b3122f',roughness:.3,clearcoat:.7})];
+    const dirs=[[0,1,0],[.4,.65,.65],[-.4,.6,-.7],[-.35,.55,.75],[.4,.6,-.65],[0,.25,1],[0,.25,-1]];
+    rig.segs.forEach((s,i)=>dirs.forEach((d,k)=>{
+      if((i+k)%3===2&&k>0)return;
+      const v=new THREE.Vector3(...d).normalize();
+      const h=mesh(GHEART,cols[(i+k)%3],false);
+      const sc=s.r*(k===0?.3:.24);h.scale.set(sc,sc,sc*.4);
+      h.position.copy(v.clone().multiplyScalar(s.r*1.0));
+      h.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),v);
+      h.rotateZ(((i*3+k)%5-2)*.25);                  // cada coração um pouquinho torto, mais fofo
+      addExtra(g,s.g,h);
+    }));
   }else if(id==='out_sueter'){
     // suéter amarelo de tricô, com barrinha mais escura em cada gomo
     if(!sweaterTex){sweaterTex=stripeTex(['#ffd23f','#ffc21a'],10);sweaterTex.repeat.set(4,1);}
@@ -353,6 +367,10 @@ function flyDeco(rig){
   }else if(outfit==='out_vaquinha'){
     const white=std('#ffffff',{roughness:.6,side:THREE.DoubleSide}),black=std('#1d1a2e',{roughness:.5,side:THREE.DoubleSide});
     u.wings.forEach(w=>{[[.4,1.15,.2,white],[0,1.5,.13,black],[-.75,.8,.18,black],[.65,.6,.11,white]].forEach(([x,z,r,m])=>[.03,-.03].forEach(o=>{[[0,0,1],[.6,.4,.6],[-.5,.5,.5]].forEach(([dx,dz,sc])=>{const d=mesh(WG.dot,m,false);d.position.set(x+dx*r,o,z+dz*r);d.scale.setScalar(r*sc);add(w.inner,d);});}));});
+  }else if(outfit==='out_coracao'){
+    const hm=[std('#e8173f',{roughness:.4,side:THREE.DoubleSide}),std('#ffffff',{roughness:.5,side:THREE.DoubleSide})];
+    const HG=new THREE.ShapeGeometry(heartShape(),16).rotateX(-Math.PI/2);
+    u.wings.forEach(w=>{[[.4,1.15,.3,0],[0,1.55,.2,1],[-.75,.8,.26,0],[.62,.58,.17,1]].forEach(([x,z,r,c])=>[.03,-.03].forEach(o=>{const d=mesh(HG,hm[c],false);d.position.set(x,o,z);d.scale.setScalar(r);add(w.inner,d);}));});
   }else if(outfit==='out_sueter'){
     const knit=std('#ffd23f',{roughness:.9});
     [-.3,-.62].forEach(x=>{const b=ball(.3,knit,x,.72,0,.35,1.04,1.04);b.castShadow=false;add(u.deco,b);});

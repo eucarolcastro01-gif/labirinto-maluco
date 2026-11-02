@@ -1363,6 +1363,7 @@ body.calm .sd-fruit,body.calm .start-scene .game-title span,body.calm #btn-play,
   .final-dress-slot .item-slot{min-height:80px;padding:6px 4px 8px}
   .final-dress-box{gap:8px}
 }
+.item-need{display:inline-flex;align-items:center;gap:1px;font:900 .68rem 'Nunito','Segoe UI',Arial,sans-serif;color:#ffe66d;line-height:1.1}
 </style>
 </head>
 <body>
@@ -1453,7 +1454,7 @@ body.calm .sd-fruit,body.calm .start-scene .game-title span,body.calm #btn-play,
       <div class="how-step-row">
         <div class="how-art"><span data-ico="shirt" data-size="58"></span><span data-ico="crown" data-size="58"></span></div>
         <div class="how-head"><span class="how-num">4</span> Pegue os brindes</div>
-        <div class="how-desc">Cada fase tem <strong>2 brindes secretos</strong>. Passe por eles para ganhar roupas, chapéus e cores para a Mimi!</div>
+        <div class="how-desc">Cada fase tem <strong>1 brinde secreto</strong> no caminho. Faça <strong>3 estrelas</strong> nas fases 1, 2 e 3 para ganhar mais um! Vencer fases também dá <strong>cores</strong> novas.</div>
       </div>
 
       <div class="how-step-row">
@@ -1827,6 +1828,8 @@ function makeMimi(w=100, hat=null, outfit=null, mood='normal'){
     outfitTopSVG=SEGB.map(([x,y,r],i)=>`<path d="M${x-r*.5},${y-r*.55} q8,-6 13,1 q4,7 -4,10 q-10,2 -9,-11z" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width="${i%2?0:1}"/><circle cx="${x+r*.35}" cy="${y+r*.15}" r="4" fill="${i%2?'#fff':'#1d1a2e'}"/>`).join('');
   } else if(outfit==='out_joaninha'){
     outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-r*.95},${y+r*.1} A${r*.95},${r*.95} 0 0 1 ${x+r*.95},${y+r*.1}Z" fill="#e8323f" stroke="#8a1020" stroke-width="1.2"/><circle cx="${x-r*.4}" cy="${y-r*.35}" r="4" fill="#1d1a2e"/><circle cx="${x+r*.4}" cy="${y-r*.3}" r="3.4" fill="#1d1a2e"/><circle cx="${x}" cy="${y-r*.7}" r="2.8" fill="#1d1a2e"/>`).join('');
+  } else if(outfit==='out_coracao'){
+    outfitTopSVG=SEGB.map(([x,y,r],i)=>[[-.4,-.45],[.35,-.3]].map(([dx,dy],k)=>`<path transform="translate(${x+dx*r},${y+dy*r}) scale(.42)" d="M0 8 C-9 1 -10 -5 -6 -8 C-3 -10 0 -8 0 -5 C0 -8 3 -10 6 -8 C10 -5 9 1 0 8Z" fill="${(i+k)%2?'#ff7eb6':'#ff3b6b'}" stroke="#c02070" stroke-width="1.5"/>`).join('')).join('');
   } else if(outfit==='out_sueter'){
     outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-r},${y+r*.25} A${r},${r} 0 0 1 ${x+r},${y+r*.25}Z" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2"/><rect x="${x-r}" y="${y+r*.18}" width="${r*2}" height="4" rx="2" fill="#f5b800"/><path d="M${x-r*.6},${y-r*.35} h${r*1.2} M${x-r*.75},${y-r*.05} h${r*1.5}" stroke="#f5b800" stroke-width="2" stroke-dasharray="3 2"/>`).join('');
   }
@@ -2038,6 +2041,7 @@ function makeMimiTiny(){
   const SEGT=[[16,48,14],[30,45,13],[44,42,13]];
   if(outfit==='out_vaquinha') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<circle cx="${x-r*.25}" cy="${y-r*.3}" r="3.6" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width=".6"/>`).join('');
   else if(outfit==='out_joaninha') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x-r*.9},${y} A${r*.9},${r*.9} 0 0 1 ${x+r*.9},${y}Z" fill="#e8323f" stroke="#8a1020" stroke-width=".8"/><circle cx="${x-r*.3}" cy="${y-r*.4}" r="2.4" fill="#1d1a2e"/><circle cx="${x+r*.35}" cy="${y-r*.3}" r="2" fill="#1d1a2e"/>`).join('');
+  else if(outfit==='out_coracao') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<path transform="translate(${x-r*.2},${y-r*.35}) scale(.3)" d="M0 8 C-9 1 -10 -5 -6 -8 C-3 -10 0 -8 0 -5 C0 -8 3 -10 6 -8 C10 -5 9 1 0 8Z" fill="${i%2?'#ff7eb6':'#ff3b6b'}"/>`).join('');
   else if(outfit==='out_sueter') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x-r*.95},${y+r*.2} A${r*.95},${r*.95} 0 0 1 ${x+r*.95},${y+r*.2}Z" fill="#ffd23f" stroke="#c98a00" stroke-width=".8"/>`).join('');
 
   return `<svg width="${tw}" height="${th}" viewBox="0 0 88 72" xmlns="http://www.w3.org/2000/svg">
@@ -2158,6 +2162,7 @@ const ITEMS=[
   {id:'out_vaquinha', type:'outfit', icon:'cow',       label:'Vaquinha'},
   {id:'out_joaninha', type:'outfit', icon:'ladybug',   label:'Joaninha'},
   {id:'out_sueter',   type:'outfit', icon:'sweater',   label:'Suéter Amarelo'},
+  {id:'out_coracao',  type:'outfit', icon:'heart',     label:'Corações'},
 ];
 // índice 0 = treino (sem brindes). Valor 4 = brinde A (chapéu), valor 7 = brinde B (roupa)
 const PHASE_COUNT=5;
@@ -2169,8 +2174,18 @@ const PHASE_PICKUPS=[
   {7:'out_joaninha'},
   {4:'hat_coroa'},             // a coroa é o prêmio da última fruta
 ];
+// prêmios de 3 ESTRELAS: quem termina a fase com 3 estrelas ganha mais um acessório (o brinde do labirinto continua um só)
+const STAR_REWARDS={1:'hat_bone',2:'hat_flor',3:'out_coracao'};
 // só aparecem no armário os presentes que dá para ganhar (e os que a criança já ganhou antes)
-const GIFT_IDS=new Set(PHASE_PICKUPS.flatMap(p=>p?Object.values(p):[]));
+const GIFT_IDS=new Set([...PHASE_PICKUPS.flatMap(p=>p?Object.values(p):[]),...Object.values(STAR_REWARDS)]);
+const STAR_PHASE=Object.fromEntries(Object.entries(STAR_REWARDS).map(([ph,id])=>[id,+ph]));
+// dá os prêmios de 3 estrelas que faltam (também para quem já tinha 3 estrelas antes desta versão)
+function grantStarRewards(){
+  const got=[];
+  for(const [ph,id] of Object.entries(STAR_REWARDS))
+    if(phaseScores[ph]!==null&&phaseScores[ph]>=80&&!unlockedItems.has(id)){unlockedItems.add(id);got.push(id);}
+  return got;
+}
 
 // ═══════════════════════════════════
 //  WALL COLORS (paleta original, em tons pastel)
@@ -2481,7 +2496,7 @@ function loadState(){
     if(!raw)return;
     const data=JSON.parse(raw);
     // as roupas antigas viraram roupas novas (mesma fase em que a criança ganhou)
-    const OLD_OUT={out_capa:'out_vaquinha',out_borboleta:'out_sueter',out_arcoirs:'out_joaninha',out_mochila:'out_vaquinha',out_cachecol:'out_joaninha',out_estrela:'out_joaninha',out_coracao:'out_vaquinha',
+    const OLD_OUT={out_capa:'out_vaquinha',out_borboleta:'out_sueter',out_arcoirs:'out_joaninha',out_mochila:'out_vaquinha',out_cachecol:'out_joaninha',out_estrela:'out_joaninha',
       out_tenis:'out_vaquinha',out_galochas:'out_sueter',out_abelha:'out_sueter',out_pintinhas:'out_joaninha'};
     const mig=id=>OLD_OUT[id]||id;
     if(Array.isArray(data.unlockedItems))data.unlockedItems=data.unlockedItems.map(mig);
@@ -2493,6 +2508,7 @@ function loadState(){
       phaseScores=data.phaseScores;
     }
     if(Array.isArray(data.unlockedItems))unlockedItems=new Set(data.unlockedItems.filter(valid));
+    grantStarRewards();                                 // quem já tinha 3 estrelas ganha os prêmios novos
     if(valid(data.equippedHat)&&unlockedItems.has(data.equippedHat))equippedHat=data.equippedHat;
     if(valid(data.equippedOutfit)&&unlockedItems.has(data.equippedOutfit))equippedOutfit=data.equippedOutfit;
     if(Array.isArray(data.seenItems))data.seenItems.filter(valid).forEach(id=>seenItems.add(id));
@@ -3776,6 +3792,7 @@ function phaseComplete(steps,blocks=steps){
   const improved=prevBest===null||score>prevBest;
   if(improved)phaseScores[curPhase]=score;     // guarda sempre a MELHOR nota
   const best=phaseScores[curPhase];
+  const starGot=grantStarRewards();             // 3 estrelas: ganha o prêmio extra da fase
   saveState();
   updateGardenBg();
   // acabou a última fruta pela primeira vez: antes de virar borboleta, a criança veste a Mimi
@@ -3834,6 +3851,11 @@ function phaseComplete(steps,blocks=steps){
   }
   document.getElementById('btn-replay').style.display='inline-flex';
   showScreen('screen-congrats');
+  if(starGot.length)setTimeout(()=>{const it=ITEMS.find(x=>x.id===starGot[0]);
+    document.getElementById('pickup-icon').innerHTML=ico(it.icon,60);
+    document.getElementById('pickup-msg').textContent=`3 estrelas! Você ganhou: ${it.label}!`;
+    showToast('toast-pickup');setTimeout(()=>hideToast('toast-pickup'),2600);
+    speak(`Três estrelas! Você ganhou: ${it.label}!`,{bubble:false});},1800);
   speak(firstAllDone?'Eba! Comi todas as frutas! Me veste antes de eu virar borboleta?':target?`Parabéns! Você passou a fase ${curPhase}!`:'Parabéns! Você completou todas as fases!',{bubble:false});
 }
 // As fases abrem em sequência: depois da fase N vem a N+1 (0 = acabaram as fases)
@@ -3885,7 +3907,7 @@ const RARITY={
   hat_cartola:'#c3a6f5', out_sueter:'#c3a6f5',   // roxo — épico
   hat_bone:'#7cb8f0',        // azul — raro
   hat_flor:'#7fd8a6',        // verde — comum
-  hat_laco:'#ffb27a', out_vaquinha:'#ffb27a',        // laranja — inicial
+  hat_laco:'#ffb27a', out_vaquinha:'#ffb27a', out_coracao:'#ff9ec0',        // laranja — inicial
 };
 
 function buildDressup(){
@@ -3987,7 +4009,9 @@ function renderItemsGrid(){
         saveState();
       };
     } else {
-      slot.innerHTML=`<span class="item-lock">${ico('lock',30)}</span><span class="item-name" style="opacity:.85">${item.label}</span>`;
+      const sp=STAR_PHASE[item.id];
+      slot.innerHTML=`<span class="item-lock">${ico('lock',30)}</span><span class="item-name" style="opacity:.85">${item.label}</span>${sp?`<span class="item-need">${ico('star',14)}${ico('star',14)}${ico('star',14)} na fase ${sp}</span>`:''}`;
+      if(sp)slot.setAttribute('aria-label',`${item.label}: faça 3 estrelas na fase ${sp} para ganhar`);
     }
     grid.appendChild(slot);
   });
