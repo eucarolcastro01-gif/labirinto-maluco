@@ -993,7 +993,30 @@ body.calm .garden-fly-path,body.calm .garden-badge{animation:none!important}
 .garden-card .btn-ghost{background:#1f5c3a;border-color:#1f5c3a;color:#fff;backdrop-filter:none}
 .garden-card .btn-cta,.garden-card .btn-ghost{white-space:nowrap}
 @media (max-width:520px){.garden-card .btn-cta{font-size:.9rem!important;padding:10px 16px!important}.garden-card .btn-ghost{padding:8px 14px}}
-.final-dress-slot{width:min(600px,100%);margin-top:12px;position:relative;z-index:2}
+.final-dress-slot{width:100%;position:relative;z-index:2}
+.final-dress-box{width:min(640px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:12px}
+.final-dress-ok{font-size:1.1rem;padding:11px 30px}
+/* resultado final maior, sem o painel de vestir embaixo */
+.garden-card.glass{max-width:760px}
+#screen-garden .garden-card{padding:26px 34px 28px;gap:14px}
+#screen-garden .garden-title{font-size:2.9rem}
+#screen-garden .garden-subtitle{font-size:1.1rem}
+#screen-garden .garden-msg{font-size:1.1rem}
+#screen-garden .garden-score-box{padding:14px 10px}
+#screen-garden .garden-score-num{font-size:3rem}
+#screen-garden .garden-score-lbl{font-size:.95rem}
+.garden-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:6px}
+.garden-btns button{font-size:1.1rem;padding:12px 24px}
+.btn-dress{border:none;border-radius:28px;cursor:pointer;color:#fff;display:inline-flex;align-items:center;gap:8px;
+  font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;letter-spacing:.5px;
+  background:linear-gradient(135deg,#ff5fa8,#d81b78);box-shadow:0 5px 0 #a3125a,0 8px 18px rgba(216,27,120,.35)}
+.btn-dress:active{transform:translateY(3px);box-shadow:0 2px 0 #a3125a}
+@media (max-width:560px){
+  #screen-garden .garden-card{padding:18px 14px 20px}
+  #screen-garden .garden-title{font-size:2.2rem}
+  #screen-garden .garden-subtitle,#screen-garden .garden-msg{font-size:.95rem}
+  .garden-btns button{font-size:1rem;padding:11px 18px}
+}
 .final-dress-slot .dressup-card{width:100%;max-width:none}
 #screen-meta{gap:0}
 .meta-card{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 20px;
@@ -1081,6 +1104,230 @@ body.calm .v2 .btn-exec.ready{animation:none}
   body.in-game .v2 .btn-exec{font-size:1.4rem!important;padding:11px 14px!important}
 }
 
+
+/* ══════════ MELHORIAS VISUAIS (v5): tudo à vista, sem rolar ══════════ */
+/* PARABÉNS: primeiro a nota; o armário abre num botão */
+#screen-congrats{gap:12px}
+#screen-congrats .dressup-card{display:none!important}
+#screen-congrats .congrats-card{width:min(520px,calc(100vw - 24px));box-sizing:border-box;padding:14px 22px 18px;display:flex;flex-direction:column;align-items:center;gap:6px}
+#screen-congrats .congrats-title{font-size:2.6rem;line-height:1}
+#screen-congrats .congrats-sub{margin:0;font-size:1.05rem}
+#screen-congrats .congrats-stars{line-height:1}
+.score-breakdown{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:2px;line-height:1.3}
+.sc-points{font-family:'Fredoka One','Segoe UI',sans-serif;font-size:2.6rem;line-height:1;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.2)}
+.sc-points small{font-size:1.1rem;opacity:.9}
+.sc-pens{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.sc-pen{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:999px;background:rgba(255,255,255,.14);border:2px solid rgba(255,214,107,.7);color:#fff;font-size:.9rem;font-weight:800}
+.sc-pen b{color:#ffd66b;font-family:'Fredoka One','Segoe UI',sans-serif;font-weight:400}
+.sc-pen.good{border-color:#9effc4;color:#d6ffe8}
+.sc-tip{display:inline-flex;align-items:center;gap:6px;font-size:1.05rem;font-weight:900;color:#ffe3a8;text-align:center}
+.sc-tip.good{color:#9effc4}
+.sc-foot{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sc-foot .sc-chips{margin:0}
+.sc-meta{display:inline-flex;align-items:center;gap:6px;color:#bfe3ff;font-size:.9rem;font-weight:800}
+.sc-best{display:inline-flex;align-items:center;gap:6px;font-size:.9rem;font-weight:800;color:#fff}
+.congrats-dress{margin-top:6px;font-size:1.15rem;padding:11px 26px;position:relative}
+.congrats-dress[hidden]{display:none}
+.congrats-dress.has-new::after{content:'Novo!';position:absolute;top:-10px;right:-8px;padding:1px 8px;border-radius:10px;background:#ffd700;color:#3a1d00;font-size:.75rem;border:2px solid #fff;animation:newBadge .7s ease-in-out infinite alternate}
+.congrats-dress.call{animation:execCall 1.2s ease-in-out infinite}
+body.calm .congrats-dress,body.calm .congrats-dress::after{animation:none!important}
+#screen-congrats .nav-row{position:static;flex-wrap:wrap;justify-content:center;background:none;box-shadow:none;padding:0}
+#screen-congrats #btn-next{font-size:1.25rem!important;padding:13px 30px!important}
+@media (max-width:520px){
+  #screen-congrats .congrats-card{padding:12px 14px 16px}
+  #screen-congrats .congrats-title{font-size:2.1rem}
+  .sc-points{font-size:2.2rem}
+  #screen-congrats .nav-row{gap:8px}
+  #screen-congrats #btn-next{width:100%;max-width:340px}
+}
+@media (max-height:700px){
+  #screen-congrats{gap:8px}
+  #screen-congrats .congrats-card{padding:8px 14px 12px;gap:4px}
+  #screen-congrats .congrats-title{font-size:1.8rem}
+  #screen-congrats .congrats-stars svg{width:34px;height:34px}
+  .sc-points{font-size:1.9rem}
+  .score-breakdown{gap:5px}
+  .congrats-dress{margin-top:2px;padding:9px 22px}
+  #screen-congrats #btn-next{padding:11px 26px!important}
+}
+/* COMO JOGAR: um cartão por vez */
+#screen-how{justify-content:center}
+.how-cards{width:min(560px,calc(100vw - 24px))!important;max-width:none!important;box-sizing:border-box;padding:20px 22px 18px!important;display:flex;flex-direction:column;align-items:center;gap:12px}
+.how-cards .how-title{font-size:2.2rem}
+.how-cards .how-steps{display:block!important;position:relative;width:100%}
+.how-cards .how-step-row{display:none;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:20px 18px 22px!important;min-height:300px;box-sizing:border-box;border-radius:24px;justify-content:center}
+.how-cards .how-step-row.on{display:flex;animation:howIn .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes howIn{from{opacity:0;transform:translateX(24px) scale(.97)}to{opacity:1;transform:none}}
+.how-art{display:flex;align-items:center;justify-content:center;gap:10px;min-height:96px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25))}
+.how-art.arrows{gap:6px}
+.how-art.arrows [data-ico]{background:linear-gradient(170deg,#c08bff,#8a4dff,#6a2fe0);border-radius:16px;padding:6px;color:#fff;box-shadow:0 4px 0 #4a1fa0}
+.how-cards .how-head{display:flex;align-items:center;gap:10px;font-size:1.5rem!important;color:#ffd700}
+.how-cards .how-num{min-width:36px;height:36px;font-size:1.1rem}
+.how-cards .how-desc{font-size:1.2rem!important;line-height:1.55!important;max-width:440px;color:#fff}
+.how-nav{display:flex;align-items:center;justify-content:center;gap:14px}
+.how-arrow{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(170deg,#c08bff,#8a4dff,#6a2fe0);box-shadow:0 4px 0 #4a1fa0}
+.how-arrow:disabled{opacity:.35;cursor:default}
+.how-arrow:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #4a1fa0}
+.how-dots{display:flex;gap:8px}
+.how-dot{width:14px;height:14px;border-radius:50%;border:2px solid #fff;background:transparent;padding:0;cursor:pointer;transition:transform .15s,background .15s}
+.how-dot.on{background:#ffd700;border-color:#ffd700;transform:scale(1.25)}
+@media (max-width:520px){
+  .how-cards{padding:16px 12px 14px!important}
+  .how-cards .how-title{font-size:1.8rem}
+  .how-cards .how-step-row{min-height:330px;padding:18px 12px!important}
+  .how-cards .how-head{font-size:1.3rem!important}
+  .how-cards .how-desc{font-size:1.1rem!important}
+}
+@media (max-height:700px){
+  .how-cards .how-step-row{min-height:250px;gap:8px;padding:14px 12px!important}
+  .how-art{min-height:72px}
+  .how-cards .how-title{font-size:1.6rem}
+}
+@media (min-width:900px) and (min-height:640px){
+  .how-cards{width:640px!important}
+  .how-cards .how-step-row{min-height:340px}
+  .how-cards .how-desc{font-size:1.35rem!important}
+  .how-cards .how-head{font-size:1.75rem!important}
+  .how-art{min-height:120px}.how-art svg{transform:scale(1.25)}
+}
+/* MAPA: cartão da próxima fase sempre à vista embaixo do mapa */
+#screen-phases .phases-bottom{width:min(1080px,100%);justify-content:center;gap:12px;flex-wrap:nowrap}
+.next-card{display:flex;align-items:center;gap:12px;padding:8px 10px 8px 12px;border-radius:999px;background:rgba(255,255,255,.95);
+  box-shadow:0 6px 18px rgba(0,40,30,.25),0 0 0 3px rgba(255,215,0,.8);min-width:0}
+.next-card[hidden]{display:none}
+.next-fruit{width:46px;height:46px;flex-shrink:0;display:flex;animation:starFloat 1.6s ease-in-out infinite alternate}
+.next-fruit svg{width:100%;height:100%;overflow:visible}
+.next-txt{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+.next-kicker{font:900 .8rem 'Nunito','Segoe UI',Arial,sans-serif;color:#6a4fc7}
+.next-name{font-family:'Fredoka One','Segoe UI',sans-serif;font-size:1.35rem;color:#10233f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.next-go{font-size:1.15rem!important;padding:10px 22px!important;white-space:nowrap}
+body.calm .next-fruit{animation:none}
+@media (max-width:520px){
+  #screen-phases .phases-header{font-size:1.6rem}
+  .fruit-map{height:calc(100vh - 220px)!important;height:calc(100dvh - 220px)!important;min-height:300px}
+  #screen-phases .phases-bottom{gap:8px}
+  #screen-phases .phases-bottom .btn-ghost{padding:10px 12px;font-size:0}
+  #screen-phases .phases-bottom .btn-ghost [data-ico]{font-size:1rem}
+  .next-card{flex:1;gap:8px}
+  .next-fruit{width:38px;height:38px}
+  .next-name{font-size:1.15rem}
+  .next-go{padding:9px 16px!important;font-size:1.05rem!important;margin-left:auto}
+}
+@media (min-width:521px){.fruit-map{height:min(calc(100vh - 166px),600px);height:min(calc(100dvh - 166px),600px)}}
+/* TELA INICIAL: pomar no fundo, frutas flutuando, título dançando e JOGAR chamando */
+.start-deco{position:absolute;left:50%;top:50%;width:100vw;height:100vh;transform:translate(-50%,-50%);z-index:1;pointer-events:none}
+#screen-start:not(.active) .start-deco{display:none}
+.sd-fruit{position:absolute;width:calc(74px*var(--s));height:calc(74px*var(--s));transform:translate(-50%,-50%);opacity:.92;
+  filter:drop-shadow(0 8px 10px rgba(0,60,40,.25));animation:sdFloat 3.2s var(--d) ease-in-out infinite alternate}
+.sd-fruit svg{width:100%;height:100%;overflow:visible}
+@keyframes sdFloat{from{transform:translate(-50%,-50%) rotate(-8deg)}to{transform:translate(-50%,-62%) rotate(8deg)}}
+#screen-start .start-card{position:relative;z-index:2}
+.start-scene .game-title span{animation:titleWave 2.4s calc(var(--i,0)*.09s) ease-in-out infinite}
+@keyframes titleWave{0%,70%,100%{transform:none}35%{transform:translateY(-7px) rotate(-3deg)}}
+#btn-play:not(.btn-play-sec),#btn-continue{font-size:1.7rem;padding:16px 52px;animation:playGlow 1.6s ease-in-out infinite}
+@keyframes playGlow{0%,100%{box-shadow:0 6px 0 #a04400,0 10px 28px rgba(200,100,0,.4),0 0 0 0 rgba(255,230,80,.0)}50%{box-shadow:0 6px 0 #a04400,0 10px 28px rgba(200,100,0,.4),0 0 0 12px rgba(255,230,80,.45)}}
+body.calm .sd-fruit,body.calm .start-scene .game-title span,body.calm #btn-play,body.calm #btn-continue{animation:none!important}
+.start-btn-col{display:flex;flex-direction:column;align-items:center;gap:12px}
+.start-btn-col .btn-how{font-size:1.15rem;padding:11px 28px}
+.start-scene .start-sub{white-space:nowrap}
+@media (min-width:700px){
+  .start-scene{gap:min(16px,2vh)}
+  .start-scene .game-title{font-size:clamp(3.2rem,9vh,5.6rem)}
+  .start-scene .start-sub{font-size:.95rem!important;padding:5px 16px}
+  .start-scene .mimi-hello{width:560px}
+  .mimi-touch{width:290px;height:min(250px,24vh)}
+  .start-scene .mimi-bubble{font-size:1.05rem;padding:8px 18px}
+}
+@media (max-width:1000px){.start-deco{display:none}}
+@media (max-width:520px){
+  .start-scene .game-title{font-size:clamp(2.9rem,14vw,4rem)}
+  #btn-play:not(.btn-play-sec){font-size:1.5rem;padding:14px 46px}
+  #btn-continue{font-size:1.2rem!important;padding:13px 22px!important}
+  .start-btn-col{gap:10px}
+}
+@media (max-width:520px) and (min-height:760px){
+  .start-scene{gap:16px}
+  .start-scene .mimi-bubble{font-size:1rem}
+  .mimi-touch{height:210px}
+}
+@media (max-height:700px){
+  .start-scene{gap:6px}
+  .mimi-touch{height:150px}
+  .start-btn-col{gap:7px}
+  .start-btn-col .btn-how{padding:8px 22px;font-size:1rem}
+  #btn-continue{padding:11px 20px!important}
+}
+.start-sec-row{display:flex;flex-wrap:wrap;width:100%;align-items:center;justify-content:center;gap:8px 10px}
+.start-sec-row .btn-adults{padding:9px 14px}
+.start-sec-row>button{width:auto!important;min-width:0!important;margin:0!important}
+#screen-start{position:relative}
+@media (max-height:700px){.start-scene .game-title{font-size:2.7rem}}
+.start-sec-row .btn-play-sec{font-size:1.1rem!important;padding:10px 22px!important;animation:none}
+#screen-start .start-card.start-scene{width:min(660px,calc(100vw - 24px))!important;min-width:0;box-sizing:border-box;padding:6px 0 8px}
+#screen-start .start-btn-col{width:100%}
+/* FASE: nome da fruta sempre à vista; no computador, controles maiores */
+.topbar .lbl-phase{font-family:'Fredoka One','Segoe UI',sans-serif}
+.lbl-scene{color:#ffe66d;opacity:1!important}
+@media (max-width:520px){
+  body.in-game .lbl-scene{display:inline!important;font-size:.9em}
+  body.in-game .btn-to-map .btm-txt{display:none}
+  body.in-game .btn-to-map{padding:5px 9px!important}
+  body.in-game .topbar{justify-content:space-between}
+}
+@media (min-width:980px) and (min-height:560px){
+  #screen-game .game-main .topbar{font-size:1.15rem;padding:10px 18px}
+  #screen-game .game-main .lbl-phase{font-size:1.25rem}
+  #screen-game .game-side.v2{width:440px;gap:16px}
+  .game-side.v2 .q-msg{font-size:1.1rem;line-height:1.35}
+  .queue-card.empty .q-msg{font-size:1.15rem!important;padding:14px 6px}
+  .v2 .dpad{--pb:84px!important;gap:10px!important}
+  .v2 .action-row{width:380px}
+  .v2 .btn-exec{font-size:1.8rem!important;padding:16px 20px!important}
+  .v2 .hint-label{font-size:1.2rem!important}
+  .v2 .q-tool{font-size:.95rem;padding:7px 14px}
+}
+@media (min-width:980px) and (max-height:700px){
+  .v2 .dpad{--pb:70px!important}
+  .v2 .btn-exec{font-size:1.55rem!important;padding:12px 18px!important}
+}
+/* LEITURA: maiúsculas mantidas, letras dos avisos e textos um pouco maiores e mais espaçadas */
+.toast-msg{font-size:1.25rem;line-height:1.3}
+.toast-sub{font-size:1rem;line-height:1.4}
+.modal-sub{font-size:1.08rem;line-height:1.45}
+.adults-list{font-size:1rem!important;line-height:1.5!important}
+.mimi-bubble,.say-bubble{line-height:1.35}
+.garden-subtitle{line-height:1.45}
+@media (max-width:520px){body.in-game .lbl-phase{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}}
+@media (max-width:520px) and (max-height:700px){
+  body.in-game{padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
+  body.in-game .v2 .dpad{--pb:50px}
+  body.in-game .v2 .btn-exec{padding:9px 14px!important;font-size:1.25rem!important}
+  body.in-game .q-listen{padding:3px 10px}
+  body.in-game .v2 .hint-bar{padding:6px 18px!important}
+}
+/* RESULTADO FINAL: cabe em telas mais baixas (notebook e celular pequeno) */
+@media (max-height:800px){
+  #screen-garden .garden-card{padding:16px 24px 18px;gap:9px}
+  #screen-garden .garden-title{font-size:2.3rem;line-height:1.05}
+  #screen-garden .garden-subtitle{font-size:1rem}
+  #screen-garden .garden-scene{height:min(180px,22vh)}
+  #screen-garden .garden-svg{height:100%;object-fit:cover}
+  #screen-garden .garden-score-box{padding:8px 10px}
+  #screen-garden .garden-score-num{font-size:2.4rem}
+  #screen-garden .garden-msg{font-size:1rem;padding:6px 12px}
+  .garden-btns{margin-top:2px;gap:10px}
+  .garden-btns button{padding:10px 20px}
+}
+@media (max-height:700px){
+  #screen-garden .garden-title{font-size:1.8rem}
+  #screen-garden .garden-subtitle{font-size:.9rem}
+  #screen-garden .garden-scene{height:min(130px,19vh)}
+  #screen-garden .garden-card{gap:7px;padding:12px 14px 14px}
+  #screen-garden .garden-score-num{font-size:2rem}
+}
+@media (max-width:400px){.garden-btns{gap:8px}.garden-btns button{font-size:.88rem!important;padding:9px 13px!important}}
+@media (max-width:400px) and (max-height:700px){#screen-garden .garden-score-lbl{font-size:.8rem}#screen-garden .garden-msg{font-size:.88rem}}
 </style>
 </head>
 <body>
@@ -1098,6 +1345,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
 
 <!-- ══ SCREEN: START ══ -->
 <div id="screen-start" class="screen active">
+  <div class="start-deco" id="start-deco" aria-hidden="true"></div>
   <div class="start-card start-scene">
 
     <!-- título arco-íris -->
@@ -1133,8 +1381,10 @@ body.calm .v2 .btn-exec.ready{animation:none}
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><polygon points="2,1 15,8 2,15"/></svg>
         JOGAR
       </button>
-      <button class="btn-how" onclick="showScreen('screen-how')"><span data-ico="help" data-size="22"></span> Como jogar</button>
-      <button class="btn-adults" onclick="openModal('adults-info')">Para pais e professores</button>
+      <div class="start-sec-row">
+        <button class="btn-how" onclick="showScreen('screen-how')"><span data-ico="help" data-size="22"></span> Como jogar</button>
+        <button class="btn-adults" onclick="openModal('adults-info')">Para pais e professores</button>
+      </div>
     </div>
 
   </div>
@@ -1142,66 +1392,47 @@ body.calm .v2 .btn-exec.ready{animation:none}
 
 <!-- ══ SCREEN: COMO JOGAR ══ -->
 <div id="screen-how" class="screen">
-  <div class="how-card-outer glass">
+  <div class="how-card-outer glass how-cards">
     <div class="how-title"><span data-ico="help" data-size="30"></span> Como jogar</div>
 
-    <div class="how-steps">
+    <div class="how-steps" id="how-steps">
 
       <div class="how-step-row">
-        <div class="how-num">1</div>
-        <div class="how-content">
-          <div class="how-emoji"><span id="how-mimi"></span></div>
-          <div>
-            <div class="how-head">Guie a Mimi!</div>
-            <div class="how-desc">Cada fase é uma <strong>fruta</strong>! Leve a Mimi até a <strong>estrela <span data-ico="star" data-size="20"></span></strong> andando pelos caminhos azuis. Cada bolinha é um passo. O resto da fruta é parede.</div>
-          </div>
-        </div>
+        <div class="how-art"><span id="how-mimi"></span><span data-ico="star" data-size="54"></span></div>
+        <div class="how-head"><span class="how-num">1</span> Guie a Mimi!</div>
+        <div class="how-desc">Cada fase é uma <strong>fruta</strong>. Leve a Mimi até a <strong>estrela</strong> pelo caminho azul. Cada bolinha é um passo.</div>
       </div>
 
       <div class="how-step-row">
-        <div class="how-num">2</div>
-        <div class="how-content">
-          <div class="how-emoji"><span data-ico="arrowUp" data-size="22"></span><span data-ico="arrowLeft" data-size="22"></span><span data-ico="arrowDown" data-size="22"></span><span data-ico="arrowRight" data-size="22"></span></div>
-          <div>
-            <div class="how-head">Monte um Algoritmo</div>
-            <div class="how-desc">Toque nas <strong>setas</strong> para criar uma sequência de comandos. Isso é programação! Use <strong>Repetir</strong> para andar várias casas com um comando só, e <strong>Passo</strong> para testar um comando de cada vez.</div>
-          </div>
-        </div>
+        <div class="how-art arrows"><span data-ico="arrowUp" data-size="46"></span><span data-ico="arrowLeft" data-size="46"></span><span data-ico="arrowDown" data-size="46"></span><span data-ico="arrowRight" data-size="46"></span></div>
+        <div class="how-head"><span class="how-num">2</span> Monte um algoritmo</div>
+        <div class="how-desc">Toque nas <strong>setas</strong> e aperte <strong>Executar</strong>. Isso é programar! O <strong>Repetir</strong> faz a Mimi andar mais casas com uma seta só.</div>
       </div>
 
       <div class="how-step-row">
-        <div class="how-num">3</div>
-        <div class="how-content">
-          <div class="how-emoji"><span data-ico="mud" data-size="30"></span> <span data-ico="rock" data-size="30"></span></div>
-          <div>
-            <div class="how-head">Desvie dos Obstáculos</div>
-            <div class="how-desc"><strong>Lama</strong> deixa a Mimi lenta (menos 10 pontos). <strong>Pedra</strong> e <strong>parede</strong> são erros: no primeiro, tudo bem, você continua de onde parou. No segundo, a fase recomeça (pedra: menos 25, parede: menos 5). Sempre há um caminho livre!</div>
-          </div>
-        </div>
+        <div class="how-art"><span data-ico="mud" data-size="62"></span><span data-ico="rock" data-size="62"></span></div>
+        <div class="how-head"><span class="how-num">3</span> Cuidado no caminho</div>
+        <div class="how-desc"><strong>Lama</strong> deixa a Mimi lenta. <strong>Pedra</strong> e <strong>parede</strong> são erros: no segundo erro, a fase recomeça. Sempre tem um caminho livre!</div>
       </div>
 
       <div class="how-step-row">
-        <div class="how-num">4</div>
-        <div class="how-content">
-          <div class="how-emoji"><span data-ico="shirt" data-size="26"></span><span data-ico="crown" data-size="26"></span></div>
-          <div>
-            <div class="how-head">Colete Acessórios</div>
-            <div class="how-desc">Há <strong>dois brindes secretos</strong> em cada fase. Passe por eles para ganhar roupinhas e chapéus para a Mimi! Cada brinde esquecido tira 15 pontos.</div>
-          </div>
-        </div>
+        <div class="how-art"><span data-ico="shirt" data-size="58"></span><span data-ico="crown" data-size="58"></span></div>
+        <div class="how-head"><span class="how-num">4</span> Pegue os brindes</div>
+        <div class="how-desc">Cada fase tem <strong>2 brindes secretos</strong>. Passe por eles para ganhar roupas, chapéus e cores para a Mimi!</div>
       </div>
 
       <div class="how-step-row">
-        <div class="how-num">5</div>
-        <div class="how-content">
-          <div class="how-emoji"><span data-ico="star" data-size="30"></span></div>
-          <div>
-            <div class="how-head">Ganhe Estrelas</div>
-            <div class="how-desc">Menos passos, mais pontos. <strong>3 estrelas = 80 a 100 pontos</strong>. A dica custa 15 pontos. O tempo não tira pontos: pense com calma! Comece pelo <strong>treino</strong>: cada fruta vencida abre a próxima no mapa.</div>
-          </div>
-        </div>
+        <div class="how-art"><span data-ico="star" data-size="50"></span><span data-ico="star" data-size="50"></span><span data-ico="star" data-size="50"></span></div>
+        <div class="how-head"><span class="how-num">5</span> Ganhe estrelas</div>
+        <div class="how-desc">Menos passos, mais estrelas! A <strong>dica</strong> custa 15 pontos. O tempo não conta: pense com calma. Comece pelo <strong>treino</strong>!</div>
       </div>
 
+    </div>
+
+    <div class="how-nav">
+      <button class="how-arrow" id="how-prev" onclick="howGo(-1)" aria-label="Voltar um cartão"><span data-ico="arrowLeft" data-size="26"></span></button>
+      <div class="how-dots" id="how-dots" role="tablist" aria-label="Cartões do como jogar"></div>
+      <button class="how-arrow" id="how-next" onclick="howGo(1)" aria-label="Próximo cartão"><span data-ico="arrowRight" data-size="26"></span></button>
     </div>
 
     <div class="how-btns">
@@ -1219,8 +1450,13 @@ body.calm .v2 .btn-exec.ready{animation:none}
   <div class="phases-header"><span data-ico="sparkle" data-size="30"></span> Fases <span data-ico="sparkle" data-size="30"></span></div>
   <div class="fruit-map" id="fruit-map"></div>
   <div class="phases-bottom">
-    <button class="btn-ghost" onclick="showScreen('screen-start')"><span data-ico="back" data-size="18"></span> Voltar</button>
+    <button class="btn-ghost" aria-label="Voltar" onclick="showScreen('screen-start')"><span data-ico="back" data-size="18"></span> Voltar</button>
     <div class="phases-note" id="phases-note"></div>
+    <div class="next-card" id="next-card" hidden>
+      <span class="next-fruit" id="next-fruit" aria-hidden="true"></span>
+      <span class="next-txt"><span class="next-kicker" id="next-kicker">Próxima fruta</span><span class="next-name" id="next-name"></span></span>
+      <button class="btn-cta next-go" id="next-go"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><polygon points="2,1 15,8 2,15"/></svg> Jogar</button>
+    </div>
   </div>
 </div>
 
@@ -1230,7 +1466,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
   <div class="topbar glass">
     <span class="lbl-phase"><span id="lbl-phase">Fase 1</span> <span class="lbl-scene" id="lbl-scene"></span></span>
     <span class="lbl-timer" id="lbl-timer"><span data-ico="clock" data-size="20"></span> <span id="timer-text">00:00</span></span>
-    <button class="btn-ghost" style="padding:5px 14px;font-size:.85rem" onclick="stopGame();showPhases()"><span data-ico="back" data-size="16"></span> Fases</button>
+    <button class="btn-ghost btn-to-map" aria-label="Voltar para o mapa das fases" style="padding:5px 14px;font-size:.85rem" onclick="stopGame();showPhases()"><span data-ico="back" data-size="16"></span><span class="btm-txt"> Fases</span></button>
   </div>
   <div class="maze-card glass">
     <div class="grid-wrap">
@@ -1278,6 +1514,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
     <div class="congrats-sub" id="congrats-sub">Você passou de fase!</div>
     <div class="congrats-stars" id="congrats-stars"></div>
     <div class="score-breakdown" id="score-breakdown"></div>
+    <button class="btn-dress congrats-dress" id="btn-congrats-dress" onclick="openDress(false)"><span data-ico="shirt" data-size="22"></span> Vestir Mimi</button>
   </div>
   <div class="dressup-card glass">
     <div class="dressup-title"><span data-ico="sparkle" data-size="26"></span> Vista a Mimi!</div>
@@ -1339,7 +1576,7 @@ body.calm .v2 .btn-exec.ready{animation:none}
     <div class="garden-scene">
       <div class="garden-fly-path" aria-hidden="true"><div id="garden-fly"></div></div>
       <!-- animated garden SVG -->
-      <svg class="garden-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+      <svg class="garden-svg" viewBox="0 0 500 180" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
         <!-- sky gradient -->
         <defs>
           <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
@@ -1458,12 +1695,20 @@ body.calm .v2 .btn-exec.ready{animation:none}
       </div>
     </div>
 
-    <div style="display:flex;gap:10px;margin-top:4px">
-      <button class="btn-cta" onclick="showScreen('screen-start')" style="font-size:1rem;padding:10px 24px"><span data-ico="replay" data-size="20"></span> Jogar novamente</button>
-      <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="16"></span> Ver fases</button>
+    <div class="garden-btns">
+      <button class="btn-cta" onclick="showScreen('screen-start')"><span data-ico="replay" data-size="22"></span> Jogar novamente</button>
+      <button class="btn-dress" onclick="openFinalDress()"><span data-ico="shirt" data-size="22"></span> Vestir Mimi</button>
+      <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="18"></span> Ver fases</button>
     </div>
   </div>
-  <div id="final-dress-slot" class="final-dress-slot"></div>
+</div>
+
+<!-- VESTIR A MIMI BORBOLETA (abre pelo botão do resultado final) -->
+<div class="modal-back" id="final-dress" hidden onclick="if(event.target===this)closeFinalDress()">
+  <div class="final-dress-box" role="dialog" aria-modal="true" aria-label="Vista a Mimi">
+    <div id="final-dress-slot" class="final-dress-slot"></div>
+    <button class="btn-cta final-dress-ok" onclick="closeFinalDress()"><span data-ico="sparkle" data-size="20"></span> Pronto!</button>
+  </div>
 </div>
 
 <!-- PERGUNTA ANTES DA DICA -->
@@ -1538,16 +1783,12 @@ function makeMimi(w=100, hat=null, outfit=null, mood='normal'){
   let outfitTopSVG='';
   // roupinhas no desenho (usado só quando o navegador não tem 3D)
   const SEGB=[[28,76,22],[54,72,20],[78,70,20]];
-  if(outfit==='out_tenis'){
-    outfitTopSVG=SEGB.map(([x,y],i)=>[-9,9].map((d,k)=>`<ellipse cx="${x+d}" cy="${y+21}" rx="7" ry="4.5" fill="${['#ff3b55','#3d9ff0','#ffd23f','#43bf63'][(i+k)%4]}" stroke="#333" stroke-width="1"/><rect x="${x+d-7}" y="${y+23}" width="14" height="2.5" rx="1" fill="#fff"/>`).join('')).join('');
-  } else if(outfit==='out_galochas'){
-    outfitTopSVG=SEGB.map(([x,y])=>[-9,9].map(d=>`<rect x="${x+d-5}" y="${y+12}" width="10" height="11" rx="3" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2"/><ellipse cx="${x+d+2}" cy="${y+23}" rx="7" ry="3.5" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2"/>`).join('')).join('');
-  } else if(outfit==='out_vaquinha'){
+  if(outfit==='out_vaquinha'){
     outfitTopSVG=SEGB.map(([x,y,r],i)=>`<path d="M${x-r*.5},${y-r*.55} q8,-6 13,1 q4,7 -4,10 q-10,2 -9,-11z" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width="${i%2?0:1}"/><circle cx="${x+r*.35}" cy="${y+r*.15}" r="4" fill="${i%2?'#fff':'#1d1a2e'}"/>`).join('');
-  } else if(outfit==='out_abelha'){
-    outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-3},${y-r*.82} Q${x+2},${y} ${x-3},${y+r*.82}" stroke="#1d1a2e" stroke-width="5" fill="none" stroke-linecap="round"/>`).join('');
-  } else if(outfit==='out_pintinhas'){
-    outfitTopSVG=SEGB.map(([x,y,r])=>`<circle cx="${x-r*.35}" cy="${y-r*.3}" r="4.5" fill="#1d1a2e"/><circle cx="${x+r*.4}" cy="${y-r*.1}" r="3.6" fill="#1d1a2e"/><circle cx="${x}" cy="${y+r*.4}" r="3.2" fill="#1d1a2e"/>`).join('');
+  } else if(outfit==='out_joaninha'){
+    outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-r*.95},${y+r*.1} A${r*.95},${r*.95} 0 0 1 ${x+r*.95},${y+r*.1}Z" fill="#e8323f" stroke="#8a1020" stroke-width="1.2"/><circle cx="${x-r*.4}" cy="${y-r*.35}" r="4" fill="#1d1a2e"/><circle cx="${x+r*.4}" cy="${y-r*.3}" r="3.4" fill="#1d1a2e"/><circle cx="${x}" cy="${y-r*.7}" r="2.8" fill="#1d1a2e"/>`).join('');
+  } else if(outfit==='out_sueter'){
+    outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-r},${y+r*.25} A${r},${r} 0 0 1 ${x+r},${y+r*.25}Z" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2"/><rect x="${x-r}" y="${y+r*.18}" width="${r*2}" height="4" rx="2" fill="#f5b800"/><path d="M${x-r*.6},${y-r*.35} h${r*1.2} M${x-r*.75},${y-r*.05} h${r*1.5}" stroke="#f5b800" stroke-width="2" stroke-dasharray="3 2"/>`).join('');
   }
 
   let hatSVG='';
@@ -1755,11 +1996,9 @@ function makeMimiTiny(){
   let outfitBehindSVG = '';
   let outfitTopSVG = '';
   const SEGT=[[16,48,14],[30,45,13],[44,42,13]];
-  if(outfit==='out_tenis') outfitTopSVG=SEGT.map(([x,y],i)=>`<ellipse cx="${x}" cy="${y+13}" rx="6" ry="3.5" fill="${['#ff3b55','#3d9ff0','#ffd23f'][i]}" stroke="#333" stroke-width=".8"/>`).join('');
-  else if(outfit==='out_galochas') outfitTopSVG=SEGT.map(([x,y])=>`<rect x="${x-4}" y="${y+8}" width="8" height="8" rx="2" fill="#ffd23f" stroke="#c98a00" stroke-width=".8"/>`).join('');
-  else if(outfit==='out_vaquinha') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<circle cx="${x-r*.25}" cy="${y-r*.3}" r="3.6" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width=".6"/>`).join('');
-  else if(outfit==='out_abelha') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x},${y-r*.8} V${y+r*.8}" stroke="#1d1a2e" stroke-width="3.5" stroke-linecap="round"/>`).join('');
-  else if(outfit==='out_pintinhas') outfitTopSVG=SEGT.map(([x,y,r])=>`<circle cx="${x-r*.3}" cy="${y-r*.3}" r="2.6" fill="#1d1a2e"/><circle cx="${x+r*.35}" cy="${y}" r="2.2" fill="#1d1a2e"/>`).join('');
+  if(outfit==='out_vaquinha') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<circle cx="${x-r*.25}" cy="${y-r*.3}" r="3.6" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width=".6"/>`).join('');
+  else if(outfit==='out_joaninha') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x-r*.9},${y} A${r*.9},${r*.9} 0 0 1 ${x+r*.9},${y}Z" fill="#e8323f" stroke="#8a1020" stroke-width=".8"/><circle cx="${x-r*.3}" cy="${y-r*.4}" r="2.4" fill="#1d1a2e"/><circle cx="${x+r*.35}" cy="${y-r*.3}" r="2" fill="#1d1a2e"/>`).join('');
+  else if(outfit==='out_sueter') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x-r*.95},${y+r*.2} A${r*.95},${r*.95} 0 0 1 ${x+r*.95},${y+r*.2}Z" fill="#ffd23f" stroke="#c98a00" stroke-width=".8"/>`).join('');
 
   return `<svg width="${tw}" height="${th}" viewBox="0 0 88 72" xmlns="http://www.w3.org/2000/svg">
   ${outfitBehindSVG}
@@ -1831,6 +2070,7 @@ const ICONS={
   bee:`<ellipse cx="12" cy="14" rx="7.5" ry="6.5" fill="#ffd23f" stroke="#1d1a2e" stroke-width="1.1"/><path d="M9 8.3 V19.7 M14.5 7.8 V20.2" stroke="#1d1a2e" stroke-width="2.4"/><ellipse cx="9" cy="5.5" rx="4" ry="3" fill="#cfefff" stroke="#6aa" stroke-width=".9"/><ellipse cx="15" cy="5.5" rx="4" ry="3" fill="#cfefff" stroke="#6aa" stroke-width=".9"/>`,
   ladybug:`<circle cx="12" cy="13.5" r="8" fill="#e8323f" stroke="#8a1020" stroke-width="1.1"/><path d="M12 5.5 V21.5" stroke="#1d1a2e" stroke-width="1.2"/><circle cx="12" cy="5.5" r="3.6" fill="#1d1a2e"/><g fill="#1d1a2e"><circle cx="8" cy="11" r="1.8"/><circle cx="16" cy="11" r="1.8"/><circle cx="8.5" cy="16.5" r="1.6"/><circle cx="15.5" cy="16.5" r="1.6"/></g>`,
   sneaker:`<path d="M3 15 Q3 9 7 9 L10 9 Q11 12 15 12.5 L19 13.5 Q21.5 14.5 21.5 17 H3Z" fill="#3d9ff0" stroke="#1f5c9e" stroke-width="1.1" stroke-linejoin="round"/><path d="M3 17 H21.5 V19 Q21.5 20 20.5 20 H4 Q3 20 3 19Z" fill="#fff" stroke="#9aa" stroke-width=".9"/><path d="M9.5 11 L12 10.5 M10.5 12.5 L13 12" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>`,
+  sweater:`<path d="M8 3 L3 7 L4.5 14 L7 13.5 V21 H17 V13.5 L19.5 14 L21 7 L16 3 Q12 6 8 3 Z" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 19 H17 M8 10 H16 M8 13 H16" stroke="#f5a800" stroke-width="1.1" stroke-dasharray="1.6 1.2"/>`,
   shirt:`<path d="M8 3 L3 6 L5 10 L7.5 9 V21 H16.5 V9 L19 10 L21 6 L16 3 Q12 6 8 3 Z" fill="#5ecfca" stroke="#2a8f8a" stroke-width="1.2" stroke-linejoin="round"/>`,
   trophy:`<path d="M7 3 H17 V9 a5 5 0 0 1 -10 0 Z" fill="#ffd700" stroke="#c8a000" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5 H3.5 V7 a4 4 0 0 0 4 4 M17 5 H20.5 V7 a4 4 0 0 1 -4 4" fill="none" stroke="#c8a000" stroke-width="1.6" stroke-linecap="round"/><rect x="10.5" y="13.5" width="3" height="4" fill="#e8b800" stroke="#c8a000" stroke-width="1"/><rect x="7" y="17.5" width="10" height="3.5" rx="1" fill="#ffd700" stroke="#c8a000" stroke-width="1.2"/>`,
   bulb:`<path d="M12 2 a7 7 0 0 0 -4 12.7 V17 h8 v-2.3 A7 7 0 0 0 12 2 Z" fill="#ffe66d" stroke="#d4a000" stroke-width="1.2" stroke-linejoin="round"/><rect x="8.5" y="18" width="7" height="2.4" rx="1.2" fill="#b0b4c4" stroke="#7a8094" stroke-width=".8"/><rect x="9.5" y="20.6" width="5" height="1.6" rx=".8" fill="#9aa0b4"/>`,
@@ -1876,19 +2116,17 @@ const ITEMS=[
   {id:'hat_laco',     type:'hat',    icon:'bow',       label:'Laço Fofo'},
   {id:'hat_bone',     type:'hat',    icon:'cap',       label:'Boné'},
   {id:'out_vaquinha', type:'outfit', icon:'cow',       label:'Vaquinha'},
-  {id:'out_galochas', type:'outfit', icon:'boot',      label:'Galochas'},
-  {id:'out_abelha',   type:'outfit', icon:'bee',       label:'Abelhinha'},
-  {id:'out_pintinhas',type:'outfit', icon:'ladybug',   label:'Pintinhas'},
-  {id:'out_tenis',    type:'outfit', icon:'sneaker',   label:'Tênis'},
+  {id:'out_joaninha', type:'outfit', icon:'ladybug',   label:'Joaninha'},
+  {id:'out_sueter',   type:'outfit', icon:'sweater',   label:'Suéter Amarelo'},
 ];
 // índice 0 = treino (sem brindes). Valor 4 = brinde A (chapéu), valor 7 = brinde B (roupa)
 const PHASE_COUNT=5;
 const PHASE_PICKUPS=[
   null,
-  {4:'hat_laco'},              // um presente por fruta, intercalando chapéu e roupinha
-  {7:'out_tenis'},
-  {4:'hat_flor'},
-  {7:'out_pintinhas'},
+  {4:'hat_laco'},              // um presente por fruta: o laço, as 3 roupinhas e a coroa no fim
+  {7:'out_vaquinha'},
+  {4:'out_sueter'},
+  {7:'out_joaninha'},
   {4:'hat_coroa'},             // a coroa é o prêmio da última fruta
 ];
 // só aparecem no armário os presentes que dá para ganhar (e os que a criança já ganhou antes)
@@ -2163,14 +2401,12 @@ let replayLog=[];
 let lastPath=null;     // último caminho que chegou na estrela: {phase, cmds} (usado em "Rever caminho")
 const seenItems=new Set();
 let soundOn=true;
-// CORES DA MIMI: rosa desde o começo; cada fase vencida libera mais uma. Nada de compras nem sorteio.
+// CORES DA MIMI: rosa desde o começo; bege, vermelha e azul são liberadas jogando. Nada de compras nem sorteio.
 const MIMI_COLORS=[
   {id:'rosa',label:'Rosa',sw:'#ee5fae',phase:-1,hue:0},
-  {id:'azul',label:'Azul',sw:'#3d9ff0',phase:0,hue:-115},
-  {id:'verde',label:'Verde',sw:'#43bf63',phase:1,hue:-190},
-  {id:'roxa',label:'Roxa',sw:'#9a68f0',phase:2,hue:-60},
-  {id:'vermelha',label:'Vermelha',sw:'#e53935',phase:3,hue:35,flt:'hue-rotate(35deg) saturate(1.3)'},
-  {id:'bege',label:'Bege',sw:'#efe3cc',phase:4,hue:0,flt:'saturate(.12) brightness(1.35) sepia(.25)'},
+  {id:'bege',label:'Bege',sw:'#efe3cc',phase:0,hue:0,flt:'saturate(.12) brightness(1.35) sepia(.25)'},
+  {id:'vermelha',label:'Vermelha',sw:'#e53935',phase:2,hue:35,flt:'hue-rotate(35deg) saturate(1.3)'},
+  {id:'azul',label:'Azul',sw:'#3d9ff0',phase:4,hue:-115},
 ];
 let mimiColor='rosa';
 const seenColors=new Set(['rosa']);
@@ -2205,7 +2441,8 @@ function loadState(){
     if(!raw)return;
     const data=JSON.parse(raw);
     // as roupas antigas viraram roupas novas (mesma fase em que a criança ganhou)
-    const OLD_OUT={out_capa:'out_vaquinha',out_borboleta:'out_galochas',out_arcoirs:'out_abelha',out_mochila:'out_vaquinha',out_sueter:'out_galochas',out_cachecol:'out_abelha',out_estrela:'out_pintinhas',out_coracao:'out_tenis'};
+    const OLD_OUT={out_capa:'out_vaquinha',out_borboleta:'out_sueter',out_arcoirs:'out_joaninha',out_mochila:'out_vaquinha',out_cachecol:'out_joaninha',out_estrela:'out_joaninha',out_coracao:'out_vaquinha',
+      out_tenis:'out_vaquinha',out_galochas:'out_sueter',out_abelha:'out_sueter',out_pintinhas:'out_joaninha'};
     const mig=id=>OLD_OUT[id]||id;
     if(Array.isArray(data.unlockedItems))data.unlockedItems=data.unlockedItems.map(mig);
     if(Array.isArray(data.seenItems))data.seenItems=data.seenItems.map(mig);
@@ -2494,7 +2731,27 @@ document.querySelectorAll('[data-stars]').forEach(e=>{e.innerHTML=starsHTML(3,36
 updateSoundBtn();
 updateMotionBtn();
 updateVoiceBtn();
-showMimi(document.getElementById('how-mimi'),52,'normal');
+showMimi(document.getElementById('how-mimi'),86,'normal');
+// COMO JOGAR em cartões: um cartão por vez (setas, bolinhas ou arrastar com o dedo)
+let howIdx=0;
+function howRender(){
+  const cards=[...document.querySelectorAll('#how-steps .how-step-row')];
+  howIdx=Math.max(0,Math.min(cards.length-1,howIdx));
+  cards.forEach((c,i)=>{c.classList.toggle('on',i===howIdx);c.setAttribute('aria-hidden',i===howIdx?'false':'true');});
+  const dots=document.getElementById('how-dots');
+  if(dots.children.length!==cards.length)dots.innerHTML=cards.map((_,i)=>`<button class="how-dot" role="tab" aria-label="Cartão ${i+1}" onclick="howIdx=${i};howRender()"></button>`).join('');
+  [...dots.children].forEach((d,i)=>{d.classList.toggle('on',i===howIdx);d.setAttribute('aria-selected',i===howIdx);});
+  document.getElementById('how-prev').disabled=howIdx===0;
+  document.getElementById('how-next').disabled=howIdx===cards.length-1;
+}
+function howGo(d){howIdx+=d;howRender();}
+(function(){
+  const box=document.getElementById('how-steps');let x0=null;
+  box.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  box.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>40)howGo(dx<0?1:-1);});
+  howRender();
+})();
+
 refreshStart();
 
 // ═══════════════════════════════════
@@ -2502,7 +2759,8 @@ refreshStart();
 // ═══════════════════════════════════
 function showScreen(id){
   if(id!=='screen-phases'&&typeof stopMapWalk==='function'){stopMapWalk();if(window.Map3D)Map3D.dispose();}
-  document.getElementById('scenery').classList.toggle('show',id==='screen-game');
+  document.getElementById('scenery').classList.toggle('show',id==='screen-game'||id==='screen-start');
+  if(id==='screen-start')setScenery(2);
   document.body.classList.toggle('in-game',id==='screen-game');
   hideSay();
   document.getElementById('garden-bg').classList.toggle('show',id==='screen-garden'||id==='screen-meta');
@@ -2510,13 +2768,14 @@ function showScreen(id){
   const el=document.getElementById(id);el.style.display='flex';
   requestAnimationFrame(()=>el.classList.add('active'));
   if(id==='screen-start')refreshStart();
+  if(id==='screen-how'){howIdx=0;howRender();}
   window.scrollTo(0,0);
 }
 function showPhases(){showScreen('screen-phases');buildPhaseGrid();}
 
 // TELA INICIAL: Mimi grande, botão Continuar (quando já tem progresso) e o "oi" da Mimi
 function refreshStart(){
-  showMimi(document.getElementById('mimi-start-wrap'),window.innerWidth<600?150:190,'normal',true);
+  showMimi(document.getElementById('mimi-start-wrap'),window.innerWidth<600?(window.innerHeight>760?170:150):(window.innerHeight>720?220:190),'normal',true);
   const bc=document.getElementById('btn-continue'),bp=document.getElementById('btn-play');
   const n=currentNode();
   const has=phaseScores[0]!==null&&n<=PHASE_COUNT&&phaseScores[n]===null;
@@ -2526,8 +2785,19 @@ function refreshStart(){
     bc.setAttribute('aria-label',`Continuar na fase da ${FRUITS[n].name}`);
   }
   bp.classList.toggle('btn-play-sec',phaseScores[0]!==null);
+  // com progresso, o "Ver o mapa" vai para a linha de baixo, ao lado do Como jogar
+  const row=document.querySelector('.start-sec-row');
+  if(phaseScores[0]!==null){if(bp.parentNode!==row)row.prepend(bp);}else if(bp.parentNode===row)bc.after(bp);
   bp.innerHTML=`<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><polygon points="2,1 15,8 2,15"/></svg> ${phaseScores[0]!==null?'VER O MAPA':'JOGAR'}`;
 }
+// tela inicial: frutinhas flutuando em volta e letras do título balançando
+(function(){
+  const deco=document.getElementById('start-deco');if(!deco)return;
+  const spots=[[12,16,0,1],[88,14,2,.9],[8,48,3,.85],[92,46,4,1],[16,72,5,.8],[85,70,1,.9]];
+  deco.innerHTML=spots.map(([x,y,f,sc],i)=>`<span class="sd-fruit" style="left:${x}%;top:${y}%;--s:${sc};--d:${(i*.37).toFixed(2)}s">${fruitSVG(f)}</span>`).join('');
+  document.querySelectorAll('.start-scene .game-title span').forEach((l,i)=>l.style.setProperty('--i',i));
+  setTimeout(()=>{if(document.getElementById('screen-start').classList.contains('active')){setScenery(2);document.getElementById('scenery').classList.add('show');}},0);
+})();
 function continueGame(){const n=currentNode();if(n<=PHASE_COUNT&&isUnlocked(n))startPhase(n);else showPhases();}
 const MIMI_HELLO=['Oi! Eu sou a Mimi! Vamos achar a estrela?','Que cócegas! Vamos brincar?','Use as setas para me levar até a estrela!','Eu adoro frutas! Vamos jogar?'];
 let helloIdx=0;
@@ -2651,6 +2921,19 @@ function buildPhaseGrid(){
   });
   const note=document.getElementById('phases-note');
   if(note)note.textContent=phaseScores[0]===null?'Comece pelo treino!':phaseScores[PHASE_COUNT]!==null?'Você passou por todas as frutas!':`Próxima fruta: ${FRUITS[cur].name}`;
+  // cartão da próxima fase: fruta, nome e um botão grande para jogar
+  const nc=document.getElementById('next-card'),allDone=phaseScores[PHASE_COUNT]!==null;
+  if(nc){
+    nc.hidden=false;if(note)note.hidden=true;
+    const tgt=allDone?PHASE_COUNT:cur;
+    document.getElementById('next-fruit').innerHTML=fruitSVG(tgt);
+    document.getElementById('next-kicker').textContent=allDone?'Você passou por todas!':tgt===0?'Comece pelo treino':`Fase ${tgt}`;
+    document.getElementById('next-name').textContent=allDone?'Jogue de novo':FRUITS[tgt].name;
+    const go=document.getElementById('next-go');
+    go.innerHTML=`<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><polygon points="2,1 15,8 2,15"/></svg> ${allDone?'Resultado':'Jogar'}`;
+    go.setAttribute('aria-label',allDone?'Ver o resultado final':`Jogar ${tgt===0?'o treino':'a fase '+tgt}: ${FRUITS[tgt].name}`);
+    go.onclick=()=>{if(allDone){stopMapWalk();showFinal();return;}const b=map.querySelector(`.map-node[data-i="${tgt}"]`);if(b)b.click();};
+  }
 
   // Mimi no mapa (em cima da fruta onde ela está)
   const mm=document.getElementById('map-mimi');
@@ -3087,6 +3370,8 @@ window.addEventListener('resize',()=>{
 // Teclado: setas = comandos, Enter = executar, Backspace = apagar o último, Esc = limpar
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&!document.getElementById('adults-info').hidden){closeModal('adults-info');return;}
+  if(e.key==='Escape'&&!document.getElementById('final-dress').hidden){closeFinalDress();return;}
+  if(document.getElementById('screen-how').classList.contains('active')&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){howGo(e.key==='ArrowLeft'?-1:1);return;}
   if(!document.getElementById('screen-game').classList.contains('active'))return;
   if(!document.getElementById('hint-confirm').hidden){if(e.key==='Escape')confirmHint(false);return;}   // com a pergunta aberta, o teclado só responde a ela
   if(!document.getElementById('break-reminder').hidden){if(e.key==='Escape')closeModal('break-reminder');return;}
@@ -3463,33 +3748,39 @@ function phaseComplete(steps,blocks=steps){
   document.getElementById('congrats-sub').textContent=firstAllDone?'Você passou por todas as frutas! Vista a Mimi antes de ela virar borboleta.':`Você passou a fase ${curPhase}!`;
   document.querySelector('.dressup-card').style.display='';
 
+  // o que tirou pontos: etiquetas pequenas, uma ao lado da outra
+  const pen=(n,txt)=>`<span class="sc-pen"><b>−${n}</b> ${txt}</span>`;
   let bd='';
-  if(extra>0)    bd+=`<span style="color:#ffdce4">−${extra*EXTRA_STEP_COST} pontos: andou a mais</span><br>`;
-  if(missing>0)  bd+=`<span style="color:#ffd66b">−${missing*MISSING_COST} pontos: ${missing===1?'presente ficou para trás':'presentes ficaram para trás'}</span><br>`;
-  if(penMud>0)   bd+=`<span style="color:#ffcf9a">−${penMud} pontos: lama</span><br>`;
-  if(penRock>0)  bd+=`<span style="color:#ff9aa8">−${penRock} pontos: pedra</span><br>`;
-  if(penWall>0)  bd+=`<span style="color:#ffb27a">−${penWall} pontos: parede</span><br>`;
-  if(hPen>0)     bd+=`<span style="color:#e2b0ff">−${hPen} pontos: dica usada</span><br>`;
+  if(extra>0)    bd+=pen(extra*EXTRA_STEP_COST,'passos a mais');
+  if(missing>0)  bd+=pen(missing*MISSING_COST,missing===1?'presente':'presentes');
+  if(penMud>0)   bd+=pen(penMud,'lama');
+  if(penRock>0)  bd+=pen(penRock,'pedra');
+  if(penWall>0)  bd+=pen(penWall,'parede');
+  if(hPen>0)     bd+=pen(hPen,'dica');
 
   // frases curtas para 6 a 8 anos + as setas que a criança usou (cada seta com ×2, ×3 conta como uma)
   const cmds=lastPath&&lastPath.phase===curPhase?lastPath.cmds:[];
   const chips=`<span class="sc-chips" aria-label="Setas usadas: ${cmds.map(c=>ARROW_NAME[c.d]+(c.n>1?` ${c.n} vezes`:'')).join(', ')}">${cmds.map(c=>`<span class="sc-chip">${ico(ARROW_ICON[c.d],18)}${c.n>1?`<b>×${c.n}</b>`:''}</span>`).join('')}</span>`;
   const setas=`${blocks} ${blocks===1?'seta':'setas'}`;
   const algoMsg=missing>0
-    ? `<span style="color:#ffe3a8;font-size:.95rem">${ico('bulb',18)} Você usou ${setas}. Da próxima vez, pegue ${missing===1?'o presente':'os presentes'} no caminho!</span>`
+    ? `<span class="sc-tip">${ico('bulb',20)} Da próxima vez, pegue ${missing===1?'o presente':'os presentes'}!</span>`
     : steps<=sp
-    ? `<span style="color:#9effc4;font-size:.95rem">${ico('bulb',18)} Caminho mais curto! Você usou ${setas}.</span>`
-    : `<span style="color:#ffe3a8;font-size:.95rem">${ico('bulb',18)} Você usou ${setas}. Tem um caminho mais curto. Quer tentar achar?</span>`;
-  const timeMsg=`${chips}<span style="color:#bfe3ff;font-size:.9rem">${ico('clock',16)} Tempo: ${fmtTime(timerSecs)} (o tempo não tira pontos)</span>`;
-  const bestMsg=(!improved)?`<br><span style="font-size:.9rem">${ico('star',16)} Sua melhor nota continua sendo ${best} pontos</span>`:'';
+    ? `<span class="sc-tip good">${ico('bulb',20)} Caminho mais curto!</span>`
+    : `<span class="sc-tip">${ico('bulb',20)} Tem um caminho mais curto. Quer achar?</span>`;
+  const timeMsg=`<span class="sc-foot">${chips}<span class="sc-meta">${setas} · ${ico('clock',16)} ${fmtTime(timerSecs)}</span></span>`;
+  const bestMsg=(!improved)?`<span class="sc-best">${ico('star',16)} Sua melhor nota: ${best} pontos</span>`:'';
 
   document.getElementById('score-breakdown').innerHTML=
-    `<span style="font-size:1.9rem;color:#ffffff;display:block;margin-bottom:4px">${score} pontos</span>`+
-    (bd||'<span style="color:#9effc4">Perfeito! Sem perda de pontos!</span><br>')+
+    `<span class="sc-points">${score} <small>pontos</small></span>`+
+    `<span class="sc-pens">${bd||'<span class="sc-pen good">Perfeito! Sem perder pontos</span>'}</span>`+
     algoMsg+timeMsg+bestMsg;
 
-  showMimi(document.getElementById('congrats-mimi'),120,'happy');
+  showMimi(document.getElementById('congrats-mimi'),window.innerHeight<700?90:110,'happy');
   buildDressup();confetti();
+  const dressBtn=document.getElementById('btn-congrats-dress');
+  dressBtn.hidden=false;
+  dressBtn.classList.toggle('has-new',ITEMS.some(it=>unlockedItems.has(it.id)&&!seenItems.has(it.id))||MIMI_COLORS.some(c=>colorUnlocked(c)&&!seenColors.has(c.id)));
+  dressBtn.classList.toggle('call',firstAllDone);
   const btn=document.getElementById('btn-next');
   if(firstAllDone){
     btn.innerHTML=`${ico('butterfly',20)} Virar borboleta!`;
@@ -3525,7 +3816,8 @@ function trainingComplete(){
   document.getElementById('score-breakdown').innerHTML=
     `<span style="color:#9effc4">Você aprendeu a usar as setas e o botão executar. Vamos para a fase 1!</span>`;
   document.querySelector('.dressup-card').style.display='none';
-  showMimi(document.getElementById('congrats-mimi'),120,'happy');
+  document.getElementById('btn-congrats-dress').hidden=true;
+  showMimi(document.getElementById('congrats-mimi'),110,'happy');
   const btn=document.getElementById('btn-next');
   btn.innerHTML=`${ico('play',18)} Ir para a fase 1`;
   btn.onclick=()=>showPhases();
@@ -3549,11 +3841,11 @@ function switchCat(cat, btn){
 
 // Cores de raridade por acessório
 const RARITY={
-  hat_coroa:'#ffd166', out_vaquinha:'#ffd166',          // dourado — lendário
-  hat_cartola:'#c3a6f5', out_galochas:'#c3a6f5',   // roxo — épico
-  hat_bone:'#7cb8f0', out_abelha:'#7cb8f0',        // azul — raro
-  hat_flor:'#7fd8a6', out_pintinhas:'#7fd8a6',        // verde — comum
-  hat_laco:'#ffb27a', out_tenis:'#ffb27a',        // laranja — inicial
+  hat_coroa:'#ffd166', out_joaninha:'#ffd166',          // dourado — lendário
+  hat_cartola:'#c3a6f5', out_sueter:'#c3a6f5',   // roxo — épico
+  hat_bone:'#7cb8f0',        // azul — raro
+  hat_flor:'#7fd8a6',        // verde — comum
+  hat_laco:'#ffb27a', out_vaquinha:'#ffb27a',        // laranja — inicial
 };
 
 function buildDressup(){
@@ -3656,16 +3948,28 @@ function showFinal(){
   document.getElementById('garden-score-num').textContent=avg;
   document.getElementById('garden-stars').innerHTML=starsHTML(starsFor(avg),36);
   document.getElementById('garden-perfect-lbl').textContent=`${perfectCount} de ${real.length} fases com 3 estrelas`;
-  // personalizar a Mimi borboleta aqui também
-  document.getElementById('final-dress-slot').appendChild(dressCard);
-  dressCard.style.display='';
-  document.getElementById('mimi-stage').dataset.fly='1';
-  buildDressup();
+  dressHomeBack();                     // o "Vista a Mimi" só aparece quando a criança aperta "Vestir Mimi"
   showScreen('screen-garden');
   const gf=document.getElementById('garden-fly');gf.dataset.fly='1';
   showMimi(gf,110,'happy');
   spawnGardenParticles();confetti();
   speak('Eu virei uma borboleta! Você programou muito bem!',{bubble:false});
+}
+
+// botão "Vestir Mimi" do resultado final: abre o armário por cima, com a Mimi borboleta
+function openFinalDress(){openDress(true);}
+// abre o armário por cima da tela (na tela de parabéns e no resultado final)
+function openDress(fly){
+  document.getElementById('final-dress-slot').appendChild(dressCard);
+  dressCard.style.display='';
+  if(fly)document.getElementById('mimi-stage').dataset.fly='1';
+  document.getElementById('btn-congrats-dress').classList.remove('has-new');
+  openModal('final-dress');
+  buildDressup();
+}
+function closeFinalDress(){
+  closeModal('final-dress');
+  dressHomeBack();
 }
 
 // TRANSFORMAÇÃO: lagarta → casulo → borboleta, e depois o resultado final
