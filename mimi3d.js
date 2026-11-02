@@ -205,7 +205,8 @@ function buildHat(id){
     const l=ball(.17,pink,0,.12,-.17,.6,.75,1.15);l.rotation.x=.4;g.add(l);
     const r=ball(.17,pink,0,.12,.17,.6,.75,1.15);r.rotation.x=-.4;g.add(r);
     g.add(ball(.08,knot,0,.12,0));
-    g.position.set(.05,0,.1);g.rotation.x=-.35;
+    // em cima da cabeça, um pouco atrás das anteninhas: nada dele fica escondido dentro da cabeça
+    g.position.set(-.26,-.02,0);g.rotation.z=.35;g.scale.setScalar(1.3);
   }else if(id==='hat_bone'){
     const blue=std('#8ecbf5',{roughness:.6});
     const dome=mesh(new THREE.SphereGeometry(.42,32,16,0,Math.PI*2,0,Math.PI/2),blue);dome.position.y=-.02;g.add(dome);
