@@ -1328,6 +1328,41 @@ body.calm .sd-fruit,body.calm .start-scene .game-title span,body.calm #btn-play,
 }
 @media (max-width:400px){.garden-btns{gap:8px}.garden-btns button{font-size:.88rem!important;padding:9px 13px!important}}
 @media (max-width:400px) and (max-height:700px){#screen-garden .garden-score-lbl{font-size:.8rem}#screen-garden .garden-msg{font-size:.88rem}}
+/* PROVADOR maior, com a Mimi girando */
+.final-dress-box{width:min(900px,100%)}
+.final-dress-slot .dressup-card{padding:22px 24px 24px;gap:16px}
+.final-dress-slot .dressup-title{font-size:1.6rem}
+.final-dress-slot .dressup-body{gap:22px;align-items:stretch}
+.final-dress-slot .mimi-preview-box{width:min(300px,34vh);height:min(300px,34vh);cursor:grab;touch-action:none}
+.mimi-preview-box.grab{cursor:grabbing}
+.mimi-preview-box:focus-visible{outline:4px solid #ffd700;outline-offset:3px}
+.spin-row{display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.spin-btn{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(170deg,#c08bff,#8a4dff,#6a2fe0);box-shadow:0 4px 0 #4a1fa0;flex-shrink:0}
+.spin-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #4a1fa0}
+.spin-tip{font:900 .78rem 'Nunito','Segoe UI',Arial,sans-serif;color:rgba(255,255,255,.85);text-align:center;line-height:1.2}
+.final-dress-slot .mimi-equipped-label{font-size:.95rem;padding:5px 10px}
+.final-dress-slot .cat-tab{font-size:1rem;padding:9px 16px}
+.final-dress-slot .items-grid{grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:12px}
+.final-dress-slot .item-slot{min-height:118px}
+.final-dress-slot .item-name{font-size:.85rem}
+.final-dress-slot .item-emoji svg{width:46px;height:46px}
+.final-dress-ok{font-size:1.25rem!important;padding:13px 38px!important}
+@media (max-width:620px){
+  .final-dress-slot .dressup-card{padding:14px 12px 16px;gap:10px}
+  .final-dress-slot .dressup-body{flex-direction:column;align-items:center;gap:12px}
+  .final-dress-slot .mimi-preview-box{width:min(230px,30vh);height:min(230px,30vh)}
+  .final-dress-slot .items-panel{width:100%}
+  .final-dress-slot .items-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .final-dress-slot .item-slot{min-height:100px}
+  .final-dress-slot .cat-tab{font-size:.85rem;padding:7px 10px}
+}
+@media (max-width:620px) and (max-height:700px){
+  .final-dress-slot .mimi-preview-box{width:150px;height:150px}
+  .final-dress-slot .dressup-title{font-size:1.25rem}
+  .final-dress-slot .item-slot{min-height:80px;padding:6px 4px 8px}
+  .final-dress-box{gap:8px}
+}
 </style>
 </head>
 <body>
@@ -1522,7 +1557,12 @@ body.calm .sd-fruit,body.calm .start-scene .game-title span,body.calm #btn-play,
 
       <!-- LEFT: Mimi preview -->
       <div class="mimi-pedestal">
-        <div class="mimi-preview-box" id="mimi-stage"></div>
+        <div class="mimi-preview-box" id="mimi-stage" title="Arraste para girar a Mimi"></div>
+        <div class="spin-row">
+          <button class="spin-btn" type="button" onclick="spinMimi(-1)" aria-label="Girar a Mimi para a esquerda"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5H3v5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 9.5A9 9 0 1 1 6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+          <span class="spin-tip">Arraste para girar</span>
+          <button class="spin-btn" type="button" onclick="spinMimi(1)" aria-label="Girar a Mimi para a direita"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="transform:scaleX(-1)"><path d="M8 5H3v5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 9.5A9 9 0 1 1 6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+        </div>
         <div class="mimi-equipped-label" id="equipped-label">Sem acessórios</div>
       </div>
 
@@ -3855,9 +3895,23 @@ function buildDressup(){
   renderItemsGrid();
 }
 
+// provador: a Mimi fica do tamanho da caixa e gira arrastando (dedo ou mouse) ou pelos botões
+function dressMimiSize(){const st=document.getElementById('mimi-stage');const w=st?st.offsetWidth:0;return Math.max(104,Math.round((w||130)*.92/1.25));}
+function dressSlot(){const st=document.getElementById('mimi-stage');return st&&st.__m3;}
+function spinMimi(dir){const s=dressSlot();if(s)s.face(s.st.yawT+dir*Math.PI/3);}
+(function(){
+  const st=document.getElementById('mimi-stage');if(!st)return;
+  let x0=null,y0=0;
+  st.addEventListener('pointerdown',e=>{const s=dressSlot();if(!s)return;x0=e.clientX;y0=s.st.yawT;st.setPointerCapture(e.pointerId);st.classList.add('grab');});
+  st.addEventListener('pointermove',e=>{if(x0===null)return;const s=dressSlot();if(s)s.face(y0+(e.clientX-x0)*.018);});
+  const end=()=>{x0=null;st.classList.remove('grab');};
+  st.addEventListener('pointerup',end);st.addEventListener('pointercancel',end);
+  st.tabIndex=0;st.setAttribute('role','img');st.setAttribute('aria-label','Mimi vestida. Use as setas para os lados para girar.');
+  st.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();e.stopPropagation();spinMimi(e.key==='ArrowLeft'?-1:1);}});
+})();
 function updateMimiPreview(){
   const stage=document.getElementById('mimi-stage');
-  if(stage) showMimi(stage,104,'normal');          // a mesma Mimi 3D do jogo, com o que ela está vestindo
+  if(stage) showMimi(stage,dressMimiSize(),'normal');          // a mesma Mimi 3D do jogo, com o que ela está vestindo
   const cm=document.getElementById('congrats-mimi');
   if(cm&&(cm.__m3||cm.innerHTML))showMimi(cm,120,'happy');
   const gf=document.getElementById('garden-fly');
