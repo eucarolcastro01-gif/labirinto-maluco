@@ -3861,7 +3861,7 @@ function updateMimiPreview(){
   const cm=document.getElementById('congrats-mimi');
   if(cm&&(cm.__m3||cm.innerHTML))showMimi(cm,120,'happy');
   const gf=document.getElementById('garden-fly');
-  if(gf&&gf.dataset.fly&&document.getElementById('screen-garden').classList.contains('active'))showMimi(gf,110,'normal');
+  if(gf&&gf.dataset.fly&&document.getElementById('screen-garden').classList.contains('active'))showMimi(gf,gardenFlySize(),'normal');
   const lbl=document.getElementById('equipped-label');
   if(lbl){
     const h=ITEMS.find(x=>x.id===equippedHat);
@@ -3942,6 +3942,17 @@ function renderItemsGrid(){
 // ═══════════════════════════════════
 //  FINAL
 // ═══════════════════════════════════
+// a borboleta do final é desenhada do tamanho real do espaço dela (antes era pequena e esticada, ficava borrada)
+function gardenFlySize(){
+  const gf=document.getElementById('garden-fly');
+  const px=gf?gf.offsetWidth:0;                         // offsetWidth: sem a animação de entrada da tela
+  return Math.max(110,Math.round((px||140)/1.25));      // showMimi desenha com 1,25 × o tamanho pedido
+}
+let gardenResizeT=0;
+window.addEventListener('resize',()=>{clearTimeout(gardenResizeT);gardenResizeT=setTimeout(()=>{
+  const gf=document.getElementById('garden-fly');
+  if(gf&&gf.dataset.fly&&document.getElementById('screen-garden').classList.contains('active'))showMimi(gf,gardenFlySize(),'normal');
+},200);});
 function showFinal(){
   const firstMissing=phaseScores.findIndex((v,i)=>i>=1&&v===null);
   if(firstMissing>0){startPhase(firstMissing);return;}   // só mostra o final com as 5 fases concluídas
@@ -3956,7 +3967,7 @@ function showFinal(){
   dressHomeBack();                     // o "Vista a Mimi" só aparece quando a criança aperta "Vestir Mimi"
   showScreen('screen-garden');
   const gf=document.getElementById('garden-fly');gf.dataset.fly='1';
-  showMimi(gf,110,'happy');
+  showMimi(gf,gardenFlySize(),'happy');
   spawnGardenParticles();confetti();
   speak('Eu virei uma borboleta! Você programou muito bem!',{bubble:false});
 }
