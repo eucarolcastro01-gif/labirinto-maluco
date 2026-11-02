@@ -993,7 +993,30 @@ body.calm .garden-fly-path,body.calm .garden-badge{animation:none!important}
 .garden-card .btn-ghost{background:#1f5c3a;border-color:#1f5c3a;color:#fff;backdrop-filter:none}
 .garden-card .btn-cta,.garden-card .btn-ghost{white-space:nowrap}
 @media (max-width:520px){.garden-card .btn-cta{font-size:.9rem!important;padding:10px 16px!important}.garden-card .btn-ghost{padding:8px 14px}}
-.final-dress-slot{width:min(600px,100%);margin-top:12px;position:relative;z-index:2}
+.final-dress-slot{width:100%;position:relative;z-index:2}
+.final-dress-box{width:min(640px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:12px}
+.final-dress-ok{font-size:1.1rem;padding:11px 30px}
+/* resultado final maior, sem o painel de vestir embaixo */
+.garden-card.glass{max-width:760px}
+#screen-garden .garden-card{padding:26px 34px 28px;gap:14px}
+#screen-garden .garden-title{font-size:2.9rem}
+#screen-garden .garden-subtitle{font-size:1.1rem}
+#screen-garden .garden-msg{font-size:1.1rem}
+#screen-garden .garden-score-box{padding:14px 10px}
+#screen-garden .garden-score-num{font-size:3rem}
+#screen-garden .garden-score-lbl{font-size:.95rem}
+.garden-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:6px}
+.garden-btns button{font-size:1.1rem;padding:12px 24px}
+.btn-dress{border:none;border-radius:28px;cursor:pointer;color:#fff;display:inline-flex;align-items:center;gap:8px;
+  font-family:'Fredoka One','Segoe UI','Trebuchet MS',Verdana,sans-serif;letter-spacing:.5px;
+  background:linear-gradient(135deg,#ff5fa8,#d81b78);box-shadow:0 5px 0 #a3125a,0 8px 18px rgba(216,27,120,.35)}
+.btn-dress:active{transform:translateY(3px);box-shadow:0 2px 0 #a3125a}
+@media (max-width:560px){
+  #screen-garden .garden-card{padding:18px 14px 20px}
+  #screen-garden .garden-title{font-size:2.2rem}
+  #screen-garden .garden-subtitle,#screen-garden .garden-msg{font-size:.95rem}
+  .garden-btns button{font-size:1rem;padding:11px 18px}
+}
 .final-dress-slot .dressup-card{width:100%;max-width:none}
 #screen-meta{gap:0}
 .meta-card{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 20px;
@@ -1458,12 +1481,20 @@ body.calm .v2 .btn-exec.ready{animation:none}
       </div>
     </div>
 
-    <div style="display:flex;gap:10px;margin-top:4px">
-      <button class="btn-cta" onclick="showScreen('screen-start')" style="font-size:1rem;padding:10px 24px"><span data-ico="replay" data-size="20"></span> Jogar novamente</button>
-      <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="16"></span> Ver fases</button>
+    <div class="garden-btns">
+      <button class="btn-cta" onclick="showScreen('screen-start')"><span data-ico="replay" data-size="22"></span> Jogar novamente</button>
+      <button class="btn-dress" onclick="openFinalDress()"><span data-ico="shirt" data-size="22"></span> Vestir Mimi</button>
+      <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="18"></span> Ver fases</button>
     </div>
   </div>
-  <div id="final-dress-slot" class="final-dress-slot"></div>
+</div>
+
+<!-- VESTIR A MIMI BORBOLETA (abre pelo botão do resultado final) -->
+<div class="modal-back" id="final-dress" hidden onclick="if(event.target===this)closeFinalDress()">
+  <div class="final-dress-box" role="dialog" aria-modal="true" aria-label="Vista a Mimi">
+    <div id="final-dress-slot" class="final-dress-slot"></div>
+    <button class="btn-cta final-dress-ok" onclick="closeFinalDress()"><span data-ico="sparkle" data-size="20"></span> Pronto!</button>
+  </div>
 </div>
 
 <!-- PERGUNTA ANTES DA DICA -->
@@ -3079,6 +3110,7 @@ window.addEventListener('resize',()=>{
 // Teclado: setas = comandos, Enter = executar, Backspace = apagar o último, Esc = limpar
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&!document.getElementById('adults-info').hidden){closeModal('adults-info');return;}
+  if(e.key==='Escape'&&!document.getElementById('final-dress').hidden){closeFinalDress();return;}
   if(!document.getElementById('screen-game').classList.contains('active'))return;
   if(!document.getElementById('hint-confirm').hidden){if(e.key==='Escape')confirmHint(false);return;}   // com a pergunta aberta, o teclado só responde a ela
   if(!document.getElementById('break-reminder').hidden){if(e.key==='Escape')closeModal('break-reminder');return;}
@@ -3648,16 +3680,25 @@ function showFinal(){
   document.getElementById('garden-score-num').textContent=avg;
   document.getElementById('garden-stars').innerHTML=starsHTML(starsFor(avg),36);
   document.getElementById('garden-perfect-lbl').textContent=`${perfectCount} de ${real.length} fases com 3 estrelas`;
-  // personalizar a Mimi borboleta aqui também
-  document.getElementById('final-dress-slot').appendChild(dressCard);
-  dressCard.style.display='';
-  document.getElementById('mimi-stage').dataset.fly='1';
-  buildDressup();
+  dressHomeBack();                     // o "Vista a Mimi" só aparece quando a criança aperta "Vestir Mimi"
   showScreen('screen-garden');
   const gf=document.getElementById('garden-fly');gf.dataset.fly='1';
   showMimi(gf,110,'happy');
   spawnGardenParticles();confetti();
   speak('Eu virei uma borboleta! Você programou muito bem!',{bubble:false});
+}
+
+// botão "Vestir Mimi" do resultado final: abre o armário por cima, com a Mimi borboleta
+function openFinalDress(){
+  document.getElementById('final-dress-slot').appendChild(dressCard);
+  dressCard.style.display='';
+  document.getElementById('mimi-stage').dataset.fly='1';
+  openModal('final-dress');
+  buildDressup();
+}
+function closeFinalDress(){
+  closeModal('final-dress');
+  dressHomeBack();
 }
 
 // TRANSFORMAÇÃO: lagarta → casulo → borboleta, e depois o resultado final
