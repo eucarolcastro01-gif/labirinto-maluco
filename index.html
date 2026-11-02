@@ -1529,8 +1529,8 @@ body.calm .sd-fruit,body.calm .start-scene .game-title span,body.calm #btn-play,
       <!-- RIGHT: items panel -->
       <div class="items-panel">
         <div class="cat-tabs">
-          <button class="cat-tab active" onclick="switchCat('hat',this)"><span data-ico="tophat" data-size="22"></span> Chapéus</button>
-          <button class="cat-tab" onclick="switchCat('outfit',this)"><span data-ico="shirt" data-size="22"></span> Roupas</button>
+          <button class="cat-tab active" id="tab-hat" onclick="switchCat('hat',this)"><span data-ico="tophat" data-size="22"></span> Chapéus</button>
+          <button class="cat-tab" id="tab-outfit" onclick="switchCat('outfit',this)"><span data-ico="shirt" data-size="22"></span> Roupas</button>
           <button class="cat-tab" id="tab-color" onclick="switchCat('color',this)"><span class="tab-swatch" aria-hidden="true"></span> Cores</button>
         </div>
         <div class="items-grid" id="items-grid"></div>
@@ -3877,6 +3877,11 @@ function updateMimiPreview(){
 function updateColorTab(){
   const t=document.getElementById('tab-color');if(!t)return;
   t.classList.toggle('has-new',MIMI_COLORS.some(c=>colorUnlocked(c)&&!seenColors.has(c.id)));
+  // chapéus e roupas: a mesma bolinha vermelha quando tem item novo que ainda não foi usado
+  ['hat','outfit'].forEach(tp=>{
+    const tab=document.getElementById('tab-'+tp);
+    if(tab)tab.classList.toggle('has-new',ITEMS.some(it=>it.type===tp&&unlockedItems.has(it.id)&&!seenItems.has(it.id)));
+  });
 }
 function renderColorGrid(grid){
   MIMI_COLORS.forEach(c=>{
