@@ -703,7 +703,7 @@ button,.q-chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent
 /* ══ MIMI DESLIZANDO PELO LABIRINTO ══ */
 .grid-wrap{position:relative}
 #mimi-token{position:absolute;left:0;top:0;z-index:5;pointer-events:none;display:flex;align-items:center;justify-content:center;
-  transition:transform .56s cubic-bezier(.45,.05,.35,1);will-change:transform}
+  will-change:transform}   /* o deslize é feito por código (glideMimi), com velocidade contínua entre as casas */
 #mimi-token.instant{transition:none}
 #mimi-token .mimi-inner{display:inline-flex;filter:drop-shadow(0 0 6px rgba(255,150,220,.9)) drop-shadow(0 2px 4px rgba(0,0,0,.5))}
 #mimi-token.hop .mimi-inner{animation:mimiStep .56s ease-in-out}
@@ -1133,12 +1133,18 @@ body.calm .v2 .btn-exec.ready{animation:none}
 body.calm .congrats-dress,body.calm .congrats-dress::after{animation:none!important}
 #screen-congrats .nav-row{position:static;flex-wrap:wrap;justify-content:center;background:none;box-shadow:none;padding:0}
 #screen-congrats #btn-next{font-size:1.25rem!important;padding:13px 30px!important}
+/* "Jogar novamente": aparece quando faltou estrela, em azul para não brigar com o laranja da próxima fase */
+#screen-congrats .btn-again{font-size:1.15rem;padding:12px 24px;background:linear-gradient(170deg,#9fe0ff,#4fb3f0,#2a86d0);box-shadow:0 5px 0 #1d5f99,0 8px 18px rgba(30,110,190,.35),inset 0 1.5px 0 rgba(255,255,255,.45);color:#06294a}
+#screen-congrats .btn-again svg{fill:#06294a}
+#screen-congrats .btn-again:active{box-shadow:0 2px 0 #1d5f99}
+#screen-congrats .btn-again[hidden]{display:none}
+.sc-goal{display:inline-flex;align-items:center;gap:6px;font-size:.95rem;font-weight:900;color:#fff;background:rgba(79,179,240,.28);border:2px solid rgba(159,224,255,.7);border-radius:999px;padding:4px 12px;text-align:center}
 @media (max-width:520px){
   #screen-congrats .congrats-card{padding:12px 14px 16px}
   #screen-congrats .congrats-title{font-size:2.1rem}
   .sc-points{font-size:2.2rem}
   #screen-congrats .nav-row{gap:8px}
-  #screen-congrats #btn-next{width:100%;max-width:340px}
+  #screen-congrats #btn-next,#screen-congrats .btn-again{width:100%;max-width:340px;justify-content:center}
 }
 @media (max-height:700px){
   #screen-congrats{gap:8px}
@@ -1580,6 +1586,7 @@ body.calm .sd-fruit,body.calm .start-scene .game-title span,body.calm #btn-play,
     </div>
   </div>
   <div class="nav-row">
+    <button class="btn-cta btn-again" id="btn-again" onclick="playAgain()" hidden><span data-ico="replay" data-size="20"></span> Jogar novamente</button>
     <button class="btn-cta" id="btn-next" onclick="nextPhase()" style="font-size:1.1rem;padding:11px 26px">Próxima fase</button>
     <button class="btn-ghost" id="btn-replay" onclick="reviewPath()" style="display:none"><span data-ico="replay" data-size="16"></span> Rever caminho</button>
     <button class="btn-ghost" onclick="showPhases()"><span data-ico="back" data-size="16"></span> Fases</button>
@@ -1826,8 +1833,8 @@ function makeMimi(w=100, hat=null, outfit=null, mood='normal'){
   const SEGB=[[28,76,22],[54,72,20],[78,70,20]];
   if(outfit==='out_vaquinha'){
     outfitTopSVG=SEGB.map(([x,y,r],i)=>`<path d="M${x-r*.5},${y-r*.55} q8,-6 13,1 q4,7 -4,10 q-10,2 -9,-11z" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width="${i%2?0:1}"/><circle cx="${x+r*.35}" cy="${y+r*.15}" r="4" fill="${i%2?'#fff':'#1d1a2e'}"/>`).join('');
-  } else if(outfit==='out_joaninha'){
-    outfitTopSVG=SEGB.map(([x,y,r])=>`<path d="M${x-r*.95},${y+r*.1} A${r*.95},${r*.95} 0 0 1 ${x+r*.95},${y+r*.1}Z" fill="#e8323f" stroke="#8a1020" stroke-width="1.2"/><circle cx="${x-r*.4}" cy="${y-r*.35}" r="4" fill="#1d1a2e"/><circle cx="${x+r*.4}" cy="${y-r*.3}" r="3.4" fill="#1d1a2e"/><circle cx="${x}" cy="${y-r*.7}" r="2.8" fill="#1d1a2e"/>`).join('');
+  } else if(outfit==='out_princesa'){
+    outfitTopSVG=SEGB.map(([x,y,r],i)=>`<path d="M${x-r},${y+r*.25} A${r},${r} 0 0 1 ${x+r},${y+r*.25}Z" fill="${i?'#b78af0':'#8f5fd8'}" stroke="#6a3fb0" stroke-width="1.2"/><path d="M${x-r},${y+r*.25} q${r*.25},6 ${r*.5},0 q${r*.25},6 ${r*.5},0 q${r*.25},6 ${r*.5},0 q${r*.25},6 ${r*.5},0" fill="#fff0fa" stroke="#e6a8d6" stroke-width="1"/><rect x="${x-r}" y="${y+r*.12}" width="${r*2}" height="3" rx="1.5" fill="#ffd36b"/><circle cx="${x}" cy="${y-r*.6}" r="2.6" fill="#fff"/>`).join('');
   } else if(outfit==='out_coracao'){
     outfitTopSVG=SEGB.map(([x,y,r],i)=>[[-.4,-.45],[.35,-.3]].map(([dx,dy],k)=>`<path transform="translate(${x+dx*r},${y+dy*r}) scale(.42)" d="M0 8 C-9 1 -10 -5 -6 -8 C-3 -10 0 -8 0 -5 C0 -8 3 -10 6 -8 C10 -5 9 1 0 8Z" fill="${(i+k)%2?'#ff7eb6':'#ff3b6b'}" stroke="#c02070" stroke-width="1.5"/>`).join('')).join('');
   } else if(outfit==='out_sueter'){
@@ -2040,7 +2047,7 @@ function makeMimiTiny(){
   let outfitTopSVG = '';
   const SEGT=[[16,48,14],[30,45,13],[44,42,13]];
   if(outfit==='out_vaquinha') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<circle cx="${x-r*.25}" cy="${y-r*.3}" r="3.6" fill="${i%2?'#1d1a2e':'#fff'}" stroke="#1d1a2e" stroke-width=".6"/>`).join('');
-  else if(outfit==='out_joaninha') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x-r*.9},${y} A${r*.9},${r*.9} 0 0 1 ${x+r*.9},${y}Z" fill="#e8323f" stroke="#8a1020" stroke-width=".8"/><circle cx="${x-r*.3}" cy="${y-r*.4}" r="2.4" fill="#1d1a2e"/><circle cx="${x+r*.35}" cy="${y-r*.3}" r="2" fill="#1d1a2e"/>`).join('');
+  else if(outfit==='out_princesa') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<path d="M${x-r*.95},${y+r*.2} A${r*.95},${r*.95} 0 0 1 ${x+r*.95},${y+r*.2}Z" fill="${i?'#b78af0':'#8f5fd8'}" stroke="#6a3fb0" stroke-width=".8"/><rect x="${x-r*.95}" y="${y+r*.1}" width="${r*1.9}" height="2" rx="1" fill="#ffd36b"/>`).join('');
   else if(outfit==='out_coracao') outfitTopSVG=SEGT.map(([x,y,r],i)=>`<path transform="translate(${x-r*.2},${y-r*.35}) scale(.3)" d="M0 8 C-9 1 -10 -5 -6 -8 C-3 -10 0 -8 0 -5 C0 -8 3 -10 6 -8 C10 -5 9 1 0 8Z" fill="${i%2?'#ff7eb6':'#ff3b6b'}"/>`).join('');
   else if(outfit==='out_sueter') outfitTopSVG=SEGT.map(([x,y,r])=>`<path d="M${x-r*.95},${y+r*.2} A${r*.95},${r*.95} 0 0 1 ${x+r*.95},${y+r*.2}Z" fill="#ffd23f" stroke="#c98a00" stroke-width=".8"/>`).join('');
 
@@ -2112,7 +2119,7 @@ const ICONS={
   cow:`<ellipse cx="4.5" cy="8" rx="3.2" ry="1.8" fill="#fff" stroke="#555" stroke-width=".9" transform="rotate(-20,4.5,8)"/><ellipse cx="19.5" cy="8" rx="3.2" ry="1.8" fill="#fff" stroke="#555" stroke-width=".9" transform="rotate(20,19.5,8)"/><path d="M8 4.5 L7 2 M16 4.5 L17 2" stroke="#c9a46a" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="12" cy="10.5" rx="7" ry="6.5" fill="#fff" stroke="#555" stroke-width="1"/><path d="M6.5 7 q3 -3 5 0 q0 3 -3 3.5 q-2.5 0 -2 -3.5z" fill="#1d1a2e"/><ellipse cx="12" cy="17" rx="6" ry="4.2" fill="#ffb3c8" stroke="#c96a86" stroke-width="1"/><circle cx="10" cy="17" r="1" fill="#8a3a52"/><circle cx="14" cy="17" r="1" fill="#8a3a52"/><circle cx="9.5" cy="10.5" r="1.1" fill="#1d1a2e"/><circle cx="14.5" cy="10.5" r="1.1" fill="#1d1a2e"/>`,
   boot:`<path d="M7 3 H15 V14 L20 15.5 Q22 16.5 22 19 V20 H7Z" fill="#ffd23f" stroke="#a87200" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 20 H22 V21.5 H7Z" fill="#c98a00"/><path d="M6.5 3 H15.5 V5.5 H6.5Z" fill="#ffe680" stroke="#a87200" stroke-width="1"/>`,
   bee:`<ellipse cx="12" cy="14" rx="7.5" ry="6.5" fill="#ffd23f" stroke="#1d1a2e" stroke-width="1.1"/><path d="M9 8.3 V19.7 M14.5 7.8 V20.2" stroke="#1d1a2e" stroke-width="2.4"/><ellipse cx="9" cy="5.5" rx="4" ry="3" fill="#cfefff" stroke="#6aa" stroke-width=".9"/><ellipse cx="15" cy="5.5" rx="4" ry="3" fill="#cfefff" stroke="#6aa" stroke-width=".9"/>`,
-  ladybug:`<circle cx="12" cy="13.5" r="8" fill="#e8323f" stroke="#8a1020" stroke-width="1.1"/><path d="M12 5.5 V21.5" stroke="#1d1a2e" stroke-width="1.2"/><circle cx="12" cy="5.5" r="3.6" fill="#1d1a2e"/><g fill="#1d1a2e"><circle cx="8" cy="11" r="1.8"/><circle cx="16" cy="11" r="1.8"/><circle cx="8.5" cy="16.5" r="1.6"/><circle cx="15.5" cy="16.5" r="1.6"/></g>`,
+  dress:`<path d="M9 3.5 h6 l-.6 3.2 l2.2 2.3 l-1.6 1.3 L20 20 q-8 2.6 -16 0 L8.9 10.3 L7.3 9 l2.2-2.3z" fill="#b78af0" stroke="#6a3fb0" stroke-width="1.1" stroke-linejoin="round"/><path d="M4.6 19.2 q1.4 1.3 2.8 0 q1.4 1.3 2.8 0 q1.4 1.3 2.8 0 q1.4 1.3 2.8 0 q1.4 1.3 2.8 0" fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><rect x="8.6" y="9.6" width="6.8" height="1.6" rx=".8" fill="#ffd36b"/><circle cx="12" cy="6.4" r="1" fill="#fff"/>`,
   sneaker:`<path d="M3 15 Q3 9 7 9 L10 9 Q11 12 15 12.5 L19 13.5 Q21.5 14.5 21.5 17 H3Z" fill="#3d9ff0" stroke="#1f5c9e" stroke-width="1.1" stroke-linejoin="round"/><path d="M3 17 H21.5 V19 Q21.5 20 20.5 20 H4 Q3 20 3 19Z" fill="#fff" stroke="#9aa" stroke-width=".9"/><path d="M9.5 11 L12 10.5 M10.5 12.5 L13 12" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>`,
   sweater:`<path d="M8 3 L3 7 L4.5 14 L7 13.5 V21 H17 V13.5 L19.5 14 L21 7 L16 3 Q12 6 8 3 Z" fill="#ffd23f" stroke="#c98a00" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 19 H17 M8 10 H16 M8 13 H16" stroke="#f5a800" stroke-width="1.1" stroke-dasharray="1.6 1.2"/>`,
   shirt:`<path d="M8 3 L3 6 L5 10 L7.5 9 V21 H16.5 V9 L19 10 L21 6 L16 3 Q12 6 8 3 Z" fill="#5ecfca" stroke="#2a8f8a" stroke-width="1.2" stroke-linejoin="round"/>`,
@@ -2160,7 +2167,7 @@ const ITEMS=[
   {id:'hat_laco',     type:'hat',    icon:'bow',       label:'Laço Fofo'},
   {id:'hat_bone',     type:'hat',    icon:'cap',       label:'Boné'},
   {id:'out_vaquinha', type:'outfit', icon:'cow',       label:'Vaquinha'},
-  {id:'out_joaninha', type:'outfit', icon:'ladybug',   label:'Joaninha'},
+  {id:'out_princesa', type:'outfit', icon:'dress',     label:'Vestido de princesa'},
   {id:'out_sueter',   type:'outfit', icon:'sweater',   label:'Suéter Amarelo'},
   {id:'out_coracao',  type:'outfit', icon:'heart',     label:'Corações'},
 ];
@@ -2171,7 +2178,7 @@ const PHASE_PICKUPS=[
   {4:'hat_laco'},              // um presente por fruta: o laço, as 3 roupinhas e a coroa no fim
   {7:'out_vaquinha'},
   {4:'out_sueter'},
-  {7:'out_joaninha'},
+  {7:'out_princesa'},
   {4:'hat_coroa'},             // a coroa é o prêmio da última fruta
 ];
 // prêmios de 3 ESTRELAS: quem termina a fase com 3 estrelas ganha mais um acessório (o brinde do labirinto continua um só)
@@ -2496,8 +2503,9 @@ function loadState(){
     if(!raw)return;
     const data=JSON.parse(raw);
     // as roupas antigas viraram roupas novas (mesma fase em que a criança ganhou)
-    const OLD_OUT={out_capa:'out_vaquinha',out_borboleta:'out_sueter',out_arcoirs:'out_joaninha',out_mochila:'out_vaquinha',out_cachecol:'out_joaninha',out_estrela:'out_joaninha',
-      out_tenis:'out_vaquinha',out_galochas:'out_sueter',out_abelha:'out_sueter',out_pintinhas:'out_joaninha'};
+    const OLD_OUT={out_capa:'out_vaquinha',out_borboleta:'out_sueter',out_arcoirs:'out_princesa',out_mochila:'out_vaquinha',out_cachecol:'out_princesa',out_estrela:'out_princesa',
+      out_tenis:'out_vaquinha',out_galochas:'out_sueter',out_abelha:'out_sueter',out_pintinhas:'out_princesa',
+      out_joaninha:'out_princesa'};   // a joaninha virou o vestido de princesa
     const mig=id=>OLD_OUT[id]||id;
     if(Array.isArray(data.unlockedItems))data.unlockedItems=data.unlockedItems.map(mig);
     if(Array.isArray(data.seenItems))data.seenItems=data.seenItems.map(mig);
@@ -3013,35 +3021,50 @@ function buildPhaseGrid(){
     const P=document.getElementById('seg-'+seg);if(!P)return MAP_PTS[seg];
     const L=P.getTotalLength(),q=P.getPointAtLength(L*Math.max(0,Math.min(1,u)));return [q.x,q.y];
   }
-  let P=start*HOPS,target=start,unlock=false,t0=null,arrive=null,hopMs=HOP_MS,restMs=REST_MS,walking=false;
+  // anda sem parar entre as florzinhas: acelera no começo, vai numa velocidade só e freia antes de chegar
+  let P=start*HOPS,target=start,unlock=false,arrive=null,vmax=1/(HOP_MS+REST_MS),vel=0,lastT=null,walking=false;
   function step(now){
     if(!map.isConnected){walking=false;return;}
-    const dir=Math.sign(target*HOPS-P);
-    if(t0===null){t0=now;if(slot)slot.step();mimiStepSnd();}
-    const q=Math.min(1,(now-t0)/hopMs),qe=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
-    const x=P+dir*qe;
-    const a=at(x),b=at(Math.max(0,Math.min(last,x+dir*.15)));
-    put(a[0],a[1]);
-    if(slot){const dx=b[0]-a[0],dy=b[1]-a[1];if(Math.abs(dx)+Math.abs(dy)>.5)slot.face(Math.atan2(-dy*.6,dx));}
-    if(now-t0<hopMs+restMs){mapAnim=requestAnimationFrame(step);return;}
-    t0=null;P+=dir;
-    const k=((P%HOPS)+HOPS)%HOPS,seg=Math.floor(P/HOPS);
-    if(unlock&&dir>0&&k&&use3D)Map3D.bloom(seg,k);
-    if(!k){                                      // chegou numa fruta
-      const node=P/HOPS;mapMimiAt=node;
-      if(unlock&&dir>0&&node>from&&node<=cur){
-        const nb=map.querySelector(`.map-node[data-i="${node}"]`);if(nb)nb.classList.add('opened-now');
-        if(use3D)Map3D.open(node);
+    const dt=lastT===null?16:Math.min(50,now-lastT);lastT=now;
+    const rem=target*HOPS-P,dir=Math.sign(rem)||1;
+    const acc=vmax/260;                                   // leva ~0,26 s para pegar velocidade
+    const want=dir*Math.min(vmax,Math.sqrt(2*acc*Math.abs(rem)));   // freia a tempo de parar na fruta
+    vel+=Math.max(-acc*dt,Math.min(acc*dt,want-vel));
+    const P0=P;P+=vel*dt;
+    if((rem>0&&P>target*HOPS)||(rem<0&&P<target*HOPS)||Math.abs(target*HOPS-P)<1e-3)P=target*HOPS;
+    // passou por uma florzinha (ou chegou numa fruta)
+    const marks=[];
+    if(P>P0)for(let m=Math.floor(P0)+1;m<=P+1e-9;m++)marks.push(m);          // indo para a frente: (P0, P]
+    else if(P<P0)for(let m=Math.ceil(P0)-1;m>=P-1e-9;m--)marks.push(m);       // voltando: [P, P0)
+    marks.forEach(m=>{
+      mimiStepSnd();
+      const k=((m%HOPS)+HOPS)%HOPS,seg=Math.floor(m/HOPS);
+      if(unlock&&P>P0&&k&&use3D)Map3D.bloom(seg,k);
+      if(!k){
+        const node=m/HOPS;mapMimiAt=node;
+        if(unlock&&P>P0&&node>from&&node<=cur){
+          const nb=map.querySelector(`.map-node[data-i="${node}"]`);if(nb)nb.classList.add('opened-now');
+          if(use3D)Map3D.open(node);
+        }
       }
-      if(node===target){walking=false;put(...standAt(node));if(arrive)arrive(node);return;}
+    });
+    const a=at(P),b=at(Math.max(0,Math.min(last,P+dir*.15)));
+    put(a[0],a[1]);
+    if(slot){
+      const dx=b[0]-a[0],dy=b[1]-a[1];if(Math.abs(dx)+Math.abs(dy)>.5)slot.face(Math.atan2(-dy*.6,dx));
+      slot.setWalking(true,Math.max(2,Math.abs(vel)*1000*Math.PI*2));   // uma onda do corpo por florzinha
+    }
+    if(P===target*HOPS){
+      walking=false;vel=0;lastT=null;if(slot)slot.setWalking(false);
+      put(...standAt(target));if(arrive)arrive(target);return;
     }
     mapAnim=requestAnimationFrame(step);
   }
   function walk(to,isUnlock,onArrive){
     clearInterval(mapWaveTimer);
     target=to;unlock=isUnlock;arrive=onArrive;
-    hopMs=isUnlock?HOP_MS:TRIP_HOP;restMs=isUnlock?REST_MS:TRIP_REST;
-    if(!walking){walking=true;t0=null;mapAnim=requestAnimationFrame(step);}
+    vmax=1/(isUnlock?HOP_MS+REST_MS:TRIP_HOP+TRIP_REST);
+    if(!walking){walking=true;lastT=null;mapAnim=requestAnimationFrame(step);}
   }
   // a criança tocou numa fruta aberta
   mapGo=i=>{
@@ -3393,21 +3416,72 @@ function placeMimi(instant=false){
   let jump=instant||!prev;
   if(!jump){const [pr,pc]=prev.split(',').map(Number);jump=Math.abs(pr-playerR)+Math.abs(pc-playerC)>1;}
   tok.style.width=cell.offsetWidth+'px';tok.style.height=cell.offsetHeight+'px';
-  if(jump)tok.classList.add('instant');
-  tok.style.transform=`translate(${cell.offsetLeft}px,${cell.offsetTop}px)`;
-  if(jump){void tok.offsetWidth;tok.classList.remove('instant');}
-  else if(prev!==pos){tok.classList.remove('hop');void tok.offsetWidth;tok.classList.add('hop');}
+  const to=[cell.offsetLeft,cell.offsetTop];
+  const g=nextGlide;nextGlide=null;
+  if(jump||prev===pos){
+    // mesma casa (redesenho, mudou o tamanho da tela) ou pulo: só se ainda não estiver deslizando para ela
+    if(jump||!mimiGlide||mimiGlide.pos!==pos)setMimiXY(tok,to);
+  } else {
+    if(!(mimiSlot&&Mimi3D.ok)){tok.classList.remove('hop');void tok.offsetWidth;tok.classList.add('hop');}
+    const [pr,pc]=prev.split(',').map(Number);
+    const dir=playerR<pr?'up':playerR>pr?'down':playerC<pc?'left':'right';
+    glideMimi(tok,to,pos,dir,g||{});
+  }
   if(mimiSlot&&Mimi3D.ok){
     if(instant||!prev)mimiSlot.face('down');               // começo da fase: olhando para a criança
-    else if(prev!==pos&&!jump){
-      const [pr,pc]=prev.split(',').map(Number);
-      mimiSlot.face(playerR<pr?'up':playerR>pr?'down':playerC<pc?'left':'right');
-      mimiSlot.step();
-    }
     mimiSlot.setMud(LEVELS[curPhase].grid[playerR][playerC]===5);
   }
   tok.dataset.pos=pos;
   tok.classList.toggle('mud',LEVELS[curPhase].grid[playerR][playerC]===5);
+}
+// ── DESLIZE DA MIMI ──
+// Cada casa leva STEP_MS. Numa reta, ela não para entre as casas: a velocidade de chegada de uma casa
+// é a velocidade de saída da próxima (curva de Hermite). Só freia antes de curva, parede, lama, presente ou estrela.
+const STEP_MS=560;
+let nextGlide=null;      // {v0,v1,dur}: o executeQueue diz como deve ser o próximo deslize
+let mimiGlide=null;      // deslize em andamento
+let mimiXY=null;
+function setMimiXY(tok,xy){
+  if(mimiGlide){cancelAnimationFrame(mimiGlide.raf);const r=mimiGlide.done;mimiGlide=null;r();}
+  mimiXY=[xy[0],xy[1]];
+  tok.style.transform=`translate3d(${xy[0].toFixed(2)}px,${xy[1].toFixed(2)}px,0)`;
+  if(mimiSlot&&Mimi3D.ok)mimiSlot.setWalking(false);
+}
+function glideMimi(tok,to,pos,dir,{v0=0,v1=0,dur=STEP_MS}={}){
+  let from=mimiXY||to,prevDone=null;
+  if(mimiGlide){cancelAnimationFrame(mimiGlide.raf);prevDone=mimiGlide.done;}
+  if(!motionOn){mimiGlide=null;if(prevDone)prevDone();setMimiXY(tok,to);return Promise.resolve();}
+  if(mimiSlot&&Mimi3D.ok){mimiSlot.face(dir);mimiSlot.setWalking(true,Math.PI*2/(dur/1000));}   // uma onda do corpo por casa
+  let done;const p=new Promise(r=>done=r);
+  const t0=performance.now();
+  const G={pos,done,p,raf:0};mimiGlide=G;
+  if(prevDone)prevDone();
+  const f=now=>{
+    if(mimiGlide!==G)return;
+    const t=Math.min(1,(now-t0)/dur),t2=t*t,t3=t2*t;
+    const u=(-2*t3+3*t2)+v0*(t3-2*t2+t)+v1*(t3-t2);   // Hermite: começa com v0 e chega com v1
+    const x=from[0]+(to[0]-from[0])*u,y=from[1]+(to[1]-from[1])*u;
+    mimiXY=[x,y];tok.style.transform=`translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0)`;
+    if(t<1){G.raf=requestAnimationFrame(f);return;}
+    mimiGlide=null;
+    if(v1===0&&mimiSlot&&Mimi3D.ok)mimiSlot.setWalking(false);
+    done();
+  };
+  G.raf=requestAnimationFrame(f);
+  return p;
+}
+function mimiArrived(){return mimiGlide?mimiGlide.p:Promise.resolve();}
+// bateu na parede: vai um pouquinho para o lado da seta e volta
+function bumpMimi(dir){
+  const tok=document.getElementById('mimi-token');if(!tok||!mimiXY||!motionOn)return;
+  const [dr,dc]={up:[-1,0],down:[1,0],left:[0,-1],right:[0,1]}[dir];
+  const base=[...mimiXY],amp=(window.__cs||40)*.22,t0=performance.now();
+  const f=now=>{
+    const t=Math.min(1,(now-t0)/320),k=Math.sin(Math.PI*t)*(t<.5?1:1-(t-.5)*.6);
+    tok.style.transform=`translate3d(${(base[0]+dc*amp*k).toFixed(2)}px,${(base[1]+dr*amp*k).toFixed(2)}px,0)`;
+    if(t<1&&!mimiGlide)requestAnimationFrame(f);else if(!mimiGlide)tok.style.transform=`translate3d(${base[0]}px,${base[1]}px,0)`;
+  };
+  requestAnimationFrame(f);
 }
 function mimiFeel(cls,ms){
   if(mimiSlot&&Mimi3D.ok){if(cls==='happy')mimiSlot.happy();else if(cls==='sad')mimiSlot.sad();}
@@ -3537,31 +3611,50 @@ async function executeQueue(stepOnly=false){
     if(st){mimiSlot.face(Math.atan2(-(st[0]-playerR),st[1]-playerC));mimiHmm();await sleep(450);if(myRun!==runId)return;}
   }
   const end=stepOnly?doneCount+1:cmdQueue.length;
+  const freeCell=(r,c)=>r>=0&&c>=0&&r<lvl.rows&&c<lvl.cols&&lvl.grid[r][c]!==1;
+  const DELTA={up:[-1,0],down:[1,0],left:[0,-1],right:[0,1]};
+  let lastDir=null,carry=0;       // carry = velocidade com que ela chegou na casa atual (0 = parada)
   for(let i=doneCount;i<end;i++){
     renderQueue(i);
     const cmd=cmdQueue[i];
     for(let k=0;k<cmd.n;k++){
       const prevR=playerR,prevC=playerC;
+      // curva: primeiro ela vira para o lado novo, depois sai andando
+      if(cmd.d!==lastDir&&mimiSlot&&Mimi3D.ok){
+        mimiSlot.face(cmd.d);
+        await sleep(lastDir===null?120:170);if(myRun!==runId)return;
+      }
+      lastDir=cmd.d;
+      const fromV=lvl.grid[prevR][prevC];
       const ok=applyMove(cmd.d);
+      const v=lvl.grid[playerR][playerC];
+      // continua na mesma velocidade se a próxima casa é na mesma reta e não tem nada para parar
+      const nextD=k+1<cmd.n?cmd.d:(i+1<end?cmdQueue[i+1].d:null);
+      const plain=v===0||v===2||((v===4||v===7)&&!giftPending(v));
+      const [dr,dc]=DELTA[cmd.d];
+      const cruise=ok&&plain&&nextD===cmd.d&&freeCell(playerR+dr,playerC+dc);
+      if(ok){
+        nextGlide={v0:fromV===5?0:carry,v1:cruise?1:0,dur:(v===5||fromV===5)?STEP_MS*1.6:STEP_MS};
+        carry=cruise?1:0;
+      }
       trail.add(`${playerR},${playerC}`);
       renderGrid();
-      const v=lvl.grid[playerR][playerC];
 
       // ERRO 1: bateu na parede (a Mimi não sai do lugar)
-      if(!ok){if(mimiSlot&&Mimi3D.ok)mimiSlot.face(cmd.d);await handleError('wall',i,k,prevR,prevC,myRun);return;}
+      if(!ok){if(mimiSlot&&Mimi3D.ok)mimiSlot.face(cmd.d);bumpMimi(cmd.d);await handleError('wall',i,k,prevR,prevC,myRun);return;}
       mimiStepSnd();
 
       // ERRO 2: pisou na pedra
       if(v===6){
-        await sleep(260);if(myRun!==runId)return;
+        await mimiArrived();await sleep(120);if(myRun!==runId)return;
         await handleError('rock',i,k,prevR,prevC,myRun);return;
       }
       replayLog.push({r:playerR,c:playerC,dir:cmd.d});
 
       // Lama = lenta
-      const delay=v===5?1100:600;
       if(v===5){penMud+=10;sfxMud();mimiMudSnd();showToast('toast-mud');setTimeout(()=>hideToast('toast-mud'),700);}
-      await sleep(delay);
+      await mimiArrived();
+      if(v===5)await sleep(260);
       if(myRun!==runId)return;
 
       // Brindes (A = chapéu, B = roupa)
@@ -3826,11 +3919,14 @@ function phaseComplete(steps,blocks=steps){
     : `<span class="sc-tip">${ico('bulb',20)} Tem um caminho mais curto. Quer achar?</span>`;
   const timeMsg=`<span class="sc-foot">${chips}<span class="sc-meta">${setas} · ${ico('clock',16)} ${fmtTime(timerSecs)}</span></span>`;
   const bestMsg=(!improved)?`<span class="sc-best">${ico('star',16)} Sua melhor nota: ${best} pontos</span>`:'';
+  // faltou estrela: mostra quanto precisa e o prêmio que está esperando
+  const gotStars=starsFor(score),prize=STAR_REWARDS[curPhase]&&!unlockedItems.has(STAR_REWARDS[curPhase])?ITEMS.find(x=>x.id===STAR_REWARDS[curPhase]):null;
+  const goalMsg=gotStars<3?`<span class="sc-goal">${ico('star',18)} Faça 80 pontos para ganhar 3 estrelas${prize?` e o prêmio: ${prize.label}`:''}!</span>`:'';
 
   document.getElementById('score-breakdown').innerHTML=
     `<span class="sc-points">${score} <small>pontos</small></span>`+
     `<span class="sc-pens">${bd||'<span class="sc-pen good">Perfeito! Sem perder pontos</span>'}</span>`+
-    algoMsg+timeMsg+bestMsg;
+    algoMsg+goalMsg+timeMsg+bestMsg;
 
   showMimi(document.getElementById('congrats-mimi'),window.innerHeight<700?90:110,'happy');
   buildDressup();confetti();
@@ -3850,13 +3946,15 @@ function phaseComplete(steps,blocks=steps){
     btn.onclick=showFinal;
   }
   document.getElementById('btn-replay').style.display='inline-flex';
+  document.getElementById('btn-again').hidden=gotStars>=3;
   showScreen('screen-congrats');
   if(starGot.length)setTimeout(()=>{const it=ITEMS.find(x=>x.id===starGot[0]);
     document.getElementById('pickup-icon').innerHTML=ico(it.icon,60);
     document.getElementById('pickup-msg').textContent=`3 estrelas! Você ganhou: ${it.label}!`;
     showToast('toast-pickup');setTimeout(()=>hideToast('toast-pickup'),2600);
     speak(`Três estrelas! Você ganhou: ${it.label}!`,{bubble:false});},1800);
-  speak(firstAllDone?'Eba! Comi todas as frutas! Me veste antes de eu virar borboleta?':target?`Parabéns! Você passou a fase ${curPhase}!`:'Parabéns! Você completou todas as fases!',{bubble:false});
+  const again=gotStars<3?' Quer jogar de novo para ganhar 3 estrelas?':'';
+  speak((firstAllDone?'Eba! Comi todas as frutas! Me veste antes de eu virar borboleta?':target?`Parabéns! Você passou a fase ${curPhase}!`:'Parabéns! Você completou todas as fases!')+again,{bubble:false});
 }
 // As fases abrem em sequência: depois da fase N vem a N+1 (0 = acabaram as fases)
 function nextTarget(){return curPhase<PHASE_COUNT?curPhase+1:0;}
@@ -3884,9 +3982,12 @@ function trainingComplete(){
   btn.innerHTML=`${ico('play',18)} Ir para a fase 1`;
   btn.onclick=()=>showPhases();
   document.getElementById('btn-replay').style.display='none';
+  document.getElementById('btn-again').hidden=true;
   confetti();
   showScreen('screen-congrats');
 }
+// joga a mesma fase de novo, do começo (a melhor nota continua guardada)
+function playAgain(){sfxAdd();startPhase(curPhase);}
 function nextPhase(){const t=nextTarget();if(t)startPhase(t);else showFinal();}
 
 // ═══════════════════════════════════
@@ -3903,7 +4004,7 @@ function switchCat(cat, btn){
 
 // Cores de raridade por acessório
 const RARITY={
-  hat_coroa:'#ffd166', out_joaninha:'#ffd166',          // dourado — lendário
+  hat_coroa:'#ffd166', out_princesa:'#ffd166',          // dourado — lendário
   hat_cartola:'#c3a6f5', out_sueter:'#c3a6f5',   // roxo — épico
   hat_bone:'#7cb8f0',        // azul — raro
   hat_flor:'#7fd8a6',        // verde — comum

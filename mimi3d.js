@@ -103,6 +103,8 @@ function buildMimi(){
   SEGS.forEach((s,i)=>{
     const g=new THREE.Group();g.position.set(s.x,s.r+LEG_H,0);
     const b=ball(s.r,mats.body);g.add(b);
+    // a roupa do gomo mora aqui e estica/encolhe junto com o corpo (assim o rosa não aparece por baixo quando ela anda)
+    const dress=new THREE.Group();g.add(dress);g.userData.dress=dress;
     const belly=ball(s.r*.82,mats.belly,0,-s.r*.32,0,1,.55,1.02);belly.castShadow=false;g.add(belly);
     const legs=[];
     [-1,1].forEach(side=>{
@@ -110,7 +112,7 @@ function buildMimi(){
       l.position.set(0,-s.r-.02,side*s.r*.45);
       g.add(l);legs.push(l);
     });
-    body.add(g);segs.push({g,ball:b,legs,r:s.r,baseY:s.r+LEG_H,x:s.x,i});
+    body.add(g);segs.push({g,ball:b,dress,legs,r:s.r,baseY:s.r+LEG_H,x:s.x,i});
   });
 
   // cabeça
@@ -208,17 +210,20 @@ function buildHat(id){
     // em cima da cabeça, um pouco atrás das anteninhas: nada dele fica escondido dentro da cabeça
     g.position.set(-.26,-.02,0);g.rotation.z=.35;g.scale.setScalar(1.3);
   }else if(id==='hat_bone'){
-    const blue=std('#8ecbf5',{roughness:.6});
-    const dome=mesh(new THREE.SphereGeometry(.42,32,16,0,Math.PI*2,0,Math.PI/2),blue);dome.position.y=-.02;g.add(dome);
-    const visor=mesh(new THREE.CylinderGeometry(.3,.3,.035,32,1,false,-Math.PI/2,Math.PI),std('#5fa6dc'));
-    visor.position.set(.28,0,0);visor.scale.set(1.1,1,1.25);g.add(visor);
-    g.add(ball(.05,std('#ffd166'),0,.4,0));
-    g.position.y=-.05;
+    // boné inteiro: a copa abraça a cabeça (mesmo centro, um pouco maior) e a aba é arredondada
+    const blue=std('#8ecbf5',{roughness:.6,side:THREE.DoubleSide}),dark=std('#5fa6dc',{roughness:.55});
+    const cap=new THREE.Group();cap.position.set(.05,-.5,0);cap.rotation.z=.32;g.add(cap);   // centro da cabeça, inclinado para trás
+    const TH=Math.PI*.4,R=.635;
+    const crown=mesh(new THREE.SphereGeometry(R,40,20,0,Math.PI*2,0,TH),blue);cap.add(crown);
+    // barrinha em volta e aba arredondada na frente
+    const band=mesh(new THREE.TorusGeometry(R*Math.sin(TH),.03,8,48),dark,false);band.rotation.x=Math.PI/2;band.position.y=R*Math.cos(TH);cap.add(band);
+    const visor=ball(.38,dark,R*Math.sin(TH)*.95,R*Math.cos(TH)-.005,0,1,.11,1.08);visor.rotation.z=-.15;cap.add(visor);
+    cap.add(ball(.06,std('#ffd166'),0,R+.01,0));
   }
   return g;
 }
 
-// ── ROUPINHAS (manchas de vaquinha, joaninha e suéter amarelo) ──
+// ── ROUPINHAS (manchas de vaquinha, vestido de princesa, corações e suéter amarelo) ──
 // tecido listrado desenhado num canvas (listras horizontais = tricô)
 function stripeTex(cols,n=8,knit=true){
   const c=document.createElement('canvas');c.width=64;c.height=128;const x=c.getContext('2d');
@@ -228,9 +233,9 @@ function stripeTex(cols,n=8,knit=true){
 }
 // "casquinha" que cobre a parte de cima de cada gomo (theta = até onde desce)
 const capGeo=theta=>new THREE.SphereGeometry(1,40,20,0,Math.PI*2,0,theta);
-const LADY_CAP=capGeo(Math.PI*.56),SWEAT_CAP=capGeo(Math.PI*.66);
+const SWEAT_CAP=capGeo(Math.PI*.66);
 let sweaterTex=null;
-function addExtra(g,parent,m){parent.add(m);g.userData.extra=(g.userData.extra||[]).concat(m);}
+function addExtra(g,parent,m){(parent.userData.dress||parent).add(m);g.userData.extra=(g.userData.extra||[]).concat(m);}
 function spotOn(s,d,r,mat,lift=.99){
   const v=new THREE.Vector3(...d).normalize();
   const m=ball(r,mat,0,0,0,1,1,.35);m.position.copy(v.clone().multiplyScalar(s.r*lift));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),v);return m;
@@ -249,15 +254,38 @@ function buildOutfit(id,rig){
       [[0,0,1],[.6,.35,.6],[-.5,.4,.55],[.2,-.55,.6]].forEach(([dx,dy,sc])=>blob.add(ball(r*sc,mat,dx*r,dy*r,0,1,1,.3)));
       addExtra(g,s.g,blob);
     }));
-  }else if(id==='out_joaninha'){
-    // casquinha vermelha de joaninha com bolinhas pretas
-    const red=phys({color:'#e8323f',roughness:.3,clearcoat:.8,clearcoatRoughness:.2});
-    const dot=std('#1d1a2e',{roughness:.35});
-    const dirs=[[0,1,0],[.35,.75,.55],[-.35,.75,-.55],[-.3,.7,.6],[.3,.7,-.6],[0,.4,.9],[0,.4,-.9]];
+  }else if(id==='out_princesa'){
+    // vestido de princesa: cetim rosa-lilás, babadinhos claros na barra, fita dourada,
+    // pérolas em cima e um laço grande nas costas
+    const satin=phys({color:'#b78af0',roughness:.35,clearcoat:.5,clearcoatRoughness:.3,sheen:.4,sheenColor:new THREE.Color('#efe0ff')});
+    const bodice=phys({color:'#8f5fd8',roughness:.3,clearcoat:.6,sheen:.4,sheenColor:new THREE.Color('#e6d6ff')});
+    const frill=std('#ffffff',{roughness:.55});
+    const gold=phys({color:'#ffd36b',roughness:.25,metalness:.6,clearcoat:1});
+    const pearl=phys({color:'#ffffff',roughness:.15,clearcoat:1});
+    const th=Math.PI*.64;
     rig.segs.forEach((s,i)=>{
-      const cap=mesh(LADY_CAP,red);cap.scale.setScalar(s.r*1.03);addExtra(g,s.g,cap);
-      dirs.forEach((d,k)=>{if((i+k)%2&&k>0)return;addExtra(g,s.g,spotOn(s,d,.085+(k===0?.03:0),dot,1.03));});
+      const R=s.r*1.05,hemY=R*Math.cos(th),hemR=R*Math.sin(th);
+      const cap=mesh(SWEAT_CAP,i===0?bodice:satin);cap.scale.set(R,R,R);addExtra(g,s.g,cap);
+      // babadinho: bolinhas achatadas em volta da barra
+      const n=16;
+      for(let k=0;k<n;k++){const a=k/n*Math.PI*2;
+        const f=ball(.11*s.r/.5,frill,Math.cos(a)*hemR*1.03,hemY-.02,Math.sin(a)*hemR*1.03,1,.55,1);f.castShadow=false;addExtra(g,s.g,f);}
+      const trim=mesh(new THREE.TorusGeometry(hemR*.99,.028,8,40),gold,false);trim.rotation.x=Math.PI/2;trim.position.y=hemY+.07;addExtra(g,s.g,trim);
+      // pérolas em cima de cada gomo
+      [[0,1,0],[.35,.85,.4],[-.35,.85,-.4],[-.3,.85,.45],[.3,.85,-.45]].forEach((d,k)=>{
+        if(i===0&&k>0)return;
+        const v=new THREE.Vector3(...d).normalize().multiplyScalar(R*1.01);
+        const pm=ball(k===0?.06:.04,pearl,v.x,v.y,v.z);pm.castShadow=false;addExtra(g,s.g,pm);
+      });
     });
+    // laço grande nas costas, entre o 1º e o 2º gomo
+    {const s0=rig.segs[1],bow=new THREE.Group();
+      const bm=phys({color:'#ff5fb8',roughness:.3,clearcoat:.7,sheen:.6});
+      const l=ball(.17,bm,0,0,-.17,.55,.7,1.15);l.rotation.x=.4;bow.add(l);
+      const r=ball(.17,bm,0,0,.17,.55,.7,1.15);r.rotation.x=-.4;bow.add(r);
+      bow.add(ball(.075,gold,0,0,0));
+      [-1,1].forEach(sd=>{const t=ball(.1,bm,-.12,-.12,sd*.1,.5,1.1,.35);t.rotation.x=sd*.35;bow.add(t);});
+      bow.position.set(.28,s0.r*1.05+.04,0);bow.rotation.z=.25;addExtra(g,s0.g,bow);}
   }else if(id==='out_coracao'){
     // coraçõezinhos espalhados pelos gomos (vermelho, pink e rosa-claro)
     const cols=[phys({color:'#e8173f',roughness:.3,clearcoat:.7}),phys({color:'#ffffff',roughness:.35,clearcoat:.6}),phys({color:'#b3122f',roughness:.3,clearcoat:.7})];
@@ -361,9 +389,9 @@ function flyDeco(rig){
   (u.decoParts||[]).forEach(m=>m.parent&&m.parent.remove(m));u.decoParts=[];
   const add=(par,m)=>{par.add(m);u.decoParts.push(m);};
   const outfit=(rig.look||'').split('|')[1];
-  if(outfit==='out_joaninha'){
-    const dot=std('#1d1a2e',{roughness:.35,side:THREE.DoubleSide});
-    u.wings.forEach(w=>{[[.4,1.15,.16],[.05,1.45,.11],[-.7,.8,.14],[.6,.6,.09]].forEach(([x,z,r])=>[.03,-.03].forEach(o=>{const d=mesh(WG.dot,dot,false);d.position.set(x,o,z);d.scale.setScalar(r);add(w.inner,d);}));});
+  if(outfit==='out_princesa'){
+    const dm=[std('#ffd36b',{roughness:.3,metalness:.5,side:THREE.DoubleSide}),std('#ffffff',{roughness:.3,side:THREE.DoubleSide}),std('#d989e6',{roughness:.4,side:THREE.DoubleSide})];
+    u.wings.forEach(w=>{[[.4,1.15,.15,2],[.05,1.45,.09,0],[-.7,.8,.13,2],[.6,.6,.08,1],[-.95,.5,.06,0],[.85,1.3,.06,1]].forEach(([x,z,r,c])=>[.03,-.03].forEach(o=>{const d=mesh(WG.dot,dm[c],false);d.position.set(x,o,z);d.scale.setScalar(r);add(w.inner,d);}));});
   }else if(outfit==='out_vaquinha'){
     const white=std('#ffffff',{roughness:.6,side:THREE.DoubleSide}),black=std('#1d1a2e',{roughness:.5,side:THREE.DoubleSide});
     u.wings.forEach(w=>{[[.4,1.15,.2,white],[0,1.5,.13,black],[-.75,.8,.18,black],[.65,.6,.11,white]].forEach(([x,z,r,m])=>[.03,-.03].forEach(o=>{[[0,0,1],[.6,.4,.6],[-.5,.5,.5]].forEach(([dx,dz,sc])=>{const d=mesh(WG.dot,m,false);d.position.set(x+dx*r,o,z+dz*r);d.scale.setScalar(r*sc);add(w.inner,d);});}));});
@@ -439,7 +467,7 @@ M3.mount=function(container,opts={}){
     },
     face(dir){if(dir in DIR_YAW)st.yawT=DIR_YAW[dir];else if(typeof dir==='number')st.yawT=dir;},
     step(){st.walkT=1;},
-    setWalking(b){st.walking=b;},
+    setWalking(b,rate){st.walking=b;if(rate)st.walkRate=rate;else if(!b)st.walkRate=0;},
     happy(){st.happyT=1;},
     wave(){st.waveT=1;st.happyT=Math.max(st.happyT,.5);},   // "oi!": levanta a cabeça e balança as antenas
     sad(){st.sadT=1;st.comfortT=0;},
@@ -483,27 +511,34 @@ function updateRig(slot,dt){
   if(st.walkT>0)st.walkT=Math.max(0,st.walkT-dt/STEP_S);
   const moving=st.walking||st.walkT>0||st.walkFade>0;
   if(st.walking||st.walkT>0)st.walkFade=1;else st.walkFade=Math.max(0,st.walkFade-dt/.25);
-  if(moving)st.crawl+=dt*(st.walking?(st.mud?7:15):(st.mud?.5:1)*Math.PI*2/STEP_S*(st.walkT>0?1:.35));
+  // ritmo e altura da onda mudam aos poucos: ela não começa nem para de andar num tranco
+  const rateT=st.walking?(st.walkRate||15)*(st.mud?.5:1):st.walkT>0?(st.mud?.5:1)*Math.PI*2/STEP_S:0;
   const sp=1-st.walkT,env=st.walkT>0?Math.sin(Math.PI*Math.min(1,sp*1.15))**.6:0;
-  const crawlAmp=st.walking?1:st.walkT>0?Math.max(env,.15):.15*st.walkFade;
+  const ampT=st.walking?1:st.walkT>0?Math.max(env,.15):0;
+  const kS=1-Math.exp(-dt*9);
+  st.rate=(st.rate||0)+(rateT-(st.rate||0))*kS;
+  st.amp=(st.amp||0)+(ampT-(st.amp||0))*kS;
+  if(moving||st.amp>.01)st.crawl+=dt*Math.max(st.rate,st.amp*4);
+  const crawlAmp=st.amp,anim=moving||st.amp>.004;
   rig.segs.forEach((s,i)=>{
     const breathe=1+.028*Math.sin(t*2.3-i*.7)*idle;
     const ph=st.crawl-(rig.segs.length-1-i)*1.1;
-    const lift=moving?Math.max(0,Math.sin(ph))*.13*crawlAmp:0;
-    const squash=moving?1+.07*Math.sin(ph+1.2)*crawlAmp:1;
+    const lift=anim?Math.max(0,Math.sin(ph))*.13*crawlAmp:0;
+    const squash=anim?1+.07*Math.sin(ph+1.2)*crawlAmp:1;
     s.g.position.y=s.baseY+lift;
-    s.g.position.x=s.x+(moving?Math.cos(ph)*.07*crawlAmp*(1+i*.3):0);   // o corpo estica e encolhe, dá para ver até de cima
+    s.g.position.x=s.x+(anim?Math.cos(ph)*.07*crawlAmp*(1+i*.3):0);   // o corpo estica e encolhe, dá para ver até de cima
     s.ball.scale.set(s.r*squash,s.r*breathe/squash,s.r*breathe);
-    s.legs.forEach((l,k)=>{l.rotation.z=moving?Math.sin(ph*1.0+k*Math.PI)*.6*crawlAmp:Math.sin(t*1.5+i+k)*.05;});
+    s.dress.scale.set(squash,breathe/squash,breathe);
+    s.legs.forEach((l,k)=>{l.rotation.z=(anim?Math.sin(ph*1.0+k*Math.PI)*.6*crawlAmp:0)+Math.sin(t*1.5+i+k)*.05*(1-Math.min(1,crawlAmp));});
   });
   // cabeça: balança de leve, acompanha a onda
   const hph=st.crawl+.3;
-  let headY=.84+(moving?Math.max(0,Math.sin(hph))*.09*crawlAmp:0)+Math.sin(t*2.3+.5)*.02*idle;
+  let headY=.84+(anim?Math.max(0,Math.sin(hph))*.09*crawlAmp:0)+Math.sin(t*2.3+.5)*.02*idle;
   // aceno: a cabeça sobe e balança de um lado para o outro
   let waveLift=0;
   if(st.waveT>0){st.waveT=Math.max(0,st.waveT-dt/1.6);const p=1-st.waveT;waveLift=Math.sin(p*Math.PI);headY+=waveLift*.35;}
   rig.headPivot.position.y=headY;
-  rig.head.rotation.z=Math.sin(t*1.3)*.05+(moving?Math.sin(hph)*.06*crawlAmp:0);
+  rig.head.rotation.z=Math.sin(t*1.3)*.05+(anim?Math.sin(hph)*.06*crawlAmp:0);
   rig.head.rotation.y=Math.sin(t*.9)*.08;
   // no labirinto, quando ela vem para baixo (na direção de quem joga), levanta o rosto para aparecer
   if(slot.view==='game'){const toward=Math.max(0,-Math.sin(st.yaw));rig.head.rotation.z+=toward*.75;}
